@@ -24,7 +24,8 @@ import json
 import logging
 from lib.Parser import Parser
 
-# TODO: init logger
+logger = logging.getLogger('specker')
+logger.addHandler(logging.StreamHandler(sys.stderr))
 
 def check_opts(options):
 	return True
@@ -78,18 +79,16 @@ if __name__ == "__main__":
 
 		# TODO: implement options
 	except Exception as e:
-		#logger.error("Error: %s" % str(e))
-		print >> sys.stderr, "Error: " + str(e)
+		logger.error("Error: %s" % str(e))
 		sys.exit(3)
 
 	if options.output is not None:
 		try:
-			#logger.debug("writting output to " + output)
+			logger.debug("writting output to '%s'" % options.output)
 			with open(options.output, 'w') as f:
 				parser.print_file(f)
 		except Exception as e:
-			#logger.error("Error: %s" % str(e))
-			print >> sys.stderr, "Error: %s" % str(e)
+			logger.error("Error: %s" % str(e))
 			raise e
 			exit(4)
 	else:

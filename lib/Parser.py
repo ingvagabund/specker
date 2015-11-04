@@ -18,6 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 
+import logging
+import sys
 from SpecFile import SpecFile
 from Token import Token, TokenList
 from Statement import *
@@ -37,9 +39,11 @@ class ChunkParser:
 		return self.func(token_list, parent, allowed, disallowed)
 
 class Parser:
+	logger = None
+
 	@staticmethod
 	def parse_if(token_list, parent, allowed, disallowed):
-		#print "--- parsing if"
+		Parser.logger.debug("-- parsing if")
 		pointer = token_list.getPointer()
 		st_if = StIf(parent)
 		t = token_list.get()
@@ -69,7 +73,7 @@ class Parser:
 
 	@staticmethod
 	def parse_global(token_list, parent, allowed = None, disallowed = None):
-		#print "--- parsing global"
+		Parser.logger.debug("-- parsing global")
 		st_global = StGlobal(parent)
 		t = token_list.get()
 		if str(t) != '%global':
@@ -92,7 +96,7 @@ class Parser:
 
 	@staticmethod
 	def parse_definition(token_list, parent, allowed = None, disallowed = None):
-		#print "--- parsing definition"
+		Parser.logger.debug("-- parsing definition")
 		st_definition = StDefinition(parent)
 		t = token_list.get()
 		if t not in Parser.DEFINITION_TS:
@@ -108,14 +112,15 @@ class Parser:
 
 	@staticmethod
 	def parse_section(token_list, parent, allowed, disallowed, section_type):
+		Parser.logger.debug("--- parsing generic section")
 		st_section = section_type(parent)
 		st_section.tokens.append(token_list.get())
 		st_section.tokens += token_list.getWhileNot(disallowed)
-		#print "----- next section is " + str(token_list.touch())
 		return st_section
 
 	@staticmethod
 	def parse_description(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing description")
 		st_section = StDescription(parent)
 		st_section.tokens.append(token_list.get())
 		st_section.tokens += token_list.getWhileNot(disallowed)
@@ -123,6 +128,7 @@ class Parser:
 
 	@staticmethod
 	def parse_files(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing files")
 		st_section = StFiles(parent)
 		st_section.tokens.append(token_list.get())
 		st_section.tokens = token_list.getWhileNot(disallowed)
@@ -130,32 +136,38 @@ class Parser:
 
 	@staticmethod
 	def parse_build(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing build")
 		# TODO: implement
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StBuild)
 
 	@staticmethod
 	def parse_changelog(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing changelog")
 		# TODO: implement
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StChangelog)
 
 	@staticmethod
 	def parse_check(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing check")
 		# TODO: implement
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StCheck)
 
 	@staticmethod
 	def parse_clean(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing clean")
 		# TODO: implement
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StClean)
 
 	@staticmethod
 	def parse_install(token_list, parent, allowed, disallowed):
+		Parser.logger.debug("-- parsing install")
 		# TODO: implement
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StInstall)
 
 	@staticmethod
 	def parse_package(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing package")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPackage)
 
 	@staticmethod
@@ -166,61 +178,73 @@ class Parser:
 	@staticmethod
 	def parse_pre(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing prep")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPre)
 
 	@staticmethod
 	def parse_post(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing post")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPost)
 
 	@staticmethod
 	def parse_preun(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing preun")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPreun)
 
 	@staticmethod
 	def parse_postun(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing postun")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPostun)
 
 	@staticmethod
 	def parse_pretrans(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing pretrans")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPretrans)
 
 	@staticmethod
 	def parse_posttrans(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing posttrans")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StPosttrans)
 
 	@staticmethod
 	def parse_trigger(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing trigger")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StTrigger)
 
 	@staticmethod
 	def parse_triggerin(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing triggerin")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StTriggerin)
 
 	@staticmethod
 	def parse_triggerprein(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing triggerprein")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StTriggerprein)
 
 	@staticmethod
 	def parse_triggerun(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing triggerun")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StTriggerun)
 
 	@staticmethod
 	def parse_triggerpostun(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing triggerpostun")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StTriggerpostun)
 
 	@staticmethod
 	def parse_verifyscript(token_list, parent, allowed, disallowed):
 		# TODO: implement
+		Parser.logger.debug("-- parsing verifyscript")
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StVerifyscript)
 
 	@staticmethod
@@ -229,14 +253,14 @@ class Parser:
 		while True:
 			found = False
 			token = token_list.touch()
-			#print "-- parsing round: " + str(token)
+			Parser.logger.debug("- parsing round: '%s'" % str(token))
 
 			if token.token is None:
 				break
 
 			for t in disallowed:
 				if t == token:
-					#print "---- disallowed - " + str(token)
+					Parser.logger.debug("- token '%s' not allowed here, skipping " % str(token))
 					break
 
 			for t in allowed:
@@ -246,10 +270,9 @@ class Parser:
 					break
 
 			if not found:
-				#print "Unparsed: " + str(token) + " line " + str(token.line)
+				Parser.logger.debug("- unparsed token '%s' on line %s" % (str(token), str(token.line)))
 				break;
 
-		#print "_parsed: " + str(ret)
 		return ret
 
 	# Sections
@@ -305,6 +328,8 @@ class Parser:
 	ALL_TS				= SECTION_TS + [IF_T, GLOBAL_T] + DEFINITION_TS
 
 	def __init__(self, spec):
+		Parser.logger = logging.getLogger('specker-parser')
+		Parser.logger.addHandler(logging.StreamHandler(sys.stderr))
 		self.token_list = TokenList(SpecFile(spec))
 		self.registered_parsers = []
 
@@ -314,7 +339,8 @@ class Parser:
 				] + self.DEFINITION_TS
 
 		ret = Parser._parse(self.token_list, None, allowed, self.SECTION_TS)
-		#print "==== Unparsed in preamble: " + str(self.token_list.touch())
+		unparsed = self.token_list.touch()
+		Parser.logger.debug("-- preamble finished with token '%s' on line %d" % (str(unparsed), unparsed.line))
 		return ret
 
 	def register_parser(self, statement_type, callback):
@@ -323,13 +349,13 @@ class Parser:
 	def parse_loop(self, parent = None):
 		ret = self.parse_preamble()
 		allowed = self.ALL_TS		# allowed within section
-		disallowed = []			# disallowed within section
+		disallowed = []				# disallowed within section
 
 		while True:
 			found = False
 			token = self.token_list.touch()
 
-			#print "---- parsing in parse: " + str(token)
+			Parser.logger.debug("-- parsing section '%s' " % str(token))
 
 			if token.token is None: # EOF
 				break
@@ -341,17 +367,16 @@ class Parser:
 					ret.append(section)
 					if type(section) is not StIf and type(section) is not StGlobal and \
 							type(section) is not StDescription and type(section) is not StFiles:
-						#print "---- removing " + str(token) + " from allowed"
+						Parser.logger.debug("-- removing " + str(token) + " from allowed")
 						allowed.remove(s)
 						disallowed.append(s)
 					# TODO: call registered callback
 					break
 
 			if not found:
-				#print "---- Unparsed section: " + str(token)
+				Parser.logger.debug("-- unparsed beginning of a section: " + str(token))
 				break
 
-		#print "Parsing finished " + str(ret)
 		return ret
 
 	def parse(self):
@@ -361,8 +386,11 @@ class Parser:
 		if eof.token != None:
 			raise ValueError("Unexpected symbol '" + eof.token + "' on line " + eof.line)
 		self.sections = [x for x in self.raw_statements if x.parent is None and type(x) is not StIf]
-		# TODO: check if everything was parsed
 		return self.raw_statements
+
+	def setLoggingLevel(self, level):
+		print "logging level"
+		Parser.logger.setLevel(level)
 
 	def print_str(self):
 		ret = ""

@@ -75,11 +75,13 @@ if __name__ == "__main__":
 		else:
 			with open(input_file, 'r') as f:
 				parser = Parser(f)
+		if options.verbose:
+			parser.setLoggingLevel(logging.DEBUG)
 		parser.parse()
 
 		# TODO: implement options
 	except Exception as e:
-		logger.error("Error: %s" % str(e))
+		logger.exception("Error: %s" % str(e))
 		sys.exit(3)
 
 	if options.output is not None:
@@ -88,7 +90,7 @@ if __name__ == "__main__":
 			with open(options.output, 'w') as f:
 				parser.print_file(f)
 		except Exception as e:
-			logger.error("Error: %s" % str(e))
+			logger.exception("Error: %s" % str(e))
 			raise e
 			exit(4)
 	else:

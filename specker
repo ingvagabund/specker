@@ -20,7 +20,6 @@
 # ####################################################################
 import optparse
 import sys
-import json
 import logging
 from lib.Parser import Parser
 

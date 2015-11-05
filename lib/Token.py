@@ -130,7 +130,7 @@ class TokenList:
 			if t.token == None:
 				break
 
-	def isEOL(self):
+	def isEOF(self):
 		return self.pointer == len(self.token_list)
 
 	def next(self):
@@ -155,10 +155,7 @@ class TokenList:
 	def getLine(self):
 		ret = []
 
-		while True:
-			if self.isEOL():
-				break
-
+		while not self.isEOF():
 			token_next = self.touch()
 
 			if len(ret) == 0:

@@ -56,11 +56,11 @@ class Parser:
 		st_exp = StExpression(st_if)
 		st_exp.parse(token_list)
 		st_if.setExpr(st_exp)
-		st_if.setTrueBranch(Parser._parse(token_list, st_if, allowed, disallowed + ['%else', '%endif']))
+		st_if.setTrueBranch(Parser.parse_loop(token_list, st_if, allowed, disallowed + ['%else', '%endif']))
 
 		t = token_list.get()
 		if str(t) == '%else':
-			st_if.setFalseBranch(Parser._parse(token_list, st_if, allowed, disallowed + ['%else', '%endif']))
+			st_if.setFalseBranch(Parser.parse_loop(token_list, st_if, allowed, disallowed + ['%else', '%endif']))
 			st_if.else_token = t
 			t = token_list.get()
 
@@ -143,8 +143,9 @@ class Parser:
 	@staticmethod
 	def parse_changelog(token_list, parent, allowed, disallowed):
 		Parser.logger.debug("-- parsing changelog")
-		# TODO: implement
-		return Parser.parse_section(token_list, parent, allowed, disallowed, StChangelog)
+		st_changelog = StChangelog(parent)
+		st_changelog.parse(token_list)
+		return st_changelog
 
 	@staticmethod
 	def parse_check(token_list, parent, allowed, disallowed):
@@ -248,7 +249,7 @@ class Parser:
 		return Parser.parse_section(token_list, parent, allowed, disallowed, StVerifyscript)
 
 	@staticmethod
-	def _parse(token_list, parent, allowed, disallowed):
+	def parse_loop(token_list, parent, allowed, disallowed):
 		ret = []
 		while True:
 			found = False
@@ -338,7 +339,7 @@ class Parser:
 						self.IF_T, self.GLOBAL_T,
 				] + self.DEFINITION_TS
 
-		ret = Parser._parse(self.token_list, None, allowed, self.SECTION_TS)
+		ret = Parser.parse_loop(self.token_list, None, allowed, self.SECTION_TS)
 		unparsed = self.token_list.touch()
 		Parser.logger.debug("-- preamble finished with token '%s' on line %d" % (str(unparsed), unparsed.line))
 		return ret
@@ -346,7 +347,7 @@ class Parser:
 	def register_parser(self, statement_type, callback):
 		self.registered_parsers.insert(0, (statement_type, callback))
 
-	def parse_loop(self, parent = None):
+	def parse_loop_section(self, parent = None):
 		ret = self.parse_preamble()
 		allowed = self.ALL_TS		# allowed within section
 		disallowed = []				# disallowed within section
@@ -380,7 +381,7 @@ class Parser:
 		return ret
 
 	def parse(self):
-		self.raw_statements = self.parse_loop(None)
+		self.raw_statements = self.parse_loop_section(None)
 
 		eof = self.token_list.touch()
 		if eof.token != None:

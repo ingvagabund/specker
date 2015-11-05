@@ -18,6 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 
+import Parser
+
 class Statement(object):
 	parent = None
 	tokens = []
@@ -178,10 +180,98 @@ class StBuild(StSection):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+class StChangelogItem(StSection):
+	def __init__(self, parent):
+		self.star = None
+		self.date = None
+		self.user = None
+		self.user_email = None
+		self.version_delim = None
+		self.version = None
+		self.parent = parent
+
+	def parse_header(self, token_list):
+		print "Parsing header"
+		self.star = token_list.get()
+		if str(self.star) != '*':
+			token_list.unget()
+			raise ValueError("Expected token '*', got '%s'" % self.star)
+
+		self.date = []
+		for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
+			self.date.append(token_list.get())
+
+		self.user = [token_list.get()] # TODO
+		self.user_email = token_list.get()
+		self.version_delim = token_list.get()
+
+		if str(self.version_delim) != '-':
+			token_list.unget()
+			raise ValueError("Expected token '-', got '%s'" % self.star)
+
+		self.version = token_list.get()
+
+	def parse(self, token_list):
+		self.parse_header(token_list)
+		self.message = token_list.getWhileNot(Parser.Parser.SECTION_TS + ['*'])
+
+	def print_file(self, f):
+		self.star.print_file(f)
+		for d in self.date:
+			d.print_file(f)
+		for u in self.user:
+			u.print_file(f)
+		self.user_email.print_file(f)
+		self.version_delim.print_file(f)
+		self.version.print_file(f)
+
+		for m in self.message:
+			m.print_file(f)
+
+	def print_str(self):
+		ret = self.star.print_str()
+
+		for d in self.date:
+			ret += d.print_str()
+
+		for u in self.user:
+			ret += u.print_str()
+
+		ret += self.user_email.print_str()
+		ret += self.version_delim.print_str()
+		ret += self.version.print_str()
+
+		for m in self.message:
+			ret += m.print_str()
+
+		return ret
+
 class StChangelog(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
-	# TODO: implement
+		self.token = None # [([hader_tokens], [message_tokens]), ...]
+		self.items = None
+
+	def parse(self, token_list):
+		self.token = token_list.get()
+		if str(self.token) != '%changelog':
+			raise ValueError("Unexpected token '%s', expected \%changelog" % str(token))
+
+		self.items = []
+		while str(token_list.touch()) == '*':
+			st_item = StChangelogItem(self)
+			st_item.parse(token_list)
+			self.items.append(st_item)
+
+	def print_file(self, f):
+		self.token.print_file(f)
+		for i in self.items:
+			i.print_file(f)
+
+	def print_str(self):
+		self.token.print_str()
+		for i in self.items:
+			i.print_str()
 
 class StCheck(StSection):
 	def __init__(self, parent):

@@ -90,6 +90,15 @@ if __name__ == "__main__":
 
 	parser.add_option_group(optparse.OptionGroup(
 		parser,
+		"OPTIONS",
+		"Only one *-show option is allowed per run and only one read from stdin in *-edit "
+		"operations is allowed per run. If no option is specified, SPECFILE is parsed "
+		"and reconstructed to its original form."
+		)
+	)
+
+	parser.add_option_group(optparse.OptionGroup(
+		parser,
 		"SPECFILE",
 		"Specfile to be parsed. If not set, stdin is used."
 		)
@@ -112,7 +121,8 @@ if __name__ == "__main__":
 	parser.add_option_group(optparse.OptionGroup(
 		parser,
 		"EDIT OPERATIONS",
-		"All *-edit operations expect a string to be used in a section. If - is used, the string is read from stdin"
+		"All *-edit operations expect a string to be used in a section. If '-' is used, the "
+		"string is read from stdin"
 		)
 	)
 

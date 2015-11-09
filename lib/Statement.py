@@ -173,7 +173,11 @@ class StSection(Statement):
 class StDescription(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
-	# TODO: implement
+
+	def parse(self, token_list, allowed, disallowed):
+		self.tokens.append(token_list.get())
+		self.tokens += token_list.getWhileNot(disallowed)
+
 
 class StBuild(StSection):
 	def __init__(self, parent):

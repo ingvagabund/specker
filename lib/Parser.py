@@ -122,8 +122,8 @@ class Parser:
 	def parse_description(token_list, parent, allowed, disallowed):
 		Parser.logger.debug("-- parsing description")
 		st_section = StDescription(parent)
-		st_section.tokens.append(token_list.get())
-		st_section.tokens += token_list.getWhileNot(disallowed)
+		st_section.parse(token_list, allowed, disallowed)
+
 		return st_section
 
 	@staticmethod

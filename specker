@@ -89,20 +89,17 @@ if __name__ == "__main__":
 		spec = SpecChanger(parser.getStatements())
 		del parser
 
+		if options.output is not None:
+			logger.debug("writting output to '%s'" % options.output)
+			f = open(options.output, 'w')
+		else:
+			f = sys.stdout
+
+		if options.list_changelog:
+			spec.changelog_list(f)
+
 		# TODO: implement options
 	except Exception as e:
 		logger.exception("Error: %s" % str(e))
 		sys.exit(3)
-
-	if options.output is not None:
-		try:
-			logger.debug("writting output to '%s'" % options.output)
-			with open(options.output, 'w') as f:
-				spec.print_file(f)
-		except Exception as e:
-			logger.exception("Error: %s" % str(e))
-			raise e
-			exit(4)
-	else:
-		spec.print_str()
 

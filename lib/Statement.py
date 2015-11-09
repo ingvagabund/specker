@@ -195,7 +195,6 @@ class StChangelogItem(StSection):
 		self.parent = parent
 
 	def parse_header(self, token_list):
-		print "Parsing header"
 		self.star = token_list.get()
 		if str(self.star) != '*':
 			token_list.unget()

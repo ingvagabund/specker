@@ -21,7 +21,7 @@
 import optparse
 import sys
 import logging
-from lib.Parser import Parser
+from lib.SpecParser import SpecParser
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
@@ -70,10 +70,10 @@ if __name__ == "__main__":
 
 	try:
 		if input_file is None:
-			parser = Parser(sys.stdin)
+			parser = SpecParser(sys.stdin)
 		else:
 			with open(input_file, 'r') as f:
-				parser = Parser(f)
+				parser = SpecParser(f)
 		if options.verbose:
 			parser.setLoggingLevel(logging.DEBUG)
 		parser.parse()

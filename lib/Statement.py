@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 
-import Parser
+import SpecParser
 
 class Statement(object):
 	parent = None
@@ -217,7 +217,7 @@ class StChangelogItem(StSection):
 
 	def parse(self, token_list):
 		self.parse_header(token_list)
-		self.message = token_list.getWhileNot(Parser.Parser.SECTION_TS + ['*'])
+		self.message = token_list.getWhileNot(SpecParser.SpecParser.SECTION_TS + ['*'])
 
 	def print_file(self, f):
 		self.star.print_file(f)

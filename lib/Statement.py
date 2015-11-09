@@ -20,6 +20,8 @@
 
 import SpecParser
 
+# TODO: privide metaclasses with __repr__()
+
 class Statement(object):
 	parent = None
 	tokens = []

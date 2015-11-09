@@ -20,7 +20,7 @@
 
 from SpecFile import SpecFile
 
-class Token:
+class SpecToken:
 	def __init__(self, specFile):
 
 		def readComment(specFile):
@@ -113,7 +113,7 @@ class Token:
 		ret += self.append
 		return ret
 
-class TokenList:
+class SpecTokenList:
 	def __init__(self, specFile):
 		self.current = 0
 		self.pointer = 0
@@ -121,7 +121,7 @@ class TokenList:
 
 		line = 1
 		while True:
-			t = Token(specFile)
+			t = SpecToken(specFile)
 			self.token_list.append(t)
 
 			t.line = line

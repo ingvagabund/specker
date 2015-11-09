@@ -22,7 +22,7 @@ import logging
 import sys
 from SpecManipulator import SpecManipulator
 from SpecFile import SpecFile
-from Token import Token, TokenList
+from SpecToken import SpecTokenList
 from Statement import *
 
 class ChunkParser:
@@ -330,7 +330,7 @@ class SpecParser(SpecManipulator):
 	def __init__(self, spec):
 		SpecManipulator.logger = logging.getLogger('specker-parser')
 		SpecManipulator.logger.addHandler(logging.StreamHandler(sys.stderr))
-		self.token_list = TokenList(SpecFile(spec))
+		self.token_list = SpecTokenList(SpecFile(spec))
 		self.registered_parsers = []
 
 	def parse_preamble(self):

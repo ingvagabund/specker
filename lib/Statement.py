@@ -205,7 +205,7 @@ class StChangelogItem(StSection):
 		for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
 			self.date.append(token_list.get())
 
-		self.user = [token_list.get()] # TODO
+		self.user = [token_list.get()] # TODO: multiple words
 		self.user_email = token_list.get()
 		self.version_delim = token_list.get()
 

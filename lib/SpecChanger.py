@@ -51,6 +51,16 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
+	def find_section_edit(self, section_type, replacement, verbose = True):
+		s = self.find_section(section_type)
+
+		if s is not None:
+			s.edit(replacement)
+		elif verbose:
+			raise ValueError("Error: section '%s' not found" % section_type)
+
+		return s
+
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print
 		return self.find_section_print(StChangelog, f)

@@ -180,11 +180,18 @@ class StDescription(StSection):
 		self.tokens.append(token_list.get())
 		self.tokens += token_list.getWhileNot(disallowed)
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StBuild(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StChangelogItem(StSection):
 	def __init__(self, parent):
@@ -287,10 +294,18 @@ class StCheck(StSection):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StClean(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StFiles(StSection):
 	def __init__(self, parent):
@@ -302,6 +317,10 @@ class StInstall(StSection):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StPackage(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
@@ -312,58 +331,106 @@ class StPrep(StSection):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StPre(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StPost(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StPreun(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StPostun(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StPretrans(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StPosttrans(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StTriggerin(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StTriggerprein(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StTriggerun(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 
 class StTriggerpostun(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
 
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
+
 class StVerifyscript(StSection):
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+	def edit(self, replacement):
+		# TODO: implement
+		self.tokens = []
 

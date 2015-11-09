@@ -82,6 +82,9 @@ class SpecChanger(SpecManipulator):
 	def clean_show(self, f = sys.stdout):
 		return self.find_section_print(StClean, f)
 
+	def clean_edit(self, f = sys.stdout):
+		pass
+
 	def files_show(self, f = sys.stdout):
 		return self.find_section_print(StFiles, f)
 

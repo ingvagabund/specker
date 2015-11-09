@@ -275,7 +275,7 @@ class StChangelog(StSection):
 
 class StCheck(StSection):
 	def __init__(self, parent):
-		StSection.__init__(parent)
+		StSection.__init__(self, parent)
 	# TODO: implement
 
 class StClean(StSection):

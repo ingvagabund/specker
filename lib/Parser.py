@@ -349,8 +349,8 @@ class Parser:
 
 	def parse_loop_section(self, parent = None):
 		ret = self.parse_preamble()
-		allowed = self.ALL_TS		# allowed within section
-		disallowed = []				# disallowed within section
+		allowed = self.ALL_TS			# allowed within section
+		disallowed = self.SECTION_TS	# disallowed within section
 
 		while True:
 			found = False

@@ -131,7 +131,7 @@ class Parser:
 		Parser.logger.debug("-- parsing files")
 		st_section = StFiles(parent)
 		st_section.tokens.append(token_list.get())
-		st_section.tokens = token_list.getWhileNot(disallowed)
+		st_section.tokens += token_list.getWhileNot(disallowed)
 		return st_section
 
 	@staticmethod

@@ -273,9 +273,13 @@ class StChangelog(StSection):
 			i.print_file(f)
 
 	def print_str(self):
-		self.token.print_str()
+		ret = ""
+
+		ret += self.token.print_str()
 		for i in self.items:
-			i.print_str()
+			ret += i.print_str()
+
+		return ret
 
 class StCheck(StSection):
 	def __init__(self, parent):

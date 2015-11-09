@@ -399,7 +399,6 @@ if __name__ == "__main__":
 		if options.package_remove:
 			spec.package_remove(options.package_remove.split(','))
 
-		# TODO: stdin?
 		if options.description_edit:
 			what = sys.stdin.read() if options.description_edit == "-" else options.description_edit
 			spec.description_edit(what)

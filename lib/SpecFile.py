@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ####################################################################
-# specker - a simple spec file tool
+# specker-lib - spec file manipulation library
 # Copyright (C) 2015  Fridolin Pokorny, fpokorny@redhat.com
 #
 # This program is free software; you can redistribute it and/or

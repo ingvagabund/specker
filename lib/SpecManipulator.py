@@ -20,20 +20,19 @@
 
 class SpecManipulator:
 	logger = None
-	def __init__():
+	def __init__(self):
 		pass
 
 	def setLoggingLevel(self, level):
-		print "logging level"
 		SpecManipulator.logger.setLevel(level)
 
 	def print_str(self):
 		ret = ""
-		for s in self.raw_statements:
+		for s in self.statements:
 			ret += s.print_str()
 		return ret
 
 	def print_file(self, f):
-		for s in self.raw_statements:
+		for s in self.statements:
 			s.print_file(f)
 

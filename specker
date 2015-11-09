@@ -22,6 +22,7 @@ import optparse
 import sys
 import logging
 from lib.SpecParser import SpecParser
+from lib.SpecChanger import SpecChanger
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
@@ -82,7 +83,11 @@ if __name__ == "__main__":
 				parser = SpecParser(f)
 		if options.verbose:
 			parser.setLoggingLevel(logging.DEBUG)
+
 		parser.parse()
+
+		spec = SpecChanger(parser.getStatements())
+		del parser
 
 		# TODO: implement options
 	except Exception as e:
@@ -93,11 +98,11 @@ if __name__ == "__main__":
 		try:
 			logger.debug("writting output to '%s'" % options.output)
 			with open(options.output, 'w') as f:
-				parser.print_file(f)
+				spec.print_file(f)
 		except Exception as e:
 			logger.exception("Error: %s" % str(e))
 			raise e
 			exit(4)
 	else:
-		parser.print_str()
+		spec.print_str()
 

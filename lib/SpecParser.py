@@ -380,11 +380,13 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse(self):
-		self.raw_statements = self.parse_loop_section(None)
+		self.statements = self.parse_loop_section(None)
 
 		eof = self.token_list.touch()
 		if eof.token != None:
 			raise ValueError("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
-		self.sections = [x for x in self.raw_statements if x.parent is None and type(x) is not StIf]
-		return self.raw_statements
+		return self.statements
+
+	def getStatements(self):
+		return self.statements
 

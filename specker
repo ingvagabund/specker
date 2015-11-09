@@ -51,6 +51,14 @@ def check_opts(options):
 						]
 	sum_show = sum(opts_show)
 
+	# these provide additional argument
+	if options.provides_show:
+		sum_show += 1
+	if options.requires_show:
+		sum_show += 1
+	if options.buildrequires_show:
+		sum_show += 1
+
 	if sum_show > 1:
 		logger.error("Error: only one show operation is allowed per run")
 		return False
@@ -141,6 +149,51 @@ if __name__ == "__main__":
 	parser.add_option(
 		"", "-v", "--verbose", dest="verbose", action = "store_true", default = False,
 		help = "verbose output"
+	)
+
+	parser.add_option(
+		"", "", "--provides-show", dest="provides_show", action = "store", type = "string",
+		help = "show provides"
+	)
+
+	parser.add_option(
+		"", "", "--provides-add", dest="provides_add", action = "store", type = "string",
+		help = "add to provides provides"
+	)
+
+	parser.add_option(
+		"", "", "--provides-remove", dest="provides_remove", action = "store", type = "string",
+		help = "remove from provides"
+	)
+
+	parser.add_option(
+		"", "", "--requires-show", dest="requires_show", action = "store", type = "string",
+		help = "show requires"
+	)
+
+	parser.add_option(
+		"", "", "--requires-add", dest="requires_add", action = "store", type = "string",
+		help = "add requires"
+	)
+
+	parser.add_option(
+		"", "", "--requires-remove", dest="requires_remove", action = "store", type = "string",
+		help = "remove requires"
+	)
+
+	parser.add_option(
+		"", "", "--buildrequires-show", dest="buildrequires_show", action = "store", type = "string",
+		help = "show buildrequires"
+	)
+
+	parser.add_option(
+		"", "", "--buildrequires-add", dest="buildrequires_add", action = "store", type = "string",
+		help = "show buildrequires"
+	)
+
+	parser.add_option(
+		"", "", "--buildrequires-remove", dest="buildrequires_remove", action = "store", type = "string",
+		help = "remove buildrequires"
 	)
 
 	parser.add_option(
@@ -396,6 +449,12 @@ if __name__ == "__main__":
 			f = sys.stdout
 
 		# modify operations before shows
+		if options.provides_add:
+			spec.provides_add(f, options.provides_add) # TODO: split package:add1,add2
+		if options.requires_add:
+			spec.requires_add(f, options.requires_add) # TODO: split package:add1,add2
+		if options.buildrequires_add:
+			spec.buildrequires_add(f, options.buildrequires_add) # TODO: split package:add1,add2
 		if options.changelog_add:
 			spec.changelog_add(options.changelog_add.split(','))
 		if options.files_add:
@@ -403,6 +462,12 @@ if __name__ == "__main__":
 		if options.package_add:
 			spec.package_add(options.package_add.split(','))
 
+		if options.provides_remove:
+			spec.provides_remove(f, options.provides_remove) # TODO: split package:add1,add2
+		if options.requires_remove:
+			spec.requires_remove(f, options.requires_remove) # TODO: split package:add1,add2
+		if options.buildrequires_remove:
+			spec.buildrequires_remove(f, options.buildrequires_remove) # TODO: split package:add1,add2
 		if options.changelog_remove:
 			spec.changelog_remove(options.changelog_remove.split(','))
 		if options.files_remove:
@@ -460,6 +525,12 @@ if __name__ == "__main__":
 			spec.verifyscript_edit(what)
 
 		# yo mama, show results!
+		if options.provides_show:
+			spec.provides_show(f, options.provides_show)
+		if options.requires_show:
+			spec.requires_show(f, options.requires_show)
+		if options.buildrequires_show:
+			spec.buildrequires_show(f, options.buildrequires_show)
 		if options.changelog_show:
 			spec.changelog_show(f)
 		elif options.description_show:

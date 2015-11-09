@@ -61,6 +61,42 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
+	def provides_show(self, package, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def provides_add(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def provides_remove(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def requires_show(self, package, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def requires_add(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def requires_remove(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def buildrequires_show(self, package, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def buildrequires_add(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
+	def buildrequires_remove(self, package, what, f = sys.stdout):
+		# TODO: implement
+		pass
+
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print
 		return self.find_section_print(StChangelog, f)

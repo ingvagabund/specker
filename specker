@@ -27,6 +27,7 @@ logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
 
 def check_opts(options):
+	# TODO: implement checking of disjoint options
 	return True
 
 if __name__ == "__main__":
@@ -50,6 +51,11 @@ if __name__ == "__main__":
 	parser.add_option(
 		"", "-v", "--verbose", dest="verbose", action = "store_true", default = False,
 		help = "verbose output"
+	)
+
+	parser.add_option(
+		"", "", "--list-changelog", dest="list_changelog", action = "store_true", default = False,
+		help = "list changelog items"
 	)
 
 	options, args = parser.parse_args()

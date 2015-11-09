@@ -385,7 +385,7 @@ class Parser:
 
 		eof = self.token_list.touch()
 		if eof.token != None:
-			raise ValueError("Unexpected symbol '" + eof.token + "' on line " + eof.line)
+			raise ValueError("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
 		self.sections = [x for x in self.raw_statements if x.parent is None and type(x) is not StIf]
 		return self.raw_statements
 

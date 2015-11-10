@@ -225,7 +225,7 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--changelog-add", dest="changelog_add", action = "store_true", default = False,
+		"", "", "--changelog-add", dest="changelog_add", action = "store", type = "string",
 		help = "add changelog entry"
 	)
 
@@ -280,7 +280,7 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--files-add", dest="files_add", action = "store_true", default = False,
+		"", "", "--files-add", dest="files_add", action = "store", type = "string",
 		help = "add files"
 	)
 
@@ -305,7 +305,7 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--package-add", dest="package_add", action = "store_true", default = False,
+		"", "", "--package-add", dest="package_add", action = "store", type = "string",
 		help = "add package to be provided to spec file"
 	)
 

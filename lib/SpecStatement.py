@@ -21,14 +21,14 @@
 import SpecParser
 from SpecError import SpecBadToken, SpecNotImplemented
 
-class StatementMeta(type):
+class SpecStatementMeta(type):
 	def __repr__(c):
 		return "generic spec statement"
 
-class Statement(object):
+class SpecStatement(object):
 	parent = None
 	tokens = []
-	__metaclass__ = StatementMeta
+	__metaclass__ = SpecStatementMeta
 
 	def __init__(self, parent = None):
 		self.parent = parent
@@ -53,15 +53,15 @@ class Statement(object):
 	def remove(self, items):
 		raise SpecNotImplemented("Not Implemented")
 
-class StIfMeta(StatementMeta):
+class SpecStIfMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "%if"
 
-class StIf(Statement):
-	__metaclass__ = StIfMeta
+class SpecStIf(SpecStatement):
+	__metaclass__ = SpecStIfMeta
 
 	def __init__(self, parent):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 		self.if_token = None
 		self.expr = None
 		self.true_branch = None
@@ -108,15 +108,15 @@ class StIf(Statement):
 	def getFalseBranch(self):
 		return self.false_branch
 
-class StDefinitionMeta(StatementMeta):
+class SpecStDefinitionMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "spec definition"
 
-class StDefinition(Statement):
-	__metaclass__ = StDefinitionMeta
+class SpecStDefinition(SpecStatement):
+	__metaclass__ = SpecStDefinitionMeta
 
 	def __init__(self, parent):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 		self.name = None
 		self.value = None
 
@@ -135,15 +135,15 @@ class StDefinition(Statement):
 	def getValue(self):
 		return self.value
 
-class StGlobalMeta(StatementMeta):
+class SpecStGlobalMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "%global"
 
-class StGlobal(Statement):
-	__metaclass__ = StGlobalMeta
+class SpecStGlobal(SpecStatement):
+	__metaclass__ = SpecStGlobalMeta
 
 	def __init__(self, parent):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 		self.global_token = None
 		self.variable = None
 		self.value = None
@@ -171,15 +171,15 @@ class StGlobal(Statement):
 	def getValue(self):
 		return self.value
 
-class StEofMeta(StatementMeta):
+class SpecStEofMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "<EOF>"
 
-class StEof(Statement):
-	__metaclass__ = StEofMeta
+class SpecStEof(SpecStatement):
+	__metaclass__ = SpecStEofMeta
 
 	def __init__(self, parent = None):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 		self.eof_token = None
 
 	def print_file(self, f):
@@ -195,41 +195,41 @@ class StEof(Statement):
 	def getEofToken(self):
 		return self.eof_token
 
-class StExpressionMeta(StatementMeta):
+class SpecStExpressionMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "spec expression"
 
-class StExpression(Statement):
-	__metaclass__ = StExpressionMeta
+class SpecStExpression(SpecStatement):
+	__metaclass__ = SpecStExpressionMeta
 
 	def __init__(self, parent):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 
 	def parse(self, token_list):
 		# TODO: implement
 		self.tokens.append(token_list.get())
 		return self.tokens
 
-class StSectionMeta(StatementMeta):
+class SpecStSectionMeta(SpecStatementMeta):
 	def __repr__(c):
 		return "generic spec section"
 
-class StSection(Statement):
-	__metaclass__ = StSectionMeta
+class SpecStSection(SpecStatement):
+	__metaclass__ = SpecStSectionMeta
 
 	def __init__(self, parent):
-		Statement.__init__(self, parent)
+		SpecStatement.__init__(self, parent)
 	# TODO: implement
 
-class StDescriptionMeta(StSectionMeta):
+class SpecStDescriptionMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%description"
 
-class StDescription(StSection):
-	__metaclass__ = StDescriptionMeta
+class SpecStDescription(SpecStSection):
+	__metaclass__ = SpecStDescriptionMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 
 	def parse(self, token_list, allowed, disallowed):
 		self.tokens.append(token_list.get())
@@ -239,27 +239,27 @@ class StDescription(StSection):
 		# TODO: implement
 		self.tokens = []
 
-class StBuildMeta(StSectionMeta):
+class SpecStBuildMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%build"
 
-class StBuild(StSection):
-	__metaclass__ = StBuildMeta
+class SpecStBuild(SpecStSection):
+	__metaclass__ = SpecStBuildMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StChangelogItemMeta(StSectionMeta):
+class SpecStChangelogItemMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "spec changelog item"
 
-class StChangelogItem(StSection):
-	__metaclass__ = StChangelogItemMeta
+class SpecStChangelogItem(SpecStSection):
+	__metaclass__ = SpecStChangelogItemMeta
 
 	def __init__(self, parent):
 		self.star = None
@@ -325,15 +325,15 @@ class StChangelogItem(StSection):
 
 		return ret
 
-class StChangelogMeta(StSectionMeta):
+class SpecStChangelogMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%changelog"
 
-class StChangelog(StSection):
-	__metaclass__ = StChangelogMeta
+class SpecStChangelog(SpecStSection):
+	__metaclass__ = SpecStChangelogMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 		self.token = None # [([hader_tokens], [message_tokens]), ...]
 		self.items = None
 
@@ -344,7 +344,7 @@ class StChangelog(StSection):
 
 		self.items = []
 		while str(token_list.touch()) == '*':
-			st_item = StChangelogItem(self)
+			st_item = SpecStChangelogItem(self)
 			st_item.parse(token_list)
 			self.items.append(st_item)
 
@@ -362,247 +362,247 @@ class StChangelog(StSection):
 
 		return ret
 
-class StCheckMeta(StSectionMeta):
+class SpecStCheckMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%check"
 
-class StCheck(StSection):
-	__metaclass__ = StCheckMeta
+class SpecStCheck(SpecStSection):
+	__metaclass__ = SpecStCheckMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StCleanMeta(StSectionMeta):
+class SpecStCleanMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%clean"
 
-class StClean(StSection):
-	__metaclass__ = StCleanMeta
+class SpecStClean(SpecStSection):
+	__metaclass__ = SpecStCleanMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StFilesMeta(StSectionMeta):
+class SpecStFilesMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%files"
 
-class StFiles(StSection):
-	__metaclass__ = StFilesMeta
+class SpecStFiles(SpecStSection):
+	__metaclass__ = SpecStFilesMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
-class StInstallMeta(StSectionMeta):
+class SpecStInstallMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%install"
 
-class StInstall(StSection):
-	__metaclass__ = StInstallMeta
+class SpecStInstall(SpecStSection):
+	__metaclass__ = SpecStInstallMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPackageMeta(StSectionMeta):
+class SpecStPackageMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%package"
 
-class StPackage(StSection):
-	__metaclass__ = StPackageMeta
+class SpecStPackage(SpecStSection):
+	__metaclass__ = SpecStPackageMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
-class StPrepMeta(StSectionMeta):
+class SpecStPrepMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%prep"
 
-class StPrep(StSection):
-	__metaclass__ = StPrepMeta
+class SpecStPrep(SpecStSection):
+	__metaclass__ = SpecStPrepMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPreMeta(StSectionMeta):
+class SpecStPreMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%pre"
 
-class StPre(StSection):
-	__metaclass__ = StPreMeta
+class SpecStPre(SpecStSection):
+	__metaclass__ = SpecStPreMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPostMeta(StSectionMeta):
+class SpecStPostMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%post"
 
-class StPost(StSection):
-	__metaclass__ = StPostMeta
+class SpecStPost(SpecStSection):
+	__metaclass__ = SpecStPostMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPreunMeta(StSectionMeta):
+class SpecStPreunMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%preun"
 
-class StPreun(StSection):
-	__metaclass__ = StPreunMeta
+class SpecStPreun(SpecStSection):
+	__metaclass__ = SpecStPreunMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPostunMeta(StSectionMeta):
+class SpecStPostunMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%postun"
 
-class StPostun(StSection):
-	__metaclass__ = StPostunMeta
+class SpecStPostun(SpecStSection):
+	__metaclass__ = SpecStPostunMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPretransMeta(StSectionMeta):
+class SpecStPretransMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%pretrans"
 
-class StPretrans(StSection):
-	__metaclass__ = StPretransMeta
+class SpecStPretrans(SpecStSection):
+	__metaclass__ = SpecStPretransMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StPosttransMeta(StSectionMeta):
+class SpecStPosttransMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%posttrans"
 
-class StPosttrans(StSection):
-	__metaclass__ = StPosttransMeta
+class SpecStPosttrans(SpecStSection):
+	__metaclass__ = SpecStPosttransMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StTriggerinMeta(StSectionMeta):
+class SpecStTriggerinMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%triggerin"
 
-class StTriggerin(StSection):
-	__metaclass__ = StTriggerinMeta
+class SpecStTriggerin(SpecStSection):
+	__metaclass__ = SpecStTriggerinMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StTriggerpreinMeta(StSectionMeta):
+class SpecStTriggerpreinMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%triggerprein"
 
-class StTriggerprein(StSection):
-	__metaclass__ = StTriggerpreinMeta
+class SpecStTriggerprein(SpecStSection):
+	__metaclass__ = SpecStTriggerpreinMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StTriggerunMeta(StSectionMeta):
+class SpecStTriggerunMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%triggerpreun"
 
-class StTriggerun(StSection):
-	__metaclass__ = StTriggerunMeta
+class SpecStTriggerun(SpecStSection):
+	__metaclass__ = SpecStTriggerunMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StTriggerpostunMeta(StSectionMeta):
+class SpecStTriggerpostunMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%triggerpostun"
 
-class StTriggerpostun(StSection):
-	__metaclass__ = StTriggerpostunMeta
+class SpecStTriggerpostun(SpecStSection):
+	__metaclass__ = SpecStTriggerpostunMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
 
-class StVerifyscriptMeta(StSectionMeta):
+class SpecStVerifyscriptMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%verifyscript"
 
-class StVerifyscript(StSection):
-	__metaclass__ = StVerifyscriptMeta
+class SpecStVerifyscript(SpecStSection):
+	__metaclass__ = SpecStVerifyscriptMeta
 
 	def __init__(self, parent):
-		StSection.__init__(self, parent)
+		SpecStSection.__init__(self, parent)
 	# TODO: implement
 
 	def edit(self, replacement):

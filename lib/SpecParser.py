@@ -23,7 +23,7 @@ import sys
 from SpecManipulator import SpecManipulator
 from SpecFile import SpecFile
 from SpecToken import SpecTokenList
-from Statement import *
+from SpecStatement import *
 from SpecError import SpecBadIf, SpecBadToken
 
 class ChunkParser:
@@ -45,7 +45,7 @@ class SpecParser(SpecManipulator):
 	def parse_if(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing if")
 		pointer = token_list.getPointer()
-		st_if = StIf(parent)
+		st_if = SpecStIf(parent)
 		t = token_list.get()
 
 		if str(t) != '%if':
@@ -53,7 +53,7 @@ class SpecParser(SpecManipulator):
 			raise SpecBadIf('Expected %if')
 
 		st_if.if_token = t
-		st_exp = StExpression(st_if)
+		st_exp = SpecStExpression(st_if)
 		st_exp.parse(token_list)
 		st_if.setExpr(st_exp)
 		st_if.setTrueBranch(SpecParser.parse_loop(token_list, st_if, allowed, disallowed + ['%else', '%endif']))
@@ -74,7 +74,7 @@ class SpecParser(SpecManipulator):
 	@staticmethod
 	def parse_global(token_list, parent, allowed = None, disallowed = None):
 		SpecManipulator.logger.debug("-- parsing global")
-		st_global = StGlobal(parent)
+		st_global = SpecStGlobal(parent)
 		t = token_list.get()
 		if str(t) != '%global':
 			token_list.unget()
@@ -88,7 +88,7 @@ class SpecParser(SpecManipulator):
 
 		st_global.setVariable(t)
 
-		st_exp = StExpression(st_global)
+		st_exp = SpecStExpression(st_global)
 		st_exp.parse(token_list)
 		st_global.setValue(st_exp)
 
@@ -97,14 +97,14 @@ class SpecParser(SpecManipulator):
 	@staticmethod
 	def parse_definition(token_list, parent, allowed = None, disallowed = None):
 		SpecManipulator.logger.debug("-- parsing definition")
-		st_definition = StDefinition(parent)
+		st_definition = SpecStDefinition(parent)
 		t = token_list.get()
 		if t not in SpecParser.DEFINITION_TS:
 			token_list.unget()
 			raise SpecBadToken('Expected definition')
 		st_definition.name = t
 
-		st_exp = StExpression(st_definition)
+		st_exp = SpecStExpression(st_definition)
 		st_exp.parse(token_list)
 		st_definition.setValue(st_exp)
 
@@ -121,7 +121,7 @@ class SpecParser(SpecManipulator):
 	@staticmethod
 	def parse_description(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing description")
-		st_section = StDescription(parent)
+		st_section = SpecStDescription(parent)
 		st_section.parse(token_list, allowed, disallowed)
 
 		return st_section
@@ -129,7 +129,7 @@ class SpecParser(SpecManipulator):
 	@staticmethod
 	def parse_files(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing files")
-		st_section = StFiles(parent)
+		st_section = SpecStFiles(parent)
 		st_section.tokens.append(token_list.get())
 		st_section.tokens += token_list.getWhileNot(disallowed)
 		return st_section
@@ -138,12 +138,12 @@ class SpecParser(SpecManipulator):
 	def parse_build(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing build")
 		# TODO: implement
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StBuild)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStBuild)
 
 	@staticmethod
 	def parse_changelog(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing changelog")
-		st_changelog = StChangelog(parent)
+		st_changelog = SpecStChangelog(parent)
 		st_changelog.parse(token_list)
 		return st_changelog
 
@@ -151,102 +151,102 @@ class SpecParser(SpecManipulator):
 	def parse_check(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing check")
 		# TODO: implement
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StCheck)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStCheck)
 
 	@staticmethod
 	def parse_clean(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing clean")
 		# TODO: implement
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StClean)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStClean)
 
 	@staticmethod
 	def parse_install(token_list, parent, allowed, disallowed):
 		SpecManipulator.logger.debug("-- parsing install")
 		# TODO: implement
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StInstall)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStInstall)
 
 	@staticmethod
 	def parse_package(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing package")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPackage)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPackage)
 
 	@staticmethod
 	def parse_prep(token_list, parent, allowed, disallowed):
 		# TODO: implement
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPrep)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPrep)
 
 	@staticmethod
 	def parse_pre(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing prep")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPre)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPre)
 
 	@staticmethod
 	def parse_post(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing post")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPost)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPost)
 
 	@staticmethod
 	def parse_preun(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing preun")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPreun)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPreun)
 
 	@staticmethod
 	def parse_postun(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing postun")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPostun)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPostun)
 
 	@staticmethod
 	def parse_pretrans(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing pretrans")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPretrans)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPretrans)
 
 	@staticmethod
 	def parse_posttrans(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing posttrans")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StPosttrans)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStPosttrans)
 
 	@staticmethod
 	def parse_trigger(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing trigger")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StTrigger)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStTrigger)
 
 	@staticmethod
 	def parse_triggerin(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing triggerin")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StTriggerin)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStTriggerin)
 
 	@staticmethod
 	def parse_triggerprein(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing triggerprein")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StTriggerprein)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStTriggerprein)
 
 	@staticmethod
 	def parse_triggerun(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing triggerun")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StTriggerun)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStTriggerun)
 
 	@staticmethod
 	def parse_triggerpostun(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing triggerpostun")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StTriggerpostun)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStTriggerpostun)
 
 	@staticmethod
 	def parse_verifyscript(token_list, parent, allowed, disallowed):
 		# TODO: implement
 		SpecManipulator.logger.debug("-- parsing verifyscript")
-		return SpecParser.parse_section(token_list, parent, allowed, disallowed, StVerifyscript)
+		return SpecParser.parse_section(token_list, parent, allowed, disallowed, SpecStVerifyscript)
 
 	@staticmethod
 	def parse_loop(token_list, parent, allowed, disallowed):
@@ -366,8 +366,8 @@ class SpecParser(SpecManipulator):
 					found = True
 					section = s.parse(self.token_list, parent, allowed, disallowed)
 					ret.append(section)
-					if type(section) is not StIf and type(section) is not StGlobal and \
-							type(section) is not StDescription and type(section) is not StFiles:
+					if type(section) is not SpecStIf and type(section) is not SpecStGlobal and \
+							type(section) is not SpecStDescription and type(section) is not SpecStFiles:
 						SpecManipulator.logger.debug("-- removing " + str(token) + " from allowed")
 						allowed.remove(s)
 						disallowed.append(s)

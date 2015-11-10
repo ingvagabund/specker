@@ -20,7 +20,7 @@
 
 import sys
 from SpecManipulator import SpecManipulator
-from Statement import *
+from SpecStatement import *
 from SpecError import SpecNotFound, SpecNotImplemented
 
 class SpecChanger(SpecManipulator):
@@ -30,7 +30,7 @@ class SpecChanger(SpecManipulator):
 
 	def setStatements(self, statements):
 		self.statements = statements
-		self.sections = [x for x in statements if x.parent is None and type(x) is not StIf]
+		self.sections = [x for x in statements if x.parent is None and type(x) is not SpecStIf]
 
 	def getStatements(self):
 		return self.statements
@@ -114,131 +114,131 @@ class SpecChanger(SpecManipulator):
 
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print
-		return self.find_section_print(StChangelog, f)
+		return self.find_section_print(SpecStChangelog, f)
 
 	def changelog_add(self, items):
-		return self.find_section_add(StChangelog, items)
+		return self.find_section_add(SpecStChangelog, items)
 
 	def changelog_remove(self, items):
-		return self.find_section_remove(StChangelog, items)
+		return self.find_section_remove(SpecStChangelog, items)
 
 	def description_show(self, package = None, f = sys.stdout):
-		return self.find_section_print(StDescription, f)
+		return self.find_section_print(SpecStDescription, f)
 
 	def description_edit(self, replacement, package = None):
-		return self.find_section_edit(StDescription, replacement)
+		return self.find_section_edit(SpecStDescription, replacement)
 
 	def build_show(self, f = sys.stdout):
-		return self.find_section_print(StBuild, f)
+		return self.find_section_print(SpecStBuild, f)
 
 	def build_edit(self, replacement):
-		return self.find_section_edit(StBuild, replacement)
+		return self.find_section_edit(SpecStBuild, replacement)
 
 	def check_show(self, f = sys.stdout):
-		return self.find_section_print(StCheck, f)
+		return self.find_section_print(SpecStCheck, f)
 
 	def check_edit(self, replacement):
-		return self.find_section_edit(StCheck, replacement)
+		return self.find_section_edit(SpecStCheck, replacement)
 
 	def clean_show(self, f = sys.stdout):
-		return self.find_section_print(StClean, f)
+		return self.find_section_print(SpecStClean, f)
 
 	def clean_edit(self, replacement):
-		return self.find_section_edit(StClean, replacement)
+		return self.find_section_edit(SpecStClean, replacement)
 
 	def files_show(self, f = sys.stdout):
-		return self.find_section_print(StFiles, f)
+		return self.find_section_print(SpecStFiles, f)
 
 	def files_add(self, items):
-		return self.find_section_add(StFiles, items)
+		return self.find_section_add(SpecStFiles, items)
 
 	def files_remove(self, items):
-		return self.find_section_remove(StFiles, items)
+		return self.find_section_remove(SpecStFiles, items)
 
 	def install_show(self, f = sys.stdout):
-		return self.find_section_print(StInstall, f)
+		return self.find_section_print(SpecStInstall, f)
 
 	def install_edit(self, replacement):
-		return self.find_section_edit(StInstall, replacement)
+		return self.find_section_edit(SpecStInstall, replacement)
 
 	def package_show(self, f = sys.stdout):
-		return self.find_section_print(StPackage, f)
+		return self.find_section_print(SpecStPackage, f)
 
 	def package_add(self, items):
-		return self.find_section_add(StPackage, items)
+		return self.find_section_add(SpecStPackage, items)
 
 	def package_remove(self, items):
-		return self.find_section_remove(StPackage, items)
+		return self.find_section_remove(SpecStPackage, items)
 
 	def prep_show(self, f = sys.stdout):
-		return self.find_section_print(StPrep, f)
+		return self.find_section_print(SpecStPrep, f)
 
 	def prep_edit(self, replacement):
-		return self.find_section_edit(StPrep, replacement)
+		return self.find_section_edit(SpecStPrep, replacement)
 
 	def pre_show(self, f = sys.stdout):
-		return self.find_section_print(StPre, f)
+		return self.find_section_print(SpecStPre, f)
 
 	def pre_edit(self, replacement):
-		return self.find_section_edit(StPre, replacement)
+		return self.find_section_edit(SpecStPre, replacement)
 
 	def post_show(self, f = sys.stdout):
-		return self.find_section_print(StPost, f)
+		return self.find_section_print(SpecStPost, f)
 
 	def post_edit(self, replacement):
-		return self.find_section_edit(StPost, replacement)
+		return self.find_section_edit(SpecStPost, replacement)
 
 	def preun_show(self, f = sys.stdout):
-		return self.find_section_print(StPreun, f)
+		return self.find_section_print(SpecStPreun, f)
 
 	def preun_edit(self, replacement):
-		return self.find_section_edit(StPreun, replacement)
+		return self.find_section_edit(SpecStPreun, replacement)
 
 	def postun_show(self, f = sys.stdout):
-		return self.find_section_print(StPostun, f)
+		return self.find_section_print(SpecStPostun, f)
 
 	def postun_edit(self, replacement):
-		return self.find_section_edit(StPostun, replacement)
+		return self.find_section_edit(SpecStPostun, replacement)
 
 	def pretrans_show(self, f = sys.stdout):
-		return self.find_section_print(StPretrans, f)
+		return self.find_section_print(SpecStPretrans, f)
 
 	def pretrans_edit(self, replacement):
-		return self.find_section_edit(StPretrans, replacement)
+		return self.find_section_edit(SpecStPretrans, replacement)
 
 	def posttrans_show(self, f = sys.stdout):
-		return self.find_section_print(StPosttrans, f)
+		return self.find_section_print(SpecStPosttrans, f)
 
 	def posttrans_edit(self, replacement):
-		return self.find_section_edit(StPosttrans, replacement)
+		return self.find_section_edit(SpecStPosttrans, replacement)
 
 	def triggerin_show(self, f = sys.stdout):
-		return self.find_section_print(StTriggerin, f)
+		return self.find_section_print(SpecStTriggerin, f)
 
 	def triggerin_edit(self, replacement):
-		return self.find_section_edit(StTriggerin, replacement)
+		return self.find_section_edit(SpecStTriggerin, replacement)
 
 	def triggerprein_show(self, f = sys.stdout):
-		return self.find_section_print(StTriggerprein, f)
+		return self.find_section_print(SpecStTriggerprein, f)
 
 	def triggerprein_edit(self, replacement):
-		return self.find_section_edit(StTriggerin, replacement)
+		return self.find_section_edit(SpecStTriggerin, replacement)
 
 	def triggerun_show(self, f = sys.stdout):
-		return self.find_section_print(StTriggerun, f)
+		return self.find_section_print(SpecStTriggerun, f)
 
 	def triggerun_edit(self, replacement):
-		return self.find_section_edit(StTriggerun, replacement)
+		return self.find_section_edit(SpecStTriggerun, replacement)
 
 	def triggerpostun_show(self, f = sys.stdout):
-		return self.find_section_print(StPostun, f)
+		return self.find_section_print(SpecStPostun, f)
 
 	def triggerpostun_edit(self, replacement):
-		return self.find_section_edit(StTriggerpostun, replacement)
+		return self.find_section_edit(SpecStTriggerpostun, replacement)
 
 	def verifyscript_show(self, f = sys.stdout):
-		return self.find_section_print(StVerifyscript, f)
+		return self.find_section_print(SpecStVerifyscript, f)
 
 	def verifyscript_edit(self, replacement):
-		return self.find_section_edit(StVerifyscript, replacement)
+		return self.find_section_edit(SpecStVerifyscript, replacement)
 

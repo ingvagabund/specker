@@ -165,7 +165,7 @@ class SpecChanger(SpecManipulator):
 	def package_show(self, f = sys.stdout):
 		return self.find_section_print(StPackage, f)
 
-	def package_add(self, package):
+	def package_add(self, items):
 		return self.find_section_add(StPackage, items)
 
 	def package_remove(self, package):

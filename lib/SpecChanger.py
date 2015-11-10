@@ -79,38 +79,38 @@ class SpecChanger(SpecManipulator):
 				s.value.print_file(f, raw = True)
 				f.write('\n') # Add delim since raw token is printed
 
+	def find_definition_add(self, package, items):
+		raise SpecNotImplemented("Not Implemented")
+
+	def find_definition_remove(self, package, items):
+		raise SpecNotImplemented("Not Implemented")
+
 	def provides_show(self, package, f = sys.stdout):
 		return self.find_definition_print('Provides:', package, f)
 
-	def provides_add(self, package, what):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def provides_add(self, package, items):
+		return self.find_definition_add('Provides:', package, items)
 
-	def provides_remove(self, package, what, f = sys.stdout):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def provides_remove(self, package, items):
+		return self.find_definition_remove('Provides:', package, items)
 
 	def requires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('Requires:', package, f)
 
-	def requires_add(self, package, what):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def requires_add(self, package, items):
+		return self.find_definition_add('Requires:', package, items)
 
-	def requires_remove(self, package, what, f = sys.stdout):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def requires_remove(self, package, items):
+		return self.find_definition_remove('Requires:', package, items)
 
 	def buildrequires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('BuildRequires:', package, f)
 
-	def buildrequires_add(self, package, what):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def buildrequires_add(self, package, items):
+		return self.find_definition_add('BuildRequires:', package, items)
 
-	def buildrequires_remove(self, package, what, f = sys.stdout):
-		# TODO: implement
-		raise SpecNotImplemented("Not Implemented")
+	def buildrequires_remove(self, package, items):
+		return self.find_definition_remove('BuildRequires:', package, items)
 
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print

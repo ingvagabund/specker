@@ -119,8 +119,8 @@ class SpecChanger(SpecManipulator):
 	def changelog_add(self, items):
 		return self.find_section_add(StChangelog, items)
 
-	def changelog_remove(self, what):
-		raise SpecNotImplemented("Not Implemented")
+	def changelog_remove(self, items):
+		return self.find_section_remove(StChangelog, items)
 
 	def description_show(self, package = None, f = sys.stdout):
 		return self.find_section_print(StDescription, f)
@@ -147,14 +147,13 @@ class SpecChanger(SpecManipulator):
 		return self.find_section_edit(StClean, replacement)
 
 	def files_show(self, f = sys.stdout):
-		raise SpecNotImplemented("Not Implemented")
 		return self.find_section_print(StFiles, f)
 
 	def files_add(self, items):
 		return self.find_section_add(StFiles, items)
 
-	def files_remove(self, files):
-		raise SpecNotImplemented("Not Implemented")
+	def files_remove(self, items):
+		return self.find_section_remove(StFiles, items)
 
 	def install_show(self, f = sys.stdout):
 		return self.find_section_print(StInstall, f)
@@ -168,8 +167,8 @@ class SpecChanger(SpecManipulator):
 	def package_add(self, items):
 		return self.find_section_add(StPackage, items)
 
-	def package_remove(self, package):
-		raise SpecNotImplemented("Not Implemented")
+	def package_remove(self, items):
+		return self.find_section_remove(StPackage, items)
 
 	def prep_show(self, f = sys.stdout):
 		return self.find_section_print(StPrep, f)

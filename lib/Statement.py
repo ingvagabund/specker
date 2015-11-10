@@ -19,7 +19,7 @@
 # ####################################################################
 
 import SpecParser
-from SpecError import SpecBadToken
+from SpecError import SpecBadToken, SpecNotImplemented
 
 # TODO: privide metaclasses with __repr__()
 
@@ -40,6 +40,9 @@ class Statement(object):
 		for t in self.tokens:
 			ret += t.print_str()
 		return ret
+
+	def edit(self, replacement):
+		raise SpecNotImplemented("Not Implemented")
 
 class StIf(Statement):
 	def __init__(self, parent):

@@ -21,6 +21,7 @@
 import sys
 from SpecManipulator import SpecManipulator
 from Statement import *
+from SpecError import SpecNotFound, SpecNotImplemented
 
 class SpecChanger(SpecManipulator):
 	def __init__(self, statements = None):
@@ -47,7 +48,7 @@ class SpecChanger(SpecManipulator):
 		if s is not None:
 			s.print_file(f)
 		elif verbose:
-			raise ValueError("Error: section '%s' not found" % section_type)
+			raise SpecNotFound("Error: section '%s' not found" % section_type)
 
 		return s
 
@@ -57,7 +58,7 @@ class SpecChanger(SpecManipulator):
 		if s is not None:
 			s.edit(replacement)
 		elif verbose:
-			raise ValueError("Error: section '%s' not found" % section_type)
+			raise SpecNotFound("Error: section '%s' not found" % section_type)
 
 		return s
 
@@ -73,163 +74,163 @@ class SpecChanger(SpecManipulator):
 
 	def provides_add(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def provides_remove(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def requires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('Requires:', package, f)
 
 	def requires_add(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def requires_remove(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def buildrequires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('BuildRequires:', package, f)
-		pass
 
 	def buildrequires_add(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def buildrequires_remove(self, package, what, f = sys.stdout):
 		# TODO: implement
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print
 		return self.find_section_print(StChangelog, f)
 
 	def changelog_add(self, items):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def changelog_remove(self, what):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def description_show(self, package = None, f = sys.stdout):
 		return self.find_section_print(StDescription, f)
 
 	def description_edit(self, definition, package = None):
 		self.find_section_edit(StDescription, definition)
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def build_show(self, f = sys.stdout):
 		return self.find_section_print(StBuild, f)
 
 	def build_edit(self, build):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def check_show(self, f = sys.stdout):
 		return self.find_section_print(StCheck, f)
 
 	def check_edit(self, edit):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def clean_show(self, f = sys.stdout):
 		return self.find_section_print(StClean, f)
 
 	def clean_edit(self, f = sys.stdout):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def files_show(self, f = sys.stdout):
+		raise SpecNotImplemented("Not Implemented")
 		return self.find_section_print(StFiles, f)
 
 	def files_add(self, files):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def files_remove(self, files):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def install_show(self, f = sys.stdout):
 		return self.find_section_print(StInstall, f)
 
 	def install_edit(self, install):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def package_show(self, f = sys.stdout):
 		return self.find_section_print(StPackage, f)
 
 	def package_add(self, package):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def package_remove(self, package):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def prep_show(self, f = sys.stdout):
 		return self.find_section_print(StPrep, f)
 
 	def prep_edit(self, prep):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def pre_show(self, f = sys.stdout):
 		return self.find_section_print(StPre, f)
 
 	def pre_edit(self, pre):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def post_show(self, f = sys.stdout):
 		return self.find_section_print(StPost, f)
 
 	def post_edit(self, post):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def preun_show(self, f = sys.stdout):
 		return self.find_section_print(StPreun, f)
 
 	def preun_edit(self, preun):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def postun_show(self, f = sys.stdout):
 		return self.find_section_print(StPostun, f)
 
 	def postun_edit(self, postun):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def pretrans_show(self, f = sys.stdout):
 		return self.find_section_print(StPretrans, f)
 
 	def pretrans_edit(self, pretrans):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def posttrans_show(self, f = sys.stdout):
 		return self.find_section_print(StPosttrans, f)
 
 	def posttrans_edit(self, posttrans):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def triggerin_show(self, f = sys.stdout):
 		return self.find_section_print(StTriggerin, f)
 
 	def triggerin_edit(self, triggerin):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def triggerprein_show(self, f = sys.stdout):
 		return self.find_section_print(StTriggerprein, f)
 
 	def triggerprein_edit(self, triggerprein):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def triggerun_show(self, f = sys.stdout):
 		return self.find_section_print(StTriggerun, f)
 
 	def triggerun_edit(self, triggerun):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def triggerpostun_show(self, f = sys.stdout):
 		return self.find_section_print(StPostun, f)
 
 	def triggerpostun_edit(self, triggerpostun):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 
 	def verifyscript_show(self, f = sys.stdout):
 		return self.find_section_print(StVerifyscript, f)
 
 	def verifyscript_edit(self, verifyscript):
-		pass
+		raise SpecNotImplemented("Not Implemented")
 

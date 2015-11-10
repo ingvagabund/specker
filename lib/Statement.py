@@ -19,6 +19,7 @@
 # ####################################################################
 
 import SpecParser
+from SpecError import SpecBadToken
 
 # TODO: privide metaclasses with __repr__()
 
@@ -207,7 +208,7 @@ class StChangelogItem(StSection):
 		self.star = token_list.get()
 		if str(self.star) != '*':
 			token_list.unget()
-			raise ValueError("Expected token '*', got '%s'" % self.star)
+			raise SpecBadToken("Expected token '*', got '%s'" % self.star)
 
 		self.date = []
 		for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
@@ -219,7 +220,7 @@ class StChangelogItem(StSection):
 
 		if str(self.version_delim) != '-':
 			token_list.unget()
-			raise ValueError("Expected token '-', got '%s'" % self.star)
+			raise SpecBadToken("Expected token '-', got '%s'" % self.star)
 
 		self.version = token_list.get()
 
@@ -267,7 +268,7 @@ class StChangelog(StSection):
 	def parse(self, token_list):
 		self.token = token_list.get()
 		if str(self.token) != '%changelog':
-			raise ValueError("Unexpected token '%s', expected \%changelog" % str(token))
+			raise SpecBadToken("Unexpected token '%s', expected \%changelog" % str(token))
 
 		self.items = []
 		while str(token_list.touch()) == '*':

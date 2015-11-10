@@ -24,6 +24,7 @@ from SpecManipulator import SpecManipulator
 from SpecFile import SpecFile
 from SpecToken import SpecTokenList
 from Statement import *
+from SpecError import SpecBadIf, SpecBadToken
 
 class ChunkParser:
 	def __init__(self, token, func):
@@ -49,7 +50,7 @@ class SpecParser(SpecManipulator):
 
 		if str(t) != '%if':
 			token_list.setPointer(pointer)
-			raise ValueError('Expected %if')
+			raise SpecBadIf('Expected %if')
 
 		st_if.if_token = t
 		st_exp = StExpression(st_if)
@@ -65,7 +66,7 @@ class SpecParser(SpecManipulator):
 
 		if t.token == None or str(t) != '%endif':
 			token_list.setPointer(pointer)
-			raise ValueError('Unexpected token ' + str(t) + ', expected %endif')
+			raise SpecBadIf('Unexpected token ' + str(t) + ', expected %endif')
 
 		st_if.endif_token = t
 		return st_if
@@ -77,13 +78,13 @@ class SpecParser(SpecManipulator):
 		t = token_list.get()
 		if str(t) != '%global':
 			token_list.unget()
-			raise ValueError('Expected %global')
+			raise SpecBadToken('Expected %global')
 		st_global.global_token = t
 
 		t = token_list.get() # TODO: parse as expression
 		if t.token == None or str(t).startswith('%'):
 			token_list.unget()
-			raise ValueError('Unexpected token, expected variable name')
+			raise SpecBadToken('Unexpected token, expected variable name')
 
 		st_global.setVariable(t)
 
@@ -100,7 +101,7 @@ class SpecParser(SpecManipulator):
 		t = token_list.get()
 		if t not in SpecParser.DEFINITION_TS:
 			token_list.unget()
-			raise ValueError('Expected definition')
+			raise SpecBadToken('Expected definition')
 		st_definition.name = t
 
 		st_exp = StExpression(st_definition)
@@ -384,7 +385,7 @@ class SpecParser(SpecManipulator):
 
 		eof = self.token_list.touch()
 		if eof.token != None:
-			raise ValueError("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
+			raise SpecBadToken("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
 		return self.statements
 
 	def getStatements(self):

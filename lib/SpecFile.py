@@ -19,6 +19,7 @@
 # ####################################################################
 
 import sys
+from SpecError import SpecBadIndex
 
 class SpecFile:
 	def __init__(self, spec):
@@ -35,7 +36,7 @@ class SpecFile:
 		tmp = offset + self.pointer
 
 		if not self.inFile(tmp):
-			raise ValueError('Bad seek')
+			raise SpecBadIndex('Bad seek')
 
 		self.pointer = tmp
 
@@ -73,7 +74,7 @@ class SpecFile:
 
 	def ungetc(self):
 		if self.pointer == 0:
-			raise ValueError('Cannot do ungetc at the beginning')
+			raise SpecBadIndex('Cannot do ungetc at the beginning')
 
 		if self.pointer != self.length:
 			self.pointer -= 1

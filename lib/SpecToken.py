@@ -19,6 +19,7 @@
 # ####################################################################
 
 from SpecFile import SpecFile
+from SpecError import SpecBadIndex
 
 class SpecToken:
 	def __init__(self, specFile):
@@ -191,7 +192,7 @@ class SpecTokenList:
 
 	def unget(self):
 		if self.pointer == 0:
-			raise ValueError('Cannot unget')
+			raise SpecBadIndex('Cannot unget')
 		self.pointer -= 1
 
 	def getPointer(self):
@@ -199,7 +200,7 @@ class SpecTokenList:
 
 	def setPointer(self, val):
 		if val < 0 or val > len(self.token_list):
-			raise ValueError('TokenList pointer out of bound')
+			raise SpecBadIndex('TokenList pointer out of bound')
 		self.pointer = val
 
 	def __len__(self):

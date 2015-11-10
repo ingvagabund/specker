@@ -164,6 +164,14 @@ if __name__ == "__main__":
 		)
 	)
 
+	parser.add_option_group(optparse.OptionGroup(
+		parser,
+		"CUSTOM MANIPULATOR",
+		"You can specify custom section manipulator which can be injected at run time in order "
+		"to process SPECFILE in more specific way. Please refer to DOC for more info."
+		)
+	)
+
 	parser.add_option(
 		"", "-o", "--output", dest="output", action = "store", default = None,
 		help = "output file"
@@ -172,6 +180,11 @@ if __name__ == "__main__":
 	parser.add_option(
 		"", "-v", "--verbose", dest="verbose", action = "store_true", default = False,
 		help = "verbose output"
+	)
+
+	parser.add_option(
+		"", "", "--custom-manipulator", dest="custom_manipulator", action = "store", type = "string",
+		help = "custom manipulator source file"
 	)
 
 	parser.add_option(
@@ -451,6 +464,10 @@ if __name__ == "__main__":
 		logger.setLevel(logging.DEBUG)
 
 	try:
+		if options.custom_manipulator:
+			execfile(options.custom_manipulator)
+			raise SpecNotImplemented("Not implemented")
+
 		if input_file is None:
 			parser = SpecParser(sys.stdin)
 		else:

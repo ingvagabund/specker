@@ -61,9 +61,15 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
+	def find_definition_print(self, definition, package, f = sys.stdout):
+		# TODO: use this for particular package as well
+		for s in self.statements:
+			if type(s) is StDefinition and str(s.name) == definition:
+				s.value.print_file(f, raw = True)
+				f.write('\n') # Add delim since raw token is printed
+
 	def provides_show(self, package, f = sys.stdout):
-		# TODO: implement
-		pass
+		return self.find_definition_print('Provides:', package, f)
 
 	def provides_add(self, package, what, f = sys.stdout):
 		# TODO: implement
@@ -74,8 +80,7 @@ class SpecChanger(SpecManipulator):
 		pass
 
 	def requires_show(self, package, f = sys.stdout):
-		# TODO: implement
-		pass
+		return self.find_definition_print('Requires:', package, f)
 
 	def requires_add(self, package, what, f = sys.stdout):
 		# TODO: implement
@@ -86,7 +91,7 @@ class SpecChanger(SpecManipulator):
 		pass
 
 	def buildrequires_show(self, package, f = sys.stdout):
-		# TODO: implement
+		return self.find_definition_print('BuildRequires:', package, f)
 		pass
 
 	def buildrequires_add(self, package, what, f = sys.stdout):
@@ -111,6 +116,7 @@ class SpecChanger(SpecManipulator):
 		return self.find_section_print(StDescription, f)
 
 	def description_edit(self, definition, package = None):
+		self.find_section_edit(StDescription, definition)
 		pass
 
 	def build_show(self, f = sys.stdout):

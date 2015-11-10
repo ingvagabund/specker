@@ -102,10 +102,14 @@ class SpecToken:
 	def __len__(self):
 		return len(self.token)
 
-	def print_file(self, f):
-		f.write(self.prepend)
+	def print_file(self, f, raw = False):
+		if not raw:
+			f.write(self.prepend)
+
 		f.write(self.token)
-		f.write(self.append)
+
+		if not raw:
+			f.write(self.append)
 
 	def print_str(self):
 		ret = self.prepend

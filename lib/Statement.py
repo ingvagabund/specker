@@ -30,9 +30,9 @@ class Statement(object):
 		self.parent = parent
 		self.tokens = []
 
-	def print_file(self, f):
+	def print_file(self, f, raw = False):
 		for t in self.tokens:
-			t.print_file(f)
+			t.print_file(f, raw)
 
 	def print_str(self):
 		ret = ""

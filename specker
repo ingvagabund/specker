@@ -473,11 +473,11 @@ if __name__ == "__main__":
 
 		# modify operations before shows
 		if options.provides_add:
-			spec.provides_add(f, parse_multiarg(options.provides_add))
+			spec.provides_add(parse_multiarg(options.provides_add), f)
 		if options.requires_add:
-			spec.requires_add(f, parse_multiarg(options.requires_add))
+			spec.requires_add(parse_multiarg(options.requires_add), f)
 		if options.buildrequires_add:
-			spec.buildrequires_add(f, parse_multiarg(options.buildrequires_add))
+			spec.buildrequires_add(parse_multiarg(options.buildrequires_add), f)
 		if options.changelog_add:
 			spec.changelog_add(options.changelog_add.split(','))
 		if options.files_add:
@@ -486,11 +486,11 @@ if __name__ == "__main__":
 			spec.package_add(options.package_add.split(','))
 
 		if options.provides_remove:
-			spec.provides_remove(f, parse_multiarg(options.provides_remove))
+			spec.provides_remove(parse_multiarg(options.provides_remove), f)
 		if options.requires_remove:
-			spec.requires_remove(f, parse_multiarg(options.requires_remove))
+			spec.requires_remove(parse_multiarg(options.requires_remove), f)
 		if options.buildrequires_remove:
-			spec.buildrequires_remove(f, parse_multiarg(options.buildrequires_remove))
+			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove), f)
 		if options.changelog_remove:
 			spec.changelog_remove(options.changelog_remove.split(','))
 		if options.files_remove:
@@ -549,11 +549,11 @@ if __name__ == "__main__":
 
 		# yo mama, show results!
 		if options.provides_show:
-			spec.provides_show(f, parse_multiarg(options.provides_show))
+			spec.provides_show(parse_multiarg(options.provides_show), f)
 		elif options.requires_show:
-			spec.requires_show(f, parse_multiarg(options.requires_show))
+			spec.requires_show(parse_multiarg(options.requires_show), f)
 		elif options.buildrequires_show:
-			spec.buildrequires_show(f, parse_multiarg(options.buildrequires_show))
+			spec.buildrequires_show(parse_multiarg(options.buildrequires_show), f)
 		elif options.changelog_show:
 			spec.changelog_show(f)
 		elif options.description_show:

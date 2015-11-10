@@ -21,11 +21,14 @@
 import SpecParser
 from SpecError import SpecBadToken, SpecNotImplemented
 
-# TODO: privide metaclasses with __repr__()
+class StatementMeta(type):
+	def __repr__(c):
+		return "generic spec statement"
 
 class Statement(object):
 	parent = None
 	tokens = []
+	__metaclass__ = StatementMeta
 
 	def __init__(self, parent = None):
 		self.parent = parent
@@ -50,7 +53,13 @@ class Statement(object):
 	def remove(self, items):
 		raise SpecNotImplemented("Not Implemented")
 
+class StIfMeta(StatementMeta):
+	def __repr__(c):
+		return "%if"
+
 class StIf(Statement):
+	__metaclass__ = StIfMeta
+
 	def __init__(self, parent):
 		Statement.__init__(self, parent)
 		self.if_token = None
@@ -99,7 +108,13 @@ class StIf(Statement):
 	def getFalseBranch(self):
 		return self.false_branch
 
+class StDefinitionMeta(StatementMeta):
+	def __repr__(c):
+		return "spec definition"
+
 class StDefinition(Statement):
+	__metaclass__ = StDefinitionMeta
+
 	def __init__(self, parent):
 		Statement.__init__(self, parent)
 		self.name = None
@@ -120,7 +135,13 @@ class StDefinition(Statement):
 	def getValue(self):
 		return self.value
 
+class StGlobalMeta(StatementMeta):
+	def __repr__(c):
+		return "%global"
+
 class StGlobal(Statement):
+	__metaclass__ = StGlobalMeta
+
 	def __init__(self, parent):
 		Statement.__init__(self, parent)
 		self.global_token = None
@@ -150,7 +171,13 @@ class StGlobal(Statement):
 	def getValue(self):
 		return self.value
 
+class StEofMeta(StatementMeta):
+	def __repr__(c):
+		return "<EOF>"
+
 class StEof(Statement):
+	__metaclass__ = StEofMeta
+
 	def __init__(self, parent = None):
 		Statement.__init__(self, parent)
 		self.eof_token = None
@@ -168,7 +195,13 @@ class StEof(Statement):
 	def getEofToken(self):
 		return self.eof_token
 
+class StExpressionMeta(StatementMeta):
+	def __repr__(c):
+		return "spec expression"
+
 class StExpression(Statement):
+	__metaclass__ = StExpressionMeta
+
 	def __init__(self, parent):
 		Statement.__init__(self, parent)
 
@@ -177,12 +210,24 @@ class StExpression(Statement):
 		self.tokens.append(token_list.get())
 		return self.tokens
 
+class StSectionMeta(StatementMeta):
+	def __repr__(c):
+		return "generic spec section"
+
 class StSection(Statement):
+	__metaclass__ = StSectionMeta
+
 	def __init__(self, parent):
 		Statement.__init__(self, parent)
 	# TODO: implement
 
+class StDescriptionMeta(StSectionMeta):
+	def __repr__(c):
+		return "%description"
+
 class StDescription(StSection):
+	__metaclass__ = StDescriptionMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 
@@ -194,7 +239,13 @@ class StDescription(StSection):
 		# TODO: implement
 		self.tokens = []
 
+class StBuildMeta(StSectionMeta):
+	def __repr__(c):
+		return "%build"
+
 class StBuild(StSection):
+	__metaclass__ = StBuildMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -203,7 +254,13 @@ class StBuild(StSection):
 		# TODO: implement
 		self.tokens = []
 
+class StChangelogItemMeta(StSectionMeta):
+	def __repr__(c):
+		return "spec changelog item"
+
 class StChangelogItem(StSection):
+	__metaclass__ = StChangelogItemMeta
+
 	def __init__(self, parent):
 		self.star = None
 		self.date = None
@@ -268,7 +325,13 @@ class StChangelogItem(StSection):
 
 		return ret
 
+class StChangelogMeta(StSectionMeta):
+	def __repr__(c):
+		return "%changelog"
+
 class StChangelog(StSection):
+	__metaclass__ = StChangelogMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 		self.token = None # [([hader_tokens], [message_tokens]), ...]
@@ -299,7 +362,13 @@ class StChangelog(StSection):
 
 		return ret
 
+class StCheckMeta(StSectionMeta):
+	def __repr__(c):
+		return "%check"
+
 class StCheck(StSection):
+	__metaclass__ = StCheckMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -307,8 +376,14 @@ class StCheck(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StCleanMeta(StSectionMeta):
+	def __repr__(c):
+		return "%clean"
 
 class StClean(StSection):
+	__metaclass__ = StCleanMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -316,13 +391,25 @@ class StClean(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StFilesMeta(StSectionMeta):
+	def __repr__(c):
+		return "%files"
 
 class StFiles(StSection):
+	__metaclass__ = StFilesMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+class StInstallMeta(StSectionMeta):
+	def __repr__(c):
+		return "%install"
 
 class StInstall(StSection):
+	__metaclass__ = StInstallMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -330,13 +417,25 @@ class StInstall(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPackageMeta(StSectionMeta):
+	def __repr__(c):
+		return "%package"
 
 class StPackage(StSection):
+	__metaclass__ = StPackageMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
+
+class StPrepMeta(StSectionMeta):
+	def __repr__(c):
+		return "%prep"
 
 class StPrep(StSection):
+	__metaclass__ = StPrepMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -344,8 +443,14 @@ class StPrep(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPreMeta(StSectionMeta):
+	def __repr__(c):
+		return "%pre"
 
 class StPre(StSection):
+	__metaclass__ = StPreMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -353,8 +458,14 @@ class StPre(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPostMeta(StSectionMeta):
+	def __repr__(c):
+		return "%post"
 
 class StPost(StSection):
+	__metaclass__ = StPostMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -362,8 +473,14 @@ class StPost(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPreunMeta(StSectionMeta):
+	def __repr__(c):
+		return "%preun"
 
 class StPreun(StSection):
+	__metaclass__ = StPreunMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -371,8 +488,14 @@ class StPreun(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPostunMeta(StSectionMeta):
+	def __repr__(c):
+		return "%postun"
 
 class StPostun(StSection):
+	__metaclass__ = StPostunMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -380,8 +503,14 @@ class StPostun(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPretransMeta(StSectionMeta):
+	def __repr__(c):
+		return "%pretrans"
 
 class StPretrans(StSection):
+	__metaclass__ = StPretransMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -389,8 +518,14 @@ class StPretrans(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StPosttransMeta(StSectionMeta):
+	def __repr__(c):
+		return "%posttrans"
 
 class StPosttrans(StSection):
+	__metaclass__ = StPosttransMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -398,8 +533,14 @@ class StPosttrans(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StTriggerinMeta(StSectionMeta):
+	def __repr__(c):
+		return "%triggerin"
 
 class StTriggerin(StSection):
+	__metaclass__ = StTriggerinMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -407,8 +548,14 @@ class StTriggerin(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StTriggerpreinMeta(StSectionMeta):
+	def __repr__(c):
+		return "%triggerprein"
 
 class StTriggerprein(StSection):
+	__metaclass__ = StTriggerpreinMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -416,8 +563,14 @@ class StTriggerprein(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StTriggerunMeta(StSectionMeta):
+	def __repr__(c):
+		return "%triggerpreun"
 
 class StTriggerun(StSection):
+	__metaclass__ = StTriggerunMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -425,8 +578,14 @@ class StTriggerun(StSection):
 	def edit(self, replacement):
 		# TODO: implement
 		self.tokens = []
+
+class StTriggerpostunMeta(StSectionMeta):
+	def __repr__(c):
+		return "%triggerpostun"
 
 class StTriggerpostun(StSection):
+	__metaclass__ = StTriggerpostunMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement
@@ -435,7 +594,13 @@ class StTriggerpostun(StSection):
 		# TODO: implement
 		self.tokens = []
 
+class StVerifyscriptMeta(StSectionMeta):
+	def __repr__(c):
+		return "%verifyscript"
+
 class StVerifyscript(StSection):
+	__metaclass__ = StVerifyscriptMeta
+
 	def __init__(self, parent):
 		StSection.__init__(self, parent)
 	# TODO: implement

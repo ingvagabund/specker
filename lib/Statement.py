@@ -44,6 +44,9 @@ class Statement(object):
 	def edit(self, replacement):
 		raise SpecNotImplemented("Not Implemented")
 
+	def add(self, items):
+		raise SpecNotImplemented("Not Implemented")
+
 class StIf(Statement):
 	def __init__(self, parent):
 		Statement.__init__(self, parent)

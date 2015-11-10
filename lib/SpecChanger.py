@@ -62,6 +62,16 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
+	def find_section_add(self, section_type, items, verbose = True):
+		s = self.find_section(section_type)
+
+		if s is not None:
+			s.add(items)
+		elif verbose:
+			raise SpecNotFound("Error: section '%s' not found" % section_type)
+
+		return s
+
 	def find_definition_print(self, definition, package, f = sys.stdout):
 		# TODO: use this for particular package as well
 		for s in self.statements:
@@ -72,7 +82,7 @@ class SpecChanger(SpecManipulator):
 	def provides_show(self, package, f = sys.stdout):
 		return self.find_definition_print('Provides:', package, f)
 
-	def provides_add(self, package, what, f = sys.stdout):
+	def provides_add(self, package, what):
 		# TODO: implement
 		raise SpecNotImplemented("Not Implemented")
 
@@ -83,7 +93,7 @@ class SpecChanger(SpecManipulator):
 	def requires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('Requires:', package, f)
 
-	def requires_add(self, package, what, f = sys.stdout):
+	def requires_add(self, package, what):
 		# TODO: implement
 		raise SpecNotImplemented("Not Implemented")
 
@@ -94,7 +104,7 @@ class SpecChanger(SpecManipulator):
 	def buildrequires_show(self, package, f = sys.stdout):
 		return self.find_definition_print('BuildRequires:', package, f)
 
-	def buildrequires_add(self, package, what, f = sys.stdout):
+	def buildrequires_add(self, package, what):
 		# TODO: implement
 		raise SpecNotImplemented("Not Implemented")
 
@@ -107,7 +117,7 @@ class SpecChanger(SpecManipulator):
 		return self.find_section_print(StChangelog, f)
 
 	def changelog_add(self, items):
-		raise SpecNotImplemented("Not Implemented")
+		return self.find_section_add(StChangelog, items)
 
 	def changelog_remove(self, what):
 		raise SpecNotImplemented("Not Implemented")
@@ -140,8 +150,8 @@ class SpecChanger(SpecManipulator):
 		raise SpecNotImplemented("Not Implemented")
 		return self.find_section_print(StFiles, f)
 
-	def files_add(self, files):
-		raise SpecNotImplemented("Not Implemented")
+	def files_add(self, items):
+		return self.find_section_add(StFiles, items)
 
 	def files_remove(self, files):
 		raise SpecNotImplemented("Not Implemented")
@@ -156,7 +166,7 @@ class SpecChanger(SpecManipulator):
 		return self.find_section_print(StPackage, f)
 
 	def package_add(self, package):
-		raise SpecNotImplemented("Not Implemented")
+		return self.find_section_add(StPackage, items)
 
 	def package_remove(self, package):
 		raise SpecNotImplemented("Not Implemented")

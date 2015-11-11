@@ -21,8 +21,8 @@
 import optparse
 import sys
 import logging
-from lib.SpecParser import SpecParser
-from lib.SpecChanger import SpecChanger
+from lib.specParser import SpecParser
+from lib.specChanger import SpecChanger
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))

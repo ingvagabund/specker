@@ -18,8 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 
-from SpecFile import SpecFile
-from SpecError import SpecBadIndex
+from specFile import SpecFile
+from specError import SpecBadIndex
 
 class SpecToken:
 	def __init__(self, specFile):

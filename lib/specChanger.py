@@ -19,9 +19,9 @@
 # ####################################################################
 
 import sys
-from SpecManipulator import SpecManipulator
-from SpecStatement import *
-from SpecError import SpecNotFound, SpecNotImplemented
+from specManipulator import SpecManipulator
+from specStatement import *
+from specError import SpecNotFound, SpecNotImplemented
 
 class SpecChanger(SpecManipulator):
 	def __init__(self, statements = None):

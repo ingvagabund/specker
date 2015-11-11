@@ -19,7 +19,7 @@
 # ####################################################################
 
 import sys
-from SpecError import SpecBadIndex
+from specError import SpecBadIndex
 
 class SpecFile:
 	def __init__(self, spec):

@@ -495,7 +495,7 @@ if __name__ == "__main__":
 		if options.buildrequires_add:
 			spec.buildrequires_add(parse_multiarg(options.buildrequires_add), f)
 		if options.changelog_add:
-			spec.changelog_add(options.changelog_add.split(','))
+			spec.changelog_add(options.changelog_add.split(':'))
 		if options.package_add:
 			spec.package_add(options.package_add.split(','))
 

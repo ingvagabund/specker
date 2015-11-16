@@ -116,6 +116,7 @@ class SpecChanger(SpecManipulator):
 		# TODO: do pretty print
 		return self.find_section_print(SpecStChangelog, f)
 
+	#TODO: def changelog_add(self, date, usname, email, version, msg):
 	def changelog_add(self, items):
 		return self.find_section_add(SpecStChangelog, items)
 

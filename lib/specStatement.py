@@ -280,56 +280,56 @@ class SpecStBuild(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-class SpecStChangelogItem(SpecStSection):
-	__metaclass__ = SpecStChangelogItemMeta
-
-	def __init__(self, parent):
-		self.star = None
-		self.date = None
-		self.user = None
-		self.user_email = None
-		self.version_delim = None
-		self.version = None
-		self.parent = parent
-
-	def parse_header(self, token_list):
-		self.star = token_list.get()
-		if str(self.star) != '*':
-			token_list.unget()
-			raise SpecBadToken("Expected token '*', got '%s'" % self.star)
-
-		self.date = []
-		for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
-			self.date.append(token_list.get())
-
-		self.user = [token_list.get()] # TODO: multiple words
-		self.user_email = token_list.get()
-		self.version_delim = token_list.get()
-
-		if str(self.version_delim) != '-':
-			token_list.unget()
-			raise SpecBadToken("Expected token '-', got '%s'" % self.star)
-
-		self.version = token_list.get()
-
-	def parse(self, token_list):
-		self.parse_header(token_list)
-		self.message = token_list.getWhileNot(sp.SpecParser.SECTION_TS + ['*'])
-
-	def print_file(self, f):
-		self.star.print_file(f)
-		for d in self.date:
-			d.print_file(f)
-		for u in self.user:
-			u.print_file(f)
-		self.user_email.print_file(f)
-		self.version_delim.print_file(f)
-		self.version.print_file(f)
-
-		for m in self.message:
-			m.print_file(f)
-
 class SpecStChangelog(SpecStSection):
+	class SpecStChangelogItem(SpecStSection):
+		__metaclass__ = SpecStChangelogItemMeta
+
+		def __init__(self, parent):
+			self.star = None
+			self.date = None
+			self.user = None
+			self.user_email = None
+			self.version_delim = None
+			self.version = None
+			self.parent = parent
+
+		def parse_header(self, token_list):
+			self.star = token_list.get()
+			if str(self.star) != '*':
+				token_list.unget()
+				raise SpecBadToken("Expected token '*', got '%s'" % self.star)
+
+			self.date = []
+			for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
+				self.date.append(token_list.get())
+
+			self.user = [token_list.get()] # TODO: multiple words
+			self.user_email = token_list.get()
+			self.version_delim = token_list.get()
+
+			if str(self.version_delim) != '-':
+				token_list.unget()
+				raise SpecBadToken("Expected token '-', got '%s'" % self.star)
+
+			self.version = token_list.get()
+
+		def parse(self, token_list):
+			self.parse_header(token_list)
+			self.message = token_list.getWhileNot(sp.SpecParser.SECTION_TS + ['*'])
+
+		def print_file(self, f):
+			self.star.print_file(f)
+			for d in self.date:
+				d.print_file(f)
+			for u in self.user:
+				u.print_file(f)
+			self.user_email.print_file(f)
+			self.version_delim.print_file(f)
+			self.version.print_file(f)
+
+			for m in self.message:
+				m.print_file(f)
+
 	__metaclass__ = SpecStChangelogMeta
 
 	def __init__(self, parent):
@@ -346,7 +346,7 @@ class SpecStChangelog(SpecStSection):
 
 		st_changelog.items = []
 		while str(token_list.touch()) == '*':
-			st_item = SpecStChangelogItem(st_changelog)
+			st_item = SpecStChangelog.SpecStChangelogItem(st_changelog)
 			st_item.parse(token_list)
 			st_changelog.items.append(st_item)
 

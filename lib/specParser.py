@@ -91,8 +91,10 @@ class SpecParser(SpecManipulator):
 					if type(section) is not SpecStIf and type(section) is not SpecStGlobal and \
 							type(section) is not SpecStDescription and type(section) is not SpecStFiles:
 						SpecManipulator.logger.debug("-- removing " + str(token) + " from allowed")
-						allowed.remove(s)
-						disallowed.append(s)
+						if s in allowed:
+							allowed.remove(s)
+						if s not in disallowed:
+							disallowed.append(s)
 					# TODO: call registered callback
 					break
 

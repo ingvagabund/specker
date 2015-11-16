@@ -463,16 +463,19 @@ if __name__ == "__main__":
 	if options.verbose:
 		logger.setLevel(logging.DEBUG)
 
+	parser = SpecParser()
+
 	try:
 		if options.custom_manipulator:
 			execfile(options.custom_manipulator)
-			raise SpecNotImplemented("Not implemented")
+			for manipulator in custom_manipulators:
+				parser.register_manipulator(manipulator)
 
 		if input_file is None:
-			parser = SpecParser(sys.stdin)
+			parser.init(sys.stdin)
 		else:
 			with open(input_file, 'r') as f:
-				parser = SpecParser(f)
+				parser.init(f)
 
 		if options.verbose:
 			parser.setLoggingLevel(logging.DEBUG)

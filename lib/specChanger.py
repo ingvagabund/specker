@@ -37,7 +37,7 @@ class SpecChanger(SpecManipulator):
 
 	def find_section(self, section_type):
 		for s in self.sections:
-			if type(s) is section_type:
+			if isinstance(s, section_type):
 				return s
 
 		return None

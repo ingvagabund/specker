@@ -50,9 +50,11 @@ class SpecParser(SpecManipulator):
 
 		return ret
 
-	def __init__(self, spec):
+	def __init__(self):
 		SpecManipulator.logger = logging.getLogger('specker-parser')
 		SpecManipulator.logger.addHandler(logging.StreamHandler(sys.stderr))
+
+	def init(self, spec):
 		self.token_list = SpecTokenList(spec)
 
 	def parse_preamble(self):

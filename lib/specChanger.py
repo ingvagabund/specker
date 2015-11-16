@@ -149,11 +149,8 @@ class SpecChanger(SpecManipulator):
 	def files_show(self, f = sys.stdout):
 		return self.find_section_print(SpecStFiles, f)
 
-	def files_add(self, items):
-		return self.find_section_add(SpecStFiles, items)
-
-	def files_remove(self, items):
-		return self.find_section_remove(SpecStFiles, items)
+	def files_edit(self, replacement):
+		return self.find_section_edit(SpecStFiles, replacement)
 
 	def install_show(self, f = sys.stdout):
 		return self.find_section_print(SpecStInstall, f)

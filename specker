@@ -68,6 +68,7 @@ def check_opts(options):
 	opts_edit = [ options.description_edit,
 					options.build_edit,
 					options.check_edit,
+					options.files_edit,
 					options.install_edit,
 					options.prep_edit,
 					options.pre_edit,
@@ -289,17 +290,12 @@ if __name__ == "__main__":
 
 	parser.add_option(
 		"", "", "--files-show", dest="files_show", action = "store_true", default = False,
-		help = "show files"
+		help = "show %files section"
 	)
 
 	parser.add_option(
-		"", "", "--files-add", dest="files_add", action = "store", type = "string",
-		help = "add files"
-	)
-
-	parser.add_option(
-		"", "", "--files-remove", dest="files_remove", action = "store_true", default = False,
-		help = "remove files"
+		"", "", "--files-edit", dest="files_edit", action = "store", type = "string",
+		help = "edit %files section"
 	)
 
 	parser.add_option(
@@ -500,8 +496,6 @@ if __name__ == "__main__":
 			spec.buildrequires_add(parse_multiarg(options.buildrequires_add), f)
 		if options.changelog_add:
 			spec.changelog_add(options.changelog_add.split(','))
-		if options.files_add:
-			spec.files_add(options.files_add.split(','))
 		if options.package_add:
 			spec.package_add(options.package_add.split(','))
 
@@ -513,8 +507,6 @@ if __name__ == "__main__":
 			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove), f)
 		if options.changelog_remove:
 			spec.changelog_remove(options.changelog_remove.split(','))
-		if options.files_remove:
-			spec.files_remove(options.files_remove.split(','))
 		if options.package_remove:
 			spec.package_remove(options.package_remove.split(','))
 
@@ -527,6 +519,9 @@ if __name__ == "__main__":
 		if options.check_edit:
 			what = sys.stdin.read() if options.check_edit == "-" else options.check_edit
 			spec.check_edit(what)
+		if options.files_edit:
+			what = sys.stdin.read() if options.files_edit == "-" else options.files_edit
+			spec.files_edit(what)
 		if options.install_edit:
 			what = sys.stdin.read() if options.install_edit == "-" else options.install_edit
 			spec.install_edit(what)

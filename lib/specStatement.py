@@ -78,8 +78,7 @@ class SpecStIf(SpecStatement):
 
 		st_if.if_token = t
 
-		st_exp = SpecStExpression(st_if)
-		st_exp.parse(token_list, parent, allowed, disallowed)
+		st_exp = SpecStExpression.parse(token_list, st_if, allowed, disallowed)
 		st_if.setExpr(st_exp)
 
 		true_branch = sp.SpecParser.parse_loop(token_list, st_if, allowed, disallowed + ['%else', '%endif'])
@@ -145,7 +144,7 @@ class SpecStDefinition(SpecStatement):
 			raise SpecBadToken('Expected definition')
 		st_definition.name = t
 
-		st_exp = SpecStExpression.parse(token_list, parent, allowed, disallowed)
+		st_exp = SpecStExpression.parse(token_list, st_definition, allowed, disallowed)
 		st_definition.setValue(st_exp)
 
 		return st_definition
@@ -187,8 +186,7 @@ class SpecStGlobal(SpecStatement):
 
 		st_global.setVariable(t)
 
-		st_exp = SpecStExpression(st_global)
-		st_exp.parse(token_list, parent, allowed, disallowed)
+		st_exp = SpecStExpression.parse(token_list, st_global, allowed, disallowed)
 		st_global.setValue(st_exp)
 
 		return st_global

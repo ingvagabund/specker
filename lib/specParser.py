@@ -53,7 +53,7 @@ class SpecParser(SpecManipulator):
 	def __init__(self, spec):
 		SpecManipulator.logger = logging.getLogger('specker-parser')
 		SpecManipulator.logger.addHandler(logging.StreamHandler(sys.stderr))
-		self.token_list = SpecTokenList(SpecFile(spec))
+		self.token_list = SpecTokenList(spec)
 
 	def parse_preamble(self):
 		allowed = [

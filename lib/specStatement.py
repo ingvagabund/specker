@@ -21,6 +21,7 @@
 import sys
 import specParser as sp
 import specManipulator as sm
+from specToken import SpecTokenList
 
 from specError import SpecBadToken, SpecNotImplemented
 from specStatementMeta import *
@@ -37,11 +38,6 @@ class SpecStatement(object):
 	def print_file(self, f, raw = False):
 		for t in self.tokens:
 			t.print_file(f, raw)
-
-	def print_str(self):
-		for t in self.tokens:
-			ret += t.print_str()
-		return ret
 
 	def edit(self, replacement):
 		raise SpecNotImplemented("Not Implemented")
@@ -82,7 +78,7 @@ class SpecStIf(SpecStatement):
 		st_if.if_token = t
 
 		st_exp = SpecStExpression(st_if)
-		st_exp.parse(token_list)
+		st_exp.parse(token_list, parent, allowed, disallowed)
 		st_if.setExpr(st_exp)
 
 		true_branch = sp.SpecParser.parse_loop(token_list, st_if, allowed, disallowed + ['%else', '%endif'])
@@ -111,17 +107,6 @@ class SpecStIf(SpecStatement):
 		for s in self.false_branch:
 			s.print_file(f)
 		self.endif_token.print_file(f)
-
-	def print_str(self):
-		ret = self.if_token.print_str()
-		ret += self.expr.print_str()
-		for s in self.true_branch:
-			ret += s.print_str()
-		ret += self.else_token.print_str() if self.else_token is not None else ""
-		for s in self.false_branch:
-			ret += s.print_str()
-		ret +=self.endif_token.print_str()
-		return ret
 
 	def setExpr(self, token_list):
 		self.expr = token_list
@@ -160,7 +145,7 @@ class SpecStDefinition(SpecStatement):
 		st_definition.name = t
 
 		st_exp = SpecStExpression(st_definition)
-		st_exp.parse(token_list)
+		st_exp.parse(token_list, parent, allowed, disallowed)
 		st_definition.setValue(st_exp)
 
 		return st_definition
@@ -168,11 +153,6 @@ class SpecStDefinition(SpecStatement):
 	def print_file(self, f):
 		self.name.print_file(f)
 		self.value.print_file(f)
-
-	def print_str(self):
-		ret = self.name.print_str()
-		ret += self.value.print_str()
-		return ret
 
 	def setValue(self, value):
 		self.value = value
@@ -208,7 +188,7 @@ class SpecStGlobal(SpecStatement):
 		st_global.setVariable(t)
 
 		st_exp = SpecStExpression(st_global)
-		st_exp.parse(token_list)
+		st_exp.parse(token_list, parent, allowed, disallowed)
 		st_global.setValue(st_exp)
 
 		return st_global
@@ -217,12 +197,6 @@ class SpecStGlobal(SpecStatement):
 		self.global_token.print_file(f)
 		self.variable.print_file(f)
 		self.value.print_file(f)
-
-	def print_str(self):
-		ret = self.global_token.print_str()
-		ret += self.variable.print_str()
-		ret += self.value.print_str()
-		return ret
 
 	def setVariable(self, variable):
 		self.variable = variable
@@ -251,9 +225,6 @@ class SpecStEof(SpecStatement):
 	def print_file(self, f):
 		self.eof_token.print_file(f)
 
-	def print_str(self):
-		return self.eof_token.print_str()
-
 	def setEofToken(self, token):
 	# this stores whitespaces at the EOF
 		self.eof_token = token
@@ -267,25 +238,35 @@ class SpecStExpression(SpecStatement):
 	def __init__(self, parent):
 		SpecStatement.__init__(self, parent)
 
-	def parse(self, token_list):
-		# TODO: implement
-		self.tokens.append(token_list.get())
-		return self.tokens
+	@classmethod
+	def parse(cls, token_list, parent, allowed, disallowed):
+		st_exp = cls(parent)
+		st_exp.tokens = token_list.getLine()
+		return st_exp
 
 class SpecStSection(SpecStatement):
 	__metaclass__ = SpecStSectionMeta
 
 	def __init__(self, parent):
 		SpecStatement.__init__(self, parent)
-	# TODO: implement
+		self.token_section = []
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, disallowed):
-		sm.SpecManipulator.logger.debug("--- parsing generic section")
+		sm.SpecManipulator.logger.debug("--- parsing generic section %s" % cls.__name__)
 		st_section = cls(parent)
-		st_section.tokens.append(token_list.get())
+		st_section.token_section = token_list.get()
 		st_section.tokens += token_list.getWhileNot(disallowed)
 		return st_section
+
+	def edit(self, replacement):
+		sm.SpecManipulator.logger.debug("--- replacing generic section")
+		self.tokens = SpecTokenList(replacement)
+
+	def print_file(self, f, raw = False):
+		self.token_section.print_file(f, raw)
+		for t in self.tokens:
+			t.print_file(f, raw)
 
 class SpecStDescription(SpecStSection):
 	__metaclass__ = SpecStDescriptionMeta
@@ -293,19 +274,11 @@ class SpecStDescription(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStBuild(SpecStSection):
 	__metaclass__ = SpecStBuildMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStChangelogItem(SpecStSection):
 	__metaclass__ = SpecStChangelogItemMeta
@@ -341,7 +314,7 @@ class SpecStChangelogItem(SpecStSection):
 
 	def parse(self, token_list):
 		self.parse_header(token_list)
-		self.message = token_list.getWhileNot(SpecParser.SpecParser.SECTION_TS + ['*'])
+		self.message = token_list.getWhileNot(sp.SpecParser.SECTION_TS + ['*'])
 
 	def print_file(self, f):
 		self.star.print_file(f)
@@ -356,24 +329,6 @@ class SpecStChangelogItem(SpecStSection):
 		for m in self.message:
 			m.print_file(f)
 
-	def print_str(self):
-		ret = self.star.print_str()
-
-		for d in self.date:
-			ret += d.print_str()
-
-		for u in self.user:
-			ret += u.print_str()
-
-		ret += self.user_email.print_str()
-		ret += self.version_delim.print_str()
-		ret += self.version.print_str()
-
-		for m in self.message:
-			ret += m.print_str()
-
-		return ret
-
 class SpecStChangelog(SpecStSection):
 	__metaclass__ = SpecStChangelogMeta
 
@@ -382,30 +337,25 @@ class SpecStChangelog(SpecStSection):
 		self.token = None # [([hader_tokens], [message_tokens]), ...]
 		self.items = None
 
-	def parse(self, token_list):
-		self.token = token_list.get()
-		if str(self.token) != '%changelog':
-			raise SpecBadToken("Unexpected token '%s', expected \%changelog" % str(token))
+	@classmethod
+	def parse(cls, token_list, parent, allowed, disallowed):
+		st_changelog = cls(parent)
+		st_changelog.token_section = token_list.get()
+		if str(st_changelog.token_section) != '%changelog':
+			raise SpecBadToken("Unexpected token '%s', expected \%changelog" % str(st_changelog.token_section))
 
-		self.items = []
+		st_changelog.items = []
 		while str(token_list.touch()) == '*':
-			st_item = SpecStChangelogItem(self)
+			st_item = SpecStChangelogItem(st_changelog)
 			st_item.parse(token_list)
-			self.items.append(st_item)
+			st_changelog.items.append(st_item)
+
+		return st_changelog
 
 	def print_file(self, f):
-		self.token.print_file(f)
+		self.token_section.print_file(f)
 		for i in self.items:
 			i.print_file(f)
-
-	def print_str(self):
-		ret = ""
-
-		ret += self.token.print_str()
-		for i in self.items:
-			ret += i.print_str()
-
-		return ret
 
 class SpecStCheck(SpecStSection):
 	__metaclass__ = SpecStCheckMeta
@@ -413,19 +363,11 @@ class SpecStCheck(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStClean(SpecStSection):
 	__metaclass__ = SpecStCleanMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStFiles(SpecStSection):
 	__metaclass__ = SpecStFilesMeta
@@ -439,10 +381,6 @@ class SpecStInstall(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStPackage(SpecStSection):
 	__metaclass__ = SpecStPackageMeta
 
@@ -455,19 +393,11 @@ class SpecStPrep(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStPre(SpecStSection):
 	__metaclass__ = SpecStPreMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStPost(SpecStSection):
 	__metaclass__ = SpecStPostMeta
@@ -475,19 +405,11 @@ class SpecStPost(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStPreun(SpecStSection):
 	__metaclass__ = SpecStPreunMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStPostun(SpecStSection):
 	__metaclass__ = SpecStPostunMeta
@@ -495,19 +417,11 @@ class SpecStPostun(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStPretrans(SpecStSection):
 	__metaclass__ = SpecStPretransMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStPosttrans(SpecStSection):
 	__metaclass__ = SpecStPosttransMeta
@@ -515,19 +429,11 @@ class SpecStPosttrans(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStTrigger(SpecStSection):
 	__metaclass__ = SpecStTriggerMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStTriggerin(SpecStSection):
 	__metaclass__ = SpecStTriggerinMeta
@@ -535,19 +441,11 @@ class SpecStTriggerin(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStTriggerprein(SpecStSection):
 	__metaclass__ = SpecStTriggerpreinMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 
 class SpecStTriggerun(SpecStSection):
 	__metaclass__ = SpecStTriggerunMeta
@@ -555,27 +453,15 @@ class SpecStTriggerun(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStTriggerpostun(SpecStSection):
 	__metaclass__ = SpecStTriggerpostunMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
-
 class SpecStVerifyscript(SpecStSection):
 	__metaclass__ = SpecStVerifyscriptMeta
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
-
-	def edit(self, replacement):
-		# TODO: implement
-		self.tokens = []
 

@@ -23,7 +23,10 @@ from specError import SpecBadIndex
 
 class SpecFile:
 	def __init__(self, spec):
-		self.content = spec.read()
+		if type(spec) is file:
+			self.content = spec.read()
+		else: # string
+			self.content = spec
 		self.pointer = 0
 		self.length = len(self.content)
 

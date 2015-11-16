@@ -106,12 +106,6 @@ class SpecManipulator:
 				cp.setManipulator(manipulator)
 				break
 
-	def print_str(self):
-		ret = ""
-		for s in self.statements:
-			ret += s.print_str()
-		return ret
-
 	def print_file(self, f):
 		for s in self.statements:
 			s.print_file(f)

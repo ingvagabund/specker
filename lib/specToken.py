@@ -107,24 +107,20 @@ class SpecToken:
 		if not raw:
 			f.write(self.prepend)
 
-		f.write(self.token)
+		if self.token is not None:
+			f.write(self.token)
 
 		if not raw:
 			f.write(self.append)
 
-	def print_str(self):
-		ret = self.prepend
-		ret += self.token
-		ret += self.append
-		return ret
-
 class SpecTokenList:
-	def __init__(self, specFile):
+	def __init__(self, spec):
 		self.current = 0
 		self.pointer = 0
 		self.token_list = []
 
 		line = 1
+		specFile = SpecFile(spec)
 		while True:
 			t = SpecToken(specFile)
 			self.token_list.append(t)

@@ -19,6 +19,7 @@
 # ####################################################################
 
 import sys
+import datetime
 import specParser as sp
 import specManipulator as sm
 from specToken import SpecTokenList
@@ -286,6 +287,7 @@ class SpecStChangelog(SpecStSection):
 		def __init__(self, parent):
 			self.star = None
 			self.date = None
+			self.date_parsed = None
 			self.user = None
 			self.user_email = None
 			self.version_delim = None
@@ -293,14 +295,20 @@ class SpecStChangelog(SpecStSection):
 			self.parent = parent
 
 		def parse_header(self, token_list):
+			def parse_date(date):
+				s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
+				return datetime.datetime.strptime(s, '%a %b %d %Y')
+
 			self.star = token_list.get()
 			if str(self.star) != '*':
 				token_list.unget()
 				raise SpecBadToken("Expected token '*', got '%s'" % self.star)
 
 			self.date = []
-			for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
+			for _ in xrange(0, 4):
 				self.date.append(token_list.get())
+
+			self.date_parsed = parse_date(self.date)
 
 			self.user = []
 			while not str(token_list.touch()).startswith('<'):

@@ -95,7 +95,6 @@ class SpecParser(SpecManipulator):
 							allowed.remove(s)
 						if s not in disallowed:
 							disallowed.append(s)
-					# TODO: call registered callback
 					break
 
 		SpecManipulator.logger.debug("-- unparsed beginning of a section: " + str(token))

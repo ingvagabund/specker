@@ -41,6 +41,31 @@ class SpecManipulator:
 		def setManipulator(self, manipulator):
 			self.manipulator = manipulator
 
+	# Default section order in a spec file
+	SPEC_SECTION_ORDER = [
+				SpecStDescription,
+				SpecStPackage,
+				SpecStPrep,
+				SpecStBuild,
+				SpecStClean,
+				SpecStInstall,
+				SpecStCheck,
+				SpecStPost,
+				SpecStPreun,
+				SpecStPostun,
+				SpecStPre,
+				SpecStPretrans,
+				SpecStPosttrans,
+				SpecStTrigger,
+				SpecStTriggerin,
+				SpecStTriggerprein,
+				SpecStTriggerun,
+				SpecStTriggerpostun,
+				SpecStVerifyscript,
+				SpecStFiles,
+				SpecStChangelog,
+			]
+
 	BUILD_T 				= ChunkParser('%build', SpecStBuild)
 	CHANGELOG_T 		= ChunkParser('%changelog', SpecStChangelog)
 	CHECK_T 				= ChunkParser('%check', SpecStCheck)

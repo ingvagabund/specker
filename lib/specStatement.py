@@ -394,6 +394,34 @@ class SpecStPackage(SpecStSection):
 
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
+		self.pkg = None
+
+	@classmethod
+	def parse(cls, token_list, parent, allowed, disallowed):
+		sm.SpecManipulator.logger.debug("--- parsing section %s" % cls.__name__)
+		st_package = cls(parent)
+		st_package.token_section = token_list.get()
+		if str(st_package.token_section) != '%package':
+			token_list.unget()
+			raise SpecBadToken('Expected %package')
+
+		if st_package.token_section.same_line(token_list.touch()):
+			st_package.pkg = token_list.get()
+		else:
+			st_package.pkg = None # not subpackage
+
+		st_package.statements = sp.SpecParser.parse_loop(token_list, st_package,
+																		sm.SpecManipulator.DEFINITION_TS,
+																		sm.SpecManipulator.SECTION_TS)
+		return st_package
+
+	def print_file(self, f):
+		self.token_section.print_file(f)
+		if self.pkg != None:
+			self.pkg.print_file(f)
+
+		for statement in self.statements:
+			statement.print_file(f)
 
 class SpecStPrep(SpecStSection):
 	__metaclass__ = SpecStPrepMeta

@@ -113,6 +113,9 @@ class SpecToken:
 		if not raw:
 			f.write(self.append)
 
+	def same_line(self, token2):
+		return self.line == token2.line
+
 class SpecTokenList:
 	def __init__(self, spec):
 		self.current = 0

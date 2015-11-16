@@ -20,6 +20,7 @@
 
 import logging
 import sys
+import copy
 from specManipulator import SpecManipulator
 from specFile import SpecFile
 from specToken import SpecTokenList
@@ -68,9 +69,9 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse_loop_section(self, parent = None):
-		ret = self.parse_preamble()
-		allowed = self.ALL_TS			# allowed within section
-		disallowed = self.SECTION_TS			# allowed within section
+		ret = []
+		allowed = copy.deepcopy(self.ALL_TS)				# allowed within section
+		disallowed = copy.deepcopy(self.SECTION_TS)		# allowed within section
 
 		found = True
 		while found:
@@ -100,7 +101,8 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse(self):
-		self.statements = self.parse_loop_section(None)
+		self.statements = self.parse_preamble()
+		self.statements += self.parse_loop_section(None)
 
 		eof = self.token_list.touch()
 		if eof.token != None:

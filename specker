@@ -27,7 +27,7 @@ from lib.specChanger import SpecChanger
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
 
-def check_opts(options):
+def check_opts(options, input_file):
 	opts_show = [ options.changelog_show,
 						options.description_show,
 						options.build_show,
@@ -63,7 +63,7 @@ def check_opts(options):
 		logger.error("Error: only one show operation is allowed per run")
 		return False
 
-	# there can be plenty *-adds and *-removes
+	# there can be plenty *-adds and *-removes, except sections_add
 
 	opts_edit = [ options.description_edit,
 					options.build_edit,
@@ -86,7 +86,8 @@ def check_opts(options):
 
 	# there can be stdin read only once, all others have to be specified
 	opts_edit_stdin = [x for x in opts_edit if x is not None and x == '-' ]
-	if len(opts_edit_stdin) > 1:
+	if len(opts_edit_stdin) > 1 or (len(opts_edit_stdin) == 1 and options.sections_add) or \
+		  ((len(opts_edit_stdin) > 0 or options.sections_add) and not input_file):
 		logger.error("Error: multiple stdin reads, only one can be used per run")
 		return False
 
@@ -186,6 +187,11 @@ if __name__ == "__main__":
 	parser.add_option(
 		"", "", "--custom-manipulator", dest="custom_manipulator", action = "store", type = "string",
 		help = "custom manipulator source file"
+	)
+
+	parser.add_option(
+		"", "", "--sections-add", dest="sections_add", action = "store_true", default = False,
+		help = "read sections from stdin and add them to the spec file"
 	)
 
 	parser.add_option(
@@ -449,7 +455,7 @@ if __name__ == "__main__":
 		logger.error("Error: Incorrect number of arguments")
 		exit(1)
 
-	if not check_opts(options):
+	if not check_opts(options, len(args) == 1):
 		exit(2)
 
 	input_file = None
@@ -561,6 +567,11 @@ if __name__ == "__main__":
 		if options.verifyscript_edit:
 			what = sys.stdin.read() if options.verifyscript_edit == "-" else options.verifyscript_edit
 			spec.verifyscript_edit(what)
+
+		if options.sections_add:
+			spec2 = SpecParser()
+			spec2.init(sys.stdin)
+			spec.sections_add(spec2.parse_loop_section())
 
 		# yo mama, show results!
 		if options.provides_show:

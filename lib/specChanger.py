@@ -71,13 +71,23 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
-	def find_definitions_all(self):
+	def find_definitions_all(self, statements):
 		ret = []
 
-		for s in self.statements:
+		for s in statements:
 			if type(s) is SpecStIf:
-				ret.append(self.find_definitions_all(s.getTrueBranch()))
-				ret.append(self.find_definitions_all(s.getFalseBranch()))
+				b = self.find_definitions_all(s.getTrueBranch())
+				if b:
+					ret += b
+				b = self.find_definitions_all(s.getFalseBranch())
+				if b:
+					ret += b
+			elif type(s) is SpecStDefinition:
+				ret.append(s)
+			elif type(s) is SpecStPackage:
+				b = self.find_definitions_all(s.getStatements())
+				if b:
+					ret += b
 
 		return ret
 
@@ -151,8 +161,29 @@ class SpecChanger(SpecManipulator):
 			if not found:
 				raise SpecNotFound("Section '%s' was not added" % section)
 
+	def print_definitions(self, defs, definition, packages, f):
+		def get_package(definition):
+			s = definition.parent
+			while s is not None:
+				if type(s) is SpecStPackage:
+					return s.pkg
+
+		for d in defs:
+			if str(d.name) == definition:
+				pkg = get_package(d)
+				if str(pkg) in packages or (pkg is None and '-' in packages) or '*' in packages:
+					if pkg is None:
+						f.write('-:')
+					else:
+						pkg.print_file(f, raw = True)
+						f.write(':') # add delim since raw
+
+					d.print_file(f, raw = True)
+					f.write('\n') # Add delim since raw token is printed
+
 	def provides_show(self, package, f = sys.stdout):
-		return self.find_definition_print('Provides:', package, f)
+		defs = self.find_definitions_all(self.statements)
+		self.print_definitions(defs, 'Provides:', package, f)
 
 	def provides_add(self, package, items):
 		return self.find_definition_add('Provides:', package, items)
@@ -161,7 +192,8 @@ class SpecChanger(SpecManipulator):
 		return self.find_definition_remove('Provides:', package, items)
 
 	def requires_show(self, package, f = sys.stdout):
-		return self.find_definition_print('Requires:', package, f)
+		defs = self.find_definitions_all(self.statements)
+		self.print_definitions(defs, 'Requires:', package, f)
 
 	def requires_add(self, package, items):
 		return self.find_definition_add('Requires:', package, items)
@@ -170,7 +202,8 @@ class SpecChanger(SpecManipulator):
 		return self.find_definition_remove('Requires:', package, items)
 
 	def buildrequires_show(self, package, f = sys.stdout):
-		return self.find_definition_print('BuildRequires:', package, f)
+		defs = self.find_definitions_all(self.statements)
+		self.print_definitions(defs, 'BuildRequires:', package, f)
 
 	def buildrequires_add(self, package, items):
 		return self.find_definition_add('BuildRequires:', package, items)

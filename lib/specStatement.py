@@ -149,16 +149,17 @@ class SpecStDefinition(SpecStatement):
 
 		return st_definition
 
-	def print_file(self, f):
-		self.name.print_file(f)
-		self.value.print_file(f)
+	def print_file(self, f, raw = False):
+		if not raw:
+			self.name.print_file(f)
+
+		self.value.print_file(f, raw)
 
 	def setValue(self, value):
 		self.value = value
 
 	def getValue(self):
 		return self.value
-
 
 class SpecStGlobal(SpecStatement):
 	__metaclass__ = SpecStGlobalMeta
@@ -422,6 +423,9 @@ class SpecStPackage(SpecStSection):
 
 		for statement in self.statements:
 			statement.print_file(f)
+
+	def getStatements(self):
+		return self.statements
 
 class SpecStPrep(SpecStSection):
 	__metaclass__ = SpecStPrepMeta

@@ -72,6 +72,17 @@ class SpecChanger(SpecManipulator):
 
 		return s
 
+	def find_definitions_all(self):
+		ret = []
+
+		for s in self.statements:
+			if type(s) is SpecStIf:
+				ret.append(self.find_definitions_all(s.getTrueBranch()))
+				ret.append(self.find_definitions_all(s.getFalseBranch()))
+
+		return ret
+
+
 	def find_definition_print(self, definition, package, f = sys.stdout):
 		# TODO: use this for particular package as well
 		for s in self.statements:

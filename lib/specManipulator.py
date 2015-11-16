@@ -63,7 +63,7 @@ class SpecManipulator:
 				SpecStTriggerpostun,
 				SpecStVerifyscript,
 				SpecStFiles,
-				SpecStChangelog,
+				SpecStChangelog
 			]
 
 	BUILD_T 				= ChunkParser('%build', SpecStBuild)

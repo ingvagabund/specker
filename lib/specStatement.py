@@ -302,7 +302,10 @@ class SpecStChangelog(SpecStSection):
 			for _ in xrange(0, 4): # TODO: parse dayOfWeek, month, day, year
 				self.date.append(token_list.get())
 
-			self.user = [token_list.get()] # TODO: multiple words
+			self.user = []
+			while not str(token_list.touch()).startswith('<'):
+				self.user.append(token_list.get())
+
 			self.user_email = token_list.get()
 			self.version_delim = token_list.get()
 

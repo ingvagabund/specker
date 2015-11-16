@@ -144,8 +144,7 @@ class SpecStDefinition(SpecStatement):
 			raise SpecBadToken('Expected definition')
 		st_definition.name = t
 
-		st_exp = SpecStExpression(st_definition)
-		st_exp.parse(token_list, parent, allowed, disallowed)
+		st_exp = SpecStExpression.parse(token_list, parent, allowed, disallowed)
 		st_definition.setValue(st_exp)
 
 		return st_definition

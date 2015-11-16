@@ -75,14 +75,14 @@ class SpecChanger(SpecManipulator):
 	def find_definition_print(self, definition, package, f = sys.stdout):
 		# TODO: use this for particular package as well
 		for s in self.statements:
-			if type(s) is StDefinition and str(s.name) == definition:
+			if type(s) is SpecStDefinition and str(s.name) == definition:
 				s.value.print_file(f, raw = True)
 				f.write('\n') # Add delim since raw token is printed
 
 	def find_definition_add(self, package, items):
 		raise SpecNotImplemented("Not Implemented")
 
-	def find_definition_remove(self, package, items):
+	def find_definition_remove(self, definition, package, items):
 		raise SpecNotImplemented("Not Implemented")
 
 	def provides_show(self, package, f = sys.stdout):

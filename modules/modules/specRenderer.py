@@ -108,7 +108,16 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 	obj = SpecStChangelog
 
 	def render(self, f, ctx):
-		raise ValueError("Not implemented")
+		self.section.getTokenSection().write(f)
+
+		for item in self.section.getItems():
+			item.getStar().write(f)
+			item.getDate().write(f) # TODO
+			item.getUser().write(f) # TODO
+			item.getUserEmail().write(f)
+			item.getVersionDelim().write(f)
+			item.getVersion().write(f)
+			item.getMessage().write(f)
 
 class SpecCheckRenderer(SpecSectionRenderer):
 	obj = SpecStCheck

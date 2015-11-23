@@ -91,11 +91,27 @@ class SpecChanger(SpecManipulator):
 
 		return ret
 
-	def find_definition_add(self, package, items):
-		raise SpecNotImplemented("Not Implemented")
+	def find_definition_add(self, definition, packages):
+		for pkg in packages:
+			if pkg == '-':
+				# TODO: add in preamble
+				pass
+			else:
+				for st_pkg in self.statements:
+					if type(st_pkg) is SpecStPackage:
+						if st_pkg.pkg != None and str(st_pkg.pkg) == pkg:
+								st_pkg.add_definition(definition, packages[pkg])
 
-	def find_definition_remove(self, definition, package, items):
-		raise SpecNotImplemented("Not Implemented")
+	def find_definition_remove(self, definition, packages):
+		for pkg in packages:
+			if pkg == '-':
+				# TODO: remove in preamble
+				pass
+			else:
+				for st_pkg in self.statements:
+					if type(st_pkg) is SpecStPackage:
+						if st_pkg.pkg != None and str(st_pkg.pkg) == pkg:
+								st_pkg.remove_definition(definition, packages[pkg])
 
 	def sections_add(self, sections):
 		def get_add_index(idx_find, idx):
@@ -155,15 +171,9 @@ class SpecChanger(SpecManipulator):
 				raise SpecNotFound("Section '%s' was not added" % section)
 
 	def print_definitions(self, defs, definition, packages, f):
-		def get_package(definition):
-			s = definition.parent
-			while s is not None:
-				if type(s) is SpecStPackage:
-					return s.pkg
-
 		for d in defs:
 			if str(d.name) == definition:
-				pkg = get_package(d)
+				pkg = d.get_package()
 				if str(pkg) in packages or (pkg is None and '-' in packages) or '*' in packages:
 					if pkg is None:
 						f.write('-:')
@@ -178,31 +188,31 @@ class SpecChanger(SpecManipulator):
 		defs = self.find_definitions_all(self.statements)
 		self.print_definitions(defs, 'Provides:', package, f)
 
-	def provides_add(self, package, items):
-		return self.find_definition_add('Provides:', package, items)
+	def provides_add(self, packages):
+		return self.find_definition_add('Provides:', packages)
 
-	def provides_remove(self, package, items):
-		return self.find_definition_remove('Provides:', package, items)
+	def provides_remove(self, packages):
+		return self.find_definition_remove('Provides:', packages)
 
-	def requires_show(self, package, f = sys.stdout):
+	def requires_show(self, packages, f = sys.stdout):
 		defs = self.find_definitions_all(self.statements)
-		self.print_definitions(defs, 'Requires:', package, f)
+		self.print_definitions(defs, 'Requires:', packages, f)
 
-	def requires_add(self, package, items):
-		return self.find_definition_add('Requires:', package, items)
+	def requires_add(self, packages):
+		return self.find_definition_add('Requires:', packages)
 
-	def requires_remove(self, package, items):
-		return self.find_definition_remove('Requires:', package, items)
+	def requires_remove(self, packages):
+		return self.find_definition_remove('Requires:', packages)
 
 	def buildrequires_show(self, package, f = sys.stdout):
 		defs = self.find_definitions_all(self.statements)
 		self.print_definitions(defs, 'BuildRequires:', package, f)
 
-	def buildrequires_add(self, package, items):
-		return self.find_definition_add('BuildRequires:', package, items)
+	def buildrequires_add(self, package):
+		return self.find_definition_add('BuildRequires:', package)
 
-	def buildrequires_remove(self, package, items):
-		return self.find_definition_remove('BuildRequires:', package, items)
+	def buildrequires_remove(self, packages):
+		return self.find_definition_remove('BuildRequires:', packages)
 
 	def changelog_show(self, f = sys.stdout):
 		# TODO: do pretty print

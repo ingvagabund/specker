@@ -237,3 +237,9 @@ class SpecTokenList:
 		for token in self.token_list:
 			token.write(f)
 
+	def tokenListAppend(self, item):
+		self.token_list.append(item)
+
+	def __getitem__(self, i):
+		return self.token_list[i]
+

@@ -22,7 +22,7 @@ from specFile import SpecFile
 from specError import SpecBadIndex
 
 class SpecToken:
-	def __init__(self, specFile):
+	def __init__(self, specFile = None):
 
 		def readComment(specFile):
 			ret = ""
@@ -39,6 +39,9 @@ class SpecToken:
 		self.token = ""
 		self.line  = None
 		self.eol_count = 0
+
+		if specFile is None:
+			return
 
 		token_parsed = False
 
@@ -91,10 +94,6 @@ class SpecToken:
 					break
 
 	def __str__(self):
-		#ret = "prepend: '" + self.prepend + "' " + str(self.line) + ":\n"
-		#ret += str(self.token)
-		#ret += "\nappend: '" + self.append + "'\n"
-		#return ret
 		if self.token == None:
 			return "<EOF>"
 		else:
@@ -115,6 +114,15 @@ class SpecToken:
 
 	def same_line(self, token2):
 		return self.line == token2.line
+
+	@staticmethod
+	def create(token, prepend = '', append = ' '):
+		# note that line is not set
+		ret = SpecToken()
+		ret.prepend = prepend
+		ret.token = token
+		ret.append = append
+		return ret
 
 class SpecTokenList:
 	def __init__(self, spec):

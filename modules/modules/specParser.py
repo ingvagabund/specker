@@ -20,6 +20,7 @@
 
 import re
 import copy
+import datetime
 import functools
 from specSection import *
 from specToken import SpecTokenList
@@ -302,9 +303,70 @@ class SpecChangelogParser(SpecSectionParser):
 		return None
 
 	@classmethod
+	def parseItem(cls, token_list, parent, ctx):
+			def parse_date(date):
+				s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
+				return datetime.datetime.strptime(s, '%a %b %d %Y')
+
+			def changelogItemBeginningCallback(obj, token_list):
+				# is there some section?
+				if obj.sectionBeginingCallback(obj, token_list):
+					return True
+
+				# or is there another changelog item?
+				return str(token_list.touch()) == '*'
+
+			item = SpecChangelogParser.obj.SpecStChangelogItem(parent)
+
+			star = token_list.get()
+			if str(star) != '*':
+				token_list.unget()
+				raise SpecBadToken("Expected token '*', got '%s'" % star)
+			item.setStar(star)
+
+			date = SpecTokenList()
+			for _ in xrange(0, 4):
+				date.tokenListAppend(token_list.get())
+			item.setDate(date)
+
+			date_parsed = parse_date(date)
+			item.setDateParsed(date_parsed)
+
+			user = SpecTokenList()
+			while not str(token_list.touch()).startswith('<'):
+				user.tokenListAppend(token_list.get())
+			item.setUser(user)
+
+			user_email = token_list.get()
+			item.setUserEmail(user_email)
+
+			version_delim = token_list.get()
+			if str(version_delim) != '-':
+				token_list.unget()
+				raise SpecBadToken("Expected token '-', got '%s'" % self.star)
+			item.setVersionDelim(version_delim)
+
+			version = token_list.get()
+			item.setVersion(version)
+
+			item.setMessage(token_list.getWhileNot(functools.partial(changelogItemBeginningCallback, ctx)))
+
+			return item
+
+	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
-		# TODO: implement
-		return None
+		if not cls.sectionBegining(token_list):
+			return None
+
+		ret = SpecChangelogParser.obj(parent)
+		ret.setTokenSection(token_list.get())
+
+		while str(token_list.touch()) == '*':
+			item = cls.parseItem(token_list, ret, ctx)
+			if item:
+				ret.appendItem(item)
+
+		return ret
 
 class SpecCheckParser(SpecSectionParser):
 	obj = SpecStCheck

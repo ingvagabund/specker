@@ -183,6 +183,7 @@ class SpecStChangelog(SpecStSection):
 		__metaclass__ = SpecStChangelogItemMeta
 
 		def __init__(self, parent):
+			self.parent = parent
 			self.star = None
 			self.date = None
 			self.date_parsed = None
@@ -190,20 +191,77 @@ class SpecStChangelog(SpecStSection):
 			self.user_email = None
 			self.version_delim = None
 			self.version = None
-			self.parent = parent
+			self.message = None
+
+		def setStar(self, star):
+			self.star = star
+
+		def setDate(self, date):
+			self.date = date
+
+		def setDateParsed(self, date_parsed):
+			self.date_parsed = date_parsed
+
+		def setUser(self, user):
+			self.user = user
+
+		def setUserEmail(self, user_email):
+			self.user_email = user_email
+
+		def setVersionDelim(self, version_delim):
+			self.version_delim = version_delim
+
+		def setVersion(self, version):
+			self.version = version
+
+		def setMessage(self, message):
+			self.message = message
+
+		def getStar(self):
+			return self.star
+
+		def getDate(self):
+			return self.date
+
+		def getDateParsed(self):
+			return self.date_parsed
+
+		def getUser(self):
+			return self.user
+
+		def getUserEmail(self):
+			return self.user_email
+
+		def getVersionDelim(self):
+			return self.version_delim
+
+		def getVersion(self):
+			return self.version
+
+		def getMessage(self):
+			return self.message
 
 	__metaclass__ = SpecStChangelogMeta
 
 	def __init__(self, parent):
 		self.parent = parent
 		self.token_section = None
-		self.items = None
+		self.items = []
+
+	def setItems(self, items):
+		self.items = items
 
 	def setTokenSection(self, tkn):
 		self.token_section = tkn
 
 	def getTokenSection(self):
 		return self.token_section
+
+	def getItems(self):
+		return self.items
+
+	def appendItem(self, item):
+		self.items.append(item)
 
 class SpecStCheck(SpecStSection):
 	__metaclass__ = SpecStCheckMeta

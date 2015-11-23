@@ -495,11 +495,11 @@ if __name__ == "__main__":
 
 		# modify operations before shows
 		if options.provides_add:
-			spec.provides_add(parse_multiarg(options.provides_add), f)
+			spec.provides_add(parse_multiarg(options.provides_add))
 		if options.requires_add:
-			spec.requires_add(parse_multiarg(options.requires_add), f)
+			spec.requires_add(parse_multiarg(options.requires_add))
 		if options.buildrequires_add:
-			spec.buildrequires_add(parse_multiarg(options.buildrequires_add), f)
+			spec.buildrequires_add(parse_multiarg(options.buildrequires_add))
 		if options.changelog_add:
 			spec.changelog_add(options.changelog_add.split(':'))
 		if options.package_add:

@@ -134,6 +134,15 @@ class SpecStDefinition(SpecStatement):
 		self.name = None
 		self.value = None
 
+	def get_package(self):
+		s = self.parent
+		while s is not None:
+			if type(s) is SpecStPackage:
+				return s.pkg
+			s = s.parent
+
+		return None
+
 	@classmethod
 	def parse(cls, token_list, parent, allowed, disallowed):
 		sm.SpecManipulator.logger.debug("-- parsing definition")
@@ -160,6 +169,13 @@ class SpecStDefinition(SpecStatement):
 
 	def getValue(self):
 		return self.value
+
+	@classmethod
+	def create(self, definition, value, parent = None):
+		ret = SpecStDefinition()
+		ret.parent = parent
+		ret.name = SpecToken.create(definition)
+		ret.value = SpecStExpression.create(value)
 
 class SpecStGlobal(SpecStatement):
 	__metaclass__ = SpecStGlobalMeta
@@ -242,6 +258,11 @@ class SpecStExpression(SpecStatement):
 		st_exp = cls(parent)
 		st_exp.tokens = token_list.getLine()
 		return st_exp
+
+	@classmethod
+	def create(cls, value, parent):
+		st_exp = cls(parent)
+		st_exp.tokens = SpecToken.create(value) # TODO
 
 class SpecStSection(SpecStatement):
 	__metaclass__ = SpecStSectionMeta
@@ -396,6 +417,12 @@ class SpecStPackage(SpecStSection):
 	def __init__(self, parent):
 		SpecStSection.__init__(self, parent)
 		self.pkg = None
+
+	def remove_definition(self, definition, values):
+		print "removing: " + str(values)
+
+	def add_definition(self, definition, values):
+		print "adding: " + str(values)
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, disallowed):

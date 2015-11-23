@@ -67,9 +67,11 @@ class SpecModel(object):
 		return self.sections
 
 	def find_section(self, section):
-		ret = []
+		ret = None
 		for s in self.sections:
 			if issubclass(s.__class__, section):
+				if not ret:
+					ret = []
 				ret.append(s)
 		return ret
 

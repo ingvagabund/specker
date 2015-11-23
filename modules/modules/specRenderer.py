@@ -20,6 +20,7 @@
 
 import sys
 import re
+from specError import SpecNotFound
 from specSection import *
 from specManipulator import SpecManipulator
 

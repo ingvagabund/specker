@@ -22,6 +22,7 @@ import re
 import copy
 import datetime
 import functools
+import sys
 from specSection import *
 from specToken import SpecTokenList
 from specModel import SpecModel
@@ -179,11 +180,32 @@ class SpecSectionParser(object):
 		if not section: # section not found
 			return None
 
-		# TODO: eof check
 		ret = section(parent)
 		ret.setTokenSection(token_list.get())
+		#could be empty
 		ret.setTokens(token_list.getWhileNot(functools.partial(ctx.sectionBeginingCallback, ctx)))
 
+		return ret
+
+class SpecExpressionParser(SpecSectionParser):
+	obj = SpecStExpression
+
+	@staticmethod
+	def sectionBegining(token_list):
+		raise ValueError("Spec expression has no beginning")
+
+	@classmethod
+	def parse(cls, token_list, parent, allowed, ctx):
+		ret = SpecExpressionParser.obj(parent)
+
+		tokens = SpecTokenList()
+		tkn = token_list.get()
+		tokens.tokenListAppend(tkn)
+		while tkn.sameLine(token_list.touch()):
+			tkn = token_list.get()
+			tokens.tokenListAppend(tkn)
+
+		ret.setTokens(tokens)
 		return ret
 
 class SpecIfParser(SpecSectionParser):
@@ -206,8 +228,7 @@ class SpecIfParser(SpecSectionParser):
 
 		stif = SpecIfParser.obj(parent)
 		stif.setIfToken(token_list.get())
-		# TODO: stif.setExpr(ctx.parseExpresion(parent, token_list))
-		stif.setExpr(token_list.get())
+		stif.setExpr(SpecExpressionParser.parse(token_list, parent, allowed, ctx))
 		stif.setTrueBranch(ctx.parse_loop(token_list, stif, allowed))
 		token = token_list.touch()
 		if str(token) == '%else':
@@ -231,7 +252,8 @@ class SpecDefinitionParser(SpecSectionParser):
 		token = token_list.touch()
 
 		if str(token) in [ 'Name:', 'Version:', 'Release:', 'Summary:', 'License:',
-				'URL:', 'ExclusiveArch:', 'BuildRequires:', 'Provides:', 'Requires']:
+				'URL:', 'ExclusiveArch:', 'BuildRequires:', 'Provides:', 'Requires:',
+				'Source:', 'BuildArch:']:
 			return SpecDefinitionParser.obj
 
 		p = re.compile('BuildRequires(.*):') # This could be adjusted later on
@@ -257,10 +279,11 @@ class SpecDefinitionParser(SpecSectionParser):
 		if not cls.sectionBegining(token_list):
 			return None
 
-		# TODO: eof check
 		ret = SpecDefinitionParser.obj(parent)
 		ret.setName(token_list.get())
 		ret.setValue(token_list.getLine())
+		if ret.getValue().isEOF():
+			raise ValueError("Expected definition value, got '%s'" % str(ret.getValue()))
 
 		return ret
 
@@ -280,12 +303,13 @@ class SpecGlobalParser(SpecSectionParser):
 		if not cls.sectionBegining(token_list):
 			return None
 
-		# TODO: eof check
 		ret = SpecGlobalParser.obj(parent)
 		ret.setGlobalToken(token_list.get())
 		ret.setVariable(token_list.get())
-		ret.setValue(token_list.getLine())
+		if ret.getVariable().isEOF():
+			raise ValueError("Expected variable, got '%s'" % str(ret.getVariable()))
 
+		ret.setValue(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
 		return ret
 
 class SpecBuildParser(SpecSectionParser):

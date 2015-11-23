@@ -81,12 +81,22 @@ class SpecSectionRenderer(object):
 		self.section.getTokenSection().write(f)
 		self.section.getTokens().write(f)
 
+class SpecExpressionRenderer(object):
+	obj = SpecStExpression
+
+	def __init__(self, section):
+		self.section = section
+
+	def render(self, f, ctx):
+		for token in self.section.getTokens():
+			token.write(f)
+
 class SpecIfRenderer(SpecSectionRenderer):
 	obj = SpecStIf
 
 	def render(self, f, ctx):
 		self.section.getIfToken().write(f)
-		self.section.getExpr().write(f)
+		SpecExpressionRenderer(self.section.getExpr()).render(f, ctx)
 		ctx.render_list(self.section.getTrueBranch(), f)
 		if self.section.getElseToken():
 			self.section.getElseToken().write(f)
@@ -99,7 +109,7 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 	def render(self, f, ctx):
 		self.section.getGlobalToken().write(f)
 		self.section.getVariable().write(f)
-		self.section.getValue().write(f)
+		SpecExpressionRenderer(self.section.getValue()).render(f, ctx)
 
 class SpecBuildRenderer(SpecSectionRenderer):
 	obj = SpecStBuild

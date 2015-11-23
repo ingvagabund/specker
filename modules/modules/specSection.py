@@ -99,6 +99,15 @@ class SpecStDefinition(SpecSection):
 	def getValue(self):
 		return self.value
 
+	def getPackage(self):
+		parent = self.parent
+		while parent != None:
+			if issubclass(parent.__class__, SpecStPackage):
+				return parent
+			parent = self.parent
+
+		return None
+
 class SpecStGlobal(SpecSection):
 	__metaclass__ = SpecStGlobalMeta
 

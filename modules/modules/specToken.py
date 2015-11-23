@@ -233,9 +233,9 @@ class SpecTokenList:
 	def __next__(self): # Python 3
 		return self.next()
 
-	def write(self, f):
+	def write(self, f, raw = False):
 		for token in self.token_list:
-			token.write(f)
+			token.write(f, raw)
 
 	def tokenListAppend(self, item):
 		self.token_list.append(item)

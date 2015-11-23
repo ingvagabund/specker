@@ -18,6 +18,26 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 
+from specSection import *
+
 class SpecManipulator(object):
-	pass
+	def find_definitions_all(self, statements):
+		ret = []
+
+		for s in statements:
+			if issubclass(s.__class__, SpecStIf):
+				b = self.find_definitions_all(s.getTrueBranch())
+				if b:
+					ret += b
+				b = self.find_definitions_all(s.getFalseBranch())
+				if b:
+					ret += b
+			elif issubclass(s.__class__, SpecStDefinition):
+				ret.append(s)
+			elif issubclass(s.__class__, SpecStPackage):
+				b = self.find_definitions_all(s.getDefs())
+				if b:
+					ret += b
+
+		return ret
 

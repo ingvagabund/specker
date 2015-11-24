@@ -575,7 +575,7 @@ if __name__ == "__main__":
 		if options.sections_add:
 			spec2 = SpecParser()
 			spec2.init(sys.stdin)
-			spec.sections_add(spec2.parse_loop_section())
+			spec.sections_add(spec2.parse_loop_section(None))
 
 		spec = SpecRenderer(spec.getModel())
 		# yo mama, show results!

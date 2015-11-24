@@ -79,6 +79,10 @@ class SpecEditor(SpecManipulator):
 
 		return s
 
+	def sections_add(self, sections):
+		for section in sections:
+			self.model.add(section)
+
 	def find_section_add(self, section_type, items, verbose = True):
 		s = self.model.find_section(section_type)
 

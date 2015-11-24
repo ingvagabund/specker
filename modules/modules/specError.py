@@ -53,3 +53,10 @@ class SpecBadIndex(IndexError):
 	def __str__(self):
 		return self.message
 
+class SpecBadParam(ValueError):
+	def __init__(self, message):
+		self.message = message
+
+	def __str__(self):
+		return self.message
+

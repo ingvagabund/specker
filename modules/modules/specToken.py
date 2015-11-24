@@ -112,6 +112,16 @@ class SpecToken:
 		if not raw:
 			f.write(self.append)
 
+	def string(self, raw = False):
+		ret = ""
+		if not raw:
+			ret += self.prepend
+		if self.token is not None:
+			ret += self.token
+		if not raw:
+			ret +=  self.append
+		return ret
+
 	def sameLine(self, token2):
 		return self.line == token2.line
 
@@ -242,4 +252,10 @@ class SpecTokenList:
 
 	def __getitem__(self, i):
 		return self.token_list[i]
+
+	def __eq__(self, str_compare):
+		str_created = ""
+		for token in self.token_list:
+			str_created += token.string(raw = True)
+		return str_created == str_compare
 

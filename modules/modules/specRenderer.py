@@ -71,12 +71,6 @@ class SpecRenderer(SpecManipulator):
 		if not found:
 			raise NotImplementedError("Not implemented renderer")
 
-	def setModel(self, model):
-		self.model = model
-
-	def getModel(self):
-		return self.model
-
 	def find_section_print(self, section_type, f = sys.stdout, verbose = True):
 		s = self.model.find_section(section_type)
 
@@ -225,14 +219,14 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 	def render(self, f, ctx):
 		self.section.getTokenSection().write(f)
 
-		for item in self.section.getItems():
-			item.getStar().write(f)
-			item.getDate().write(f)
-			item.getUser().write(f)
-			item.getUserEmail().write(f)
-			item.getVersionDelim().write(f)
-			item.getVersion().write(f)
-			item.getMessage().write(f)
+		for entry in self.section.getEntries():
+			entry.getStar().write(f)
+			entry.getDate().write(f)
+			entry.getUser().write(f)
+			entry.getUserEmail().write(f)
+			entry.getVersionDelim().write(f)
+			entry.getVersion().write(f)
+			entry.getMessage().write(f)
 
 class SpecCheckRenderer(SpecSectionRenderer):
 	obj = SpecStCheck

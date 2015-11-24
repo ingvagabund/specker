@@ -21,6 +21,15 @@
 from specSection import *
 
 class SpecManipulator(object):
+	def __init__(self, model):
+		self.model = model
+
+	def setModel(self, model):
+		self.model = model
+
+	def getModel(self):
+		return self.model
+
 	def find_definitions_all(self, statements):
 		ret = []
 

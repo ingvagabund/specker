@@ -188,8 +188,8 @@ class SpecStBuild(SpecStSection):
 	__metaclass__ = SpecStBuildMeta
 
 class SpecStChangelog(SpecStSection):
-	class SpecStChangelogItem(SpecStSection):
-		__metaclass__ = SpecStChangelogItemMeta
+	class SpecStChangelogEntry(SpecStSection):
+		__metaclass__ = SpecStChangelogEntryMeta
 
 		def __init__(self, parent):
 			self.parent = parent
@@ -255,10 +255,10 @@ class SpecStChangelog(SpecStSection):
 	def __init__(self, parent):
 		self.parent = parent
 		self.token_section = None
-		self.items = []
+		self.entries = []
 
-	def setItems(self, items):
-		self.items = items
+	def setEntries(self, entries):
+		self.entries = entries
 
 	def setTokenSection(self, tkn):
 		self.token_section = tkn
@@ -266,11 +266,14 @@ class SpecStChangelog(SpecStSection):
 	def getTokenSection(self):
 		return self.token_section
 
-	def getItems(self):
-		return self.items
+	def getEntries(self):
+		return self.entries
 
-	def appendItem(self, item):
-		self.items.append(item)
+	def appendEntry(self, entry):
+		self.entries.append(entry)
+
+	def insertEntry(self, entry):
+		self.entries.insert(0, entry)
 
 class SpecStCheck(SpecStSection):
 	__metaclass__ = SpecStCheckMeta
@@ -304,6 +307,9 @@ class SpecStPackage(SpecStSection):
 
 	def getDefs(self):
 		return self.defs
+
+	def defsAppend(self, item):
+		return self.defs.append(item)
 
 class SpecStPrep(SpecStSection):
 	__metaclass__ = SpecStPrepMeta

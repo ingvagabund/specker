@@ -152,9 +152,6 @@ class SpecParser(SpecManipulator):
 		if not eof.isEOF():
 			raise SpecBadToken("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
 
-	def getModel(self):
-		return self.model
-
 class SpecSectionParser(object):
 	obj = [ SpecStBuild, SpecStCheck, SpecStClean, SpecStDescription, SpecStFiles, SpecStInstall,
 				SpecStPrep, SpecStPre, SpecStPost, SpecStPreun, SpecStPostun, SpecStPretrans,
@@ -327,55 +324,55 @@ class SpecChangelogParser(SpecSectionParser):
 		return None
 
 	@classmethod
-	def parseItem(cls, token_list, parent, ctx):
+	def parseEntry(cls, token_list, parent, ctx):
 			def parse_date(date):
 				s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
 				return datetime.datetime.strptime(s, '%a %b %d %Y')
 
-			def changelogItemBeginningCallback(obj, token_list):
+			def changelogEntryBeginningCallback(obj, token_list):
 				# is there some section?
 				if obj.sectionBeginingCallback(obj, token_list):
 					return True
 
-				# or is there another changelog item?
+				# or is there another changelog entry?
 				return str(token_list.touch()) == '*'
 
-			item = SpecChangelogParser.obj.SpecStChangelogItem(parent)
+			entry = SpecChangelogParser.obj.SpecStChangelogEntry(parent)
 
 			star = token_list.get()
 			if str(star) != '*':
 				token_list.unget()
 				raise SpecBadToken("Expected token '*', got '%s'" % star)
-			item.setStar(star)
+			entry.setStar(star)
 
 			date = SpecTokenList()
 			for _ in xrange(0, 4):
 				date.tokenListAppend(token_list.get())
-			item.setDate(date)
+			entry.setDate(date)
 
 			date_parsed = parse_date(date)
-			item.setDateParsed(date_parsed)
+			entry.setDateParsed(date_parsed)
 
 			user = SpecTokenList()
 			while not str(token_list.touch()).startswith('<'):
 				user.tokenListAppend(token_list.get())
-			item.setUser(user)
+			entry.setUser(user)
 
 			user_email = token_list.get()
-			item.setUserEmail(user_email)
+			entry.setUserEmail(user_email)
 
 			version_delim = token_list.get()
 			if str(version_delim) != '-':
 				token_list.unget()
 				raise SpecBadToken("Expected token '-', got '%s'" % self.star)
-			item.setVersionDelim(version_delim)
+			entry.setVersionDelim(version_delim)
 
 			version = token_list.get()
-			item.setVersion(version)
+			entry.setVersion(version)
 
-			item.setMessage(token_list.getWhileNot(functools.partial(changelogItemBeginningCallback, ctx)))
+			entry.setMessage(token_list.getWhileNot(functools.partial(changelogEntryBeginningCallback, ctx)))
 
-			return item
+			return entry
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
@@ -386,9 +383,9 @@ class SpecChangelogParser(SpecSectionParser):
 		ret.setTokenSection(token_list.get())
 
 		while str(token_list.touch()) == '*':
-			item = cls.parseItem(token_list, ret, ctx)
-			if item:
-				ret.appendItem(item)
+			entry = cls.parseEntry(token_list, ret, ctx)
+			if entry:
+				ret.appendEntry(entry)
 
 		return ret
 

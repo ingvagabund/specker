@@ -21,10 +21,12 @@
 import optparse
 import sys
 import logging
+from dateutil.parser import parse as date_parse
 from modules.specParser import SpecParser
-from modules.specChanger import SpecChanger
+from modules.specEditor import SpecEditor
 from modules.specRenderer import SpecRenderer
 from modules.specDebug import SpecDebug
+from modules.specError import SpecBadParam
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
@@ -252,11 +254,6 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--changelog-remove", dest="changelog_remove", action = "store_true", default = False,
-		help = "remove changelog entry"
-	)
-
-	parser.add_option(
 		"", "", "--description-show", dest="description_show", action = "store_true", default = False,
 		help = "show description"
 	)
@@ -327,7 +324,7 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--package-remove", dest="package_remove", action = "store_true", default = False,
+		"", "", "--package-remove", dest="package_remove", action = "store", type = "string",
 		help = "remove package provided by spec file"
 	)
 
@@ -484,7 +481,7 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		spec = SpecChanger(parser.getModel())
+		spec = SpecEditor(parser.getModel())
 		del parser
 
 		if options.output is not None:
@@ -494,25 +491,32 @@ if __name__ == "__main__":
 			f = sys.stdout
 
 		# modify operations before shows
+		if options.changelog_add:
+			vals = options.changelog_add.split(':')
+			print vals
+			if len(vals) != 5:
+				raise SpecBadParam("Changelog entry must be in a form 'date:username:email:version:message'")
+			date = date_parse(vals[0])
+			username = vals[1]
+			email = vals[2]
+			version = vals[3]
+			msg = vals[4] + '\n' # make a gap between entries
+			spec.changelogentry_add(date, username, email, version, msg)
 		if options.provides_add:
 			spec.provides_add(parse_multiarg(options.provides_add))
 		if options.requires_add:
 			spec.requires_add(parse_multiarg(options.requires_add))
 		if options.buildrequires_add:
 			spec.buildrequires_add(parse_multiarg(options.buildrequires_add))
-		if options.changelog_add:
-			spec.changelog_add(options.changelog_add.split(':'))
 		if options.package_add:
 			spec.package_add(options.package_add.split(','))
 
 		if options.provides_remove:
-			spec.provides_remove(parse_multiarg(options.provides_remove), f)
+			spec.provides_remove(parse_multiarg(options.provides_remove))
 		if options.requires_remove:
-			spec.requires_remove(parse_multiarg(options.requires_remove), f)
+			spec.requires_remove(parse_multiarg(options.requires_remove))
 		if options.buildrequires_remove:
-			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove), f)
-		if options.changelog_remove:
-			spec.changelog_remove(options.changelog_remove.split(','))
+			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove))
 		if options.package_remove:
 			spec.package_remove(options.package_remove.split(','))
 

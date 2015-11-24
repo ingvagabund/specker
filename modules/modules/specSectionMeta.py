@@ -54,9 +54,9 @@ class SpecStBuildMeta(SpecStSectionMeta):
 	def __repr__(c):
 		return "%build"
 
-class SpecStChangelogItemMeta(SpecStSectionMeta):
+class SpecStChangelogEntryMeta(SpecStSectionMeta):
 	def __repr__(c):
-		return "spec changelog item"
+		return "spec changelog entry"
 
 class SpecStChangelogMeta(SpecStSectionMeta):
 	def __repr__(c):

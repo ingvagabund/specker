@@ -17,11 +17,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - basic L{SpecSection} and inherited classes representing a section
+in a specfile
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 import re
 from specSectionMeta import *
 
 class SpecSection(object):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecSectionMeta
 
 	def __init__(self, parent = None):
@@ -32,6 +43,9 @@ class SpecSection(object):
 		return self.parent
 
 class SpecStIf(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStIfMeta
 
 	def __init__(self, parent):
@@ -80,6 +94,9 @@ class SpecStIf(SpecSection):
 		return self.endif_token
 
 class SpecStDefinition(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStDefinitionMeta
 
 	def __init__(self, parent):
@@ -109,6 +126,9 @@ class SpecStDefinition(SpecSection):
 		return None
 
 class SpecStGlobal(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStGlobalMeta
 
 	def __init__(self, parent):
@@ -136,6 +156,9 @@ class SpecStGlobal(SpecSection):
 		return self.value
 
 class SpecStEof(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStEofMeta
 
 	def __init__(self, parent = None):
@@ -149,6 +172,9 @@ class SpecStEof(SpecSection):
 		return self.eof_token
 
 class SpecStExpression(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStExpressionMeta
 
 	def __init__(self, parent):
@@ -162,6 +188,9 @@ class SpecStExpression(SpecSection):
 		return self.tokens
 
 class SpecStSection(SpecSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStSectionMeta
 
 	def __init__(self, parent):
@@ -182,13 +211,25 @@ class SpecStSection(SpecSection):
 		return self.tokens
 
 class SpecStDescription(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStDescriptionMeta
 
 class SpecStBuild(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStBuildMeta
 
 class SpecStChangelog(SpecStSection):
+	'''
+	TODO
+	'''
 	class SpecStChangelogEntry(SpecStSection):
+		'''
+		TODO
+		'''
 		__metaclass__ = SpecStChangelogEntryMeta
 
 		def __init__(self, parent):
@@ -276,18 +317,33 @@ class SpecStChangelog(SpecStSection):
 		self.entries.insert(0, entry)
 
 class SpecStCheck(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStCheckMeta
 
 class SpecStClean(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStCleanMeta
 
 class SpecStFiles(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStFilesMeta
 
 class SpecStInstall(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStInstallMeta
 
 class SpecStPackage(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPackageMeta
 
 	def __init__(self, parent):
@@ -312,41 +368,80 @@ class SpecStPackage(SpecStSection):
 		return self.defs.append(item)
 
 class SpecStPrep(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPrepMeta
 
 class SpecStPre(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPreMeta
 
 class SpecStPost(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPostMeta
 
 class SpecStPreun(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPreunMeta
 
 class SpecStPostun(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPostunMeta
 
 class SpecStPretrans(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPretransMeta
 
 class SpecStPosttrans(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStPosttransMeta
 
 class SpecStTrigger(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStTriggerMeta
 
 class SpecStTriggerin(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStTriggerinMeta
 
 class SpecStTriggerprein(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStTriggerpreinMeta
 
 class SpecStTriggerun(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStTriggerunMeta
 
 class SpecStTriggerpostun(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStTriggerpostunMeta
 
 class SpecStVerifyscript(SpecStSection):
+	'''
+	TODO
+	'''
 	__metaclass__ = SpecStVerifyscriptMeta
 

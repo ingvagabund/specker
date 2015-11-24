@@ -17,20 +17,62 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - spec main manipulator
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 from specSection import *
 
 class SpecManipulator(object):
+	'''
+	TODO
+	'''
 	def __init__(self, model):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.model = model
 
 	def setModel(self, model):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.model = model
 
 	def getModel(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		return self.model
 
 	def find_definitions_all(self, statements):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		ret = []
 
 		for s in statements:

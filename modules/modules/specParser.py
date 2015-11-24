@@ -17,6 +17,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - spec file parser
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 import re
 import copy
@@ -30,8 +37,20 @@ from specManipulator import SpecManipulator
 from specDebug import SpecDebug
 from specError import SpecBadToken, SpecBadIf
 
+
 class SpecParser(SpecManipulator):
+	'''
+	TODO
+	'''
 	def __init__(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.PARSERS = [
 				SpecIfParser,
 				SpecDefinitionParser,
@@ -62,14 +81,57 @@ class SpecParser(SpecManipulator):
 		self.model = None
 		self.token_list = None
 
+	def register(self, parser):
+		'''
+		TODO
+		@type parser: TODO
+		@param parser: TODO
+		@rtype: TODO
+		@return: TODO
+		@raises SpecNotFound: TODO
+		'''
+		# TODO: move to SpecManipulator
+		found = False
+		for idx, item in enumerate(self.PARSERS):
+			if issubclass(parser, item):
+				found = True
+				self.PARSERS[idx] = parser
+
+		if not found:
+			raise SpecNotFound("Invalid parser '%s' registration" % parser.__name__)
+
 	def init(self, f):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.token_list = SpecTokenList(f)
 
 	@staticmethod
 	def sectionBeginingCallback(obj, token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		return obj.sectionBegining(token_list)
 
 	def sectionBegining(self, token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		for parser in self.PARSERS:
 			ret = parser.sectionBegining(token_list)
 			if ret is not None:
@@ -78,6 +140,14 @@ class SpecParser(SpecManipulator):
 		return None # Not found
 
 	def parse_loop(self, token_list, parent, allowed):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		ret = []
 
 		found = True
@@ -103,6 +173,14 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse_preamble(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		allowed = [ SpecIfParser, SpecDefinitionParser, SpecGlobalParser ]
 
 		ret = self.parse_loop(self.token_list, None, allowed)
@@ -111,6 +189,14 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse_loop_section(self, parent):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		ret = []
 		allowed = copy.deepcopy(self.PARSERS)
 
@@ -143,6 +229,14 @@ class SpecParser(SpecManipulator):
 		return ret
 
 	def parse(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.model = SpecModel()
 
 		self.model.append_items(self.parse_preamble())
@@ -153,16 +247,35 @@ class SpecParser(SpecManipulator):
 			raise SpecBadToken("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
 
 class SpecSectionParser(object):
+	'''
+	TODO
+	'''
 	obj = [ SpecStBuild, SpecStCheck, SpecStClean, SpecStDescription, SpecStFiles, SpecStInstall,
 				SpecStPrep, SpecStPre, SpecStPost, SpecStPreun, SpecStPostun, SpecStPretrans,
 				SpecStPosttrans, SpecStTrigger, SpecStTriggerin, SpecStTriggerprein, SpecStTriggerun,
 				SpecStTriggerpostun, SpecStVerifyscript ]
 
 	def __init__(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		raise ValueError("Cannot instantiate")
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 
 		for o in SpecSectionParser.obj:
@@ -173,6 +286,14 @@ class SpecSectionParser(object):
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		section = cls.sectionBegining(token_list)
 		if not section: # section not found
 			return None
@@ -185,14 +306,33 @@ class SpecSectionParser(object):
 		return ret
 
 class SpecExpressionParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStExpression
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		raise ValueError("Spec expression has no beginning")
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		ret = SpecExpressionParser.obj(parent)
 
 		tokens = SpecTokenList()
@@ -206,10 +346,21 @@ class SpecExpressionParser(SpecSectionParser):
 		return ret
 
 class SpecIfParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStIf
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 		if str(token) == '%if' or str(token) == '%ifarch':
 			return SpecIfParser.obj
@@ -218,6 +369,14 @@ class SpecIfParser(SpecSectionParser):
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not cls.sectionBegining(token_list):
 			return None
 
@@ -242,10 +401,21 @@ class SpecIfParser(SpecSectionParser):
 		return stif
 
 class SpecDefinitionParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStDefinition
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 
 		if str(token) in [ 'Name:', 'Version:', 'Release:', 'Summary:', 'License:',
@@ -273,6 +443,14 @@ class SpecDefinitionParser(SpecSectionParser):
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not cls.sectionBegining(token_list):
 			return None
 
@@ -285,10 +463,21 @@ class SpecDefinitionParser(SpecSectionParser):
 		return ret
 
 class SpecGlobalParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStGlobal
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 		if str(token) == str(SpecGlobalParser.obj):
 			return SpecGlobalParser.obj
@@ -297,6 +486,14 @@ class SpecGlobalParser(SpecSectionParser):
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not cls.sectionBegining(token_list):
 			return None
 
@@ -310,13 +507,27 @@ class SpecGlobalParser(SpecSectionParser):
 		return ret
 
 class SpecBuildParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStBuild
 
 class SpecChangelogParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStChangelog
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 		if str(token) == str(SpecChangelogParser.obj):
 			return SpecChangelogParser.obj
@@ -325,57 +536,73 @@ class SpecChangelogParser(SpecSectionParser):
 
 	@classmethod
 	def parseEntry(cls, token_list, parent, ctx):
-			def parse_date(date):
-				s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
-				return datetime.datetime.strptime(s, '%a %b %d %Y')
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
+		def parse_date(date):
+			s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
+			return datetime.datetime.strptime(s, '%a %b %d %Y')
 
-			def changelogEntryBeginningCallback(obj, token_list):
-				# is there some section?
-				if obj.sectionBeginingCallback(obj, token_list):
-					return True
+		def changelogEntryBeginningCallback(obj, token_list):
+			# is there some section?
+			if obj.sectionBeginingCallback(obj, token_list):
+				return True
 
-				# or is there another changelog entry?
-				return str(token_list.touch()) == '*'
+			# or is there another changelog entry?
+			return str(token_list.touch()) == '*'
 
-			entry = SpecChangelogParser.obj.SpecStChangelogEntry(parent)
+		entry = SpecChangelogParser.obj.SpecStChangelogEntry(parent)
 
-			star = token_list.get()
-			if str(star) != '*':
-				token_list.unget()
-				raise SpecBadToken("Expected token '*', got '%s'" % star)
-			entry.setStar(star)
+		star = token_list.get()
+		if str(star) != '*':
+			token_list.unget()
+			raise SpecBadToken("Expected token '*', got '%s'" % star)
+		entry.setStar(star)
 
-			date = SpecTokenList()
-			for _ in xrange(0, 4):
-				date.tokenListAppend(token_list.get())
-			entry.setDate(date)
+		date = SpecTokenList()
+		for _ in xrange(0, 4):
+			date.tokenListAppend(token_list.get())
+		entry.setDate(date)
 
-			date_parsed = parse_date(date)
-			entry.setDateParsed(date_parsed)
+		date_parsed = parse_date(date)
+		entry.setDateParsed(date_parsed)
 
-			user = SpecTokenList()
-			while not str(token_list.touch()).startswith('<'):
-				user.tokenListAppend(token_list.get())
-			entry.setUser(user)
+		user = SpecTokenList()
+		while not str(token_list.touch()).startswith('<'):
+			user.tokenListAppend(token_list.get())
+		entry.setUser(user)
 
-			user_email = token_list.get()
-			entry.setUserEmail(user_email)
+		user_email = token_list.get()
+		entry.setUserEmail(user_email)
 
-			version_delim = token_list.get()
-			if str(version_delim) != '-':
-				token_list.unget()
-				raise SpecBadToken("Expected token '-', got '%s'" % self.star)
-			entry.setVersionDelim(version_delim)
+		version_delim = token_list.get()
+		if str(version_delim) != '-':
+			token_list.unget()
+			raise SpecBadToken("Expected token '-', got '%s'" % self.star)
+		entry.setVersionDelim(version_delim)
 
-			version = token_list.get()
-			entry.setVersion(version)
+		version = token_list.get()
+		entry.setVersion(version)
 
-			entry.setMessage(token_list.getWhileNot(functools.partial(changelogEntryBeginningCallback, ctx)))
+		entry.setMessage(token_list.getWhileNot(functools.partial(changelogEntryBeginningCallback, ctx)))
 
-			return entry
+		return entry
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not cls.sectionBegining(token_list):
 			return None
 
@@ -390,25 +617,51 @@ class SpecChangelogParser(SpecSectionParser):
 		return ret
 
 class SpecCheckParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStCheck
 
 class SpecCleanParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStClean
 
 class SpecDescriptionParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStDescription
 
 class SpecFilesParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStFiles
 
 class SpecInstallParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStInstall
 
 class SpecPackageParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPackage
 
 	@staticmethod
 	def sectionBegining(token_list):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		token = token_list.touch()
 
 		if str(token) == str(SpecPackageParser.obj):
@@ -418,6 +671,14 @@ class SpecPackageParser(SpecSectionParser):
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not cls.sectionBegining(token_list):
 			return None
 
@@ -430,41 +691,80 @@ class SpecPackageParser(SpecSectionParser):
 		return section
 
 class SpecPrepParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPrep
 
 class SpecPreParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPre
 
 class SpecPostParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPost
 
 class SpecPreunParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPreun
 
 class SpecPostunParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPostun
 
 class SpecPretransParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPretrans
 
 class SpecPosttransParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStPosttrans
 
 class SpecTriggerParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStTrigger
 
 class SpecTriggerinParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStTriggerin
 
 class SpecTriggerpreinParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStTriggerprein
 
 class SpecTriggerunParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStTriggerun
 
 class SpecTriggerpostunParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStTriggerpostun
 
 class SpecVerifyscriptParser(SpecSectionParser):
+	'''
+	TODO
+	'''
 	obj = SpecStVerifyscript
 

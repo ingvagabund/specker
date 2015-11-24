@@ -17,10 +17,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - basic operations on spec sections and spec section encapsulation
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 from specSection import *
 
 class SpecModel(object):
+	'''
+	TODO
+	'''
 	# Default section order in a spec file
 	SPEC_SECTION_ORDER = [
 				SpecStDescription,
@@ -47,19 +57,59 @@ class SpecModel(object):
 			]
 
 	def __init__(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.sections = []
 
 	def append(self, section):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.sections.append(section)
 
 	def remove(self, section):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.sections.remove(section)
 
 	def append_items(self, array):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		for item in array:
 			self.sections.append(item)
 
 	def add(self, section):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		# TODO: add section based on order
 		#def get_add_index(idx_find, idx):
 		#	# first iterate downwards, when beginning reached, continue upwards
@@ -119,12 +169,36 @@ class SpecModel(object):
 		self.sections.insert(0, section)
 
 	def remove(self, section):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.sections.remove(section)
 
 	def getSections(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		return self.sections
 
 	def find_section(self, section):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		ret = None
 		for s in self.sections:
 			if issubclass(s.__class__, section):

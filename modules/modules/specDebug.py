@@ -17,11 +17,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - library debug control
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 import sys
 import logging
 
-class SpecDebug():
+class SpecDebug(object):
+	'''
+	TODO
+	@cvar logger: TODO
+	'''
 	logger = logging.getLogger('specker-lib')
 	logger.addHandler(logging.StreamHandler(sys.stderr))
 

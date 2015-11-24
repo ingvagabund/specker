@@ -17,12 +17,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+specker-lib - spec FILE abstraction
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 import sys
 from specError import SpecBadIndex
 
 class SpecFile:
+	'''
+	TODO
+	'''
 	def __init__(self, spec):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if type(spec) is file:
 			self.content = spec.read()
 		else: # string
@@ -31,11 +49,27 @@ class SpecFile:
 		self.length = len(self.content)
 
 	def inFile(self, position = None):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if position == None:
 			position = self.pointer
 		return position >= 0 and self.pointer < self.length
 
 	def seek(self, offset):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		tmp = offset + self.pointer
 
 		if not self.inFile(tmp):
@@ -44,6 +78,14 @@ class SpecFile:
 		self.pointer = tmp
 
 	def readLine(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if not self.inFile('Not in File'):
 			return -1
 
@@ -65,6 +107,14 @@ class SpecFile:
 			return res
 
 	def getc(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if self.pointer == self.length:
 			return -1
 
@@ -73,9 +123,25 @@ class SpecFile:
 		return c
 
 	def touch(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		return self.content[self.pointer]
 
 	def ungetc(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		if self.pointer == 0:
 			raise SpecBadIndex('Cannot do ungetc at the beginning')
 
@@ -83,5 +149,13 @@ class SpecFile:
 			self.pointer -= 1
 
 	def reset(self):
+		'''
+		TODO
+		@param XXX:
+		@type XXX: number
+		@return: None
+		@rtype:
+		@raise SpecNotFound:
+		'''
 		self.pointer = 0
 

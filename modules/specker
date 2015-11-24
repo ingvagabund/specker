@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+
 import optparse
 import sys
 import logging
@@ -189,8 +190,18 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--custom-manipulator", dest="custom_manipulator", action = "store", type = "string",
-		help = "custom manipulator source file"
+		"", "", "--custom-editor", dest="custom_editor", action = "store", type = "string",
+		help = "custom editor source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-parser", dest="custom_parser", action = "store", type = "string",
+		help = "custom parser source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-renderer", dest="custom_renderer", action = "store", type = "string",
+		help = "custom renderer source file"
 	)
 
 	parser.add_option(
@@ -468,10 +479,10 @@ if __name__ == "__main__":
 	parser = SpecParser()
 
 	try:
-		if options.custom_manipulator:
-			execfile(options.custom_manipulator)
-			for manipulator in custom_manipulators:
-				parser.register_manipulator(manipulator)
+		if options.custom_parser:
+			execfile(options.custom_parser)
+			for my_parser in custom_parsers:
+				parser.register(my_parser)
 
 		if input_file is None:
 			parser.init(sys.stdin)
@@ -483,6 +494,11 @@ if __name__ == "__main__":
 
 		spec = SpecEditor(parser.getModel())
 		del parser
+
+		if options.custom_editor:
+			execfile(options.custom_editor)
+			for my_editor in custom_editors:
+				spec.register(my_editor)
 
 		if options.output is not None:
 			logger.debug("writting output to '%s'" % options.output)
@@ -578,6 +594,12 @@ if __name__ == "__main__":
 			spec.sections_add(spec2.parse_loop_section(None))
 
 		spec = SpecRenderer(spec.getModel())
+
+		if options.custom_renderer:
+			execfile(options.custom_renderer)
+			for my_renderer in custom_renderers:
+				spec.register(my_renderer)
+
 		# yo mama, show results!
 		if options.provides_show:
 			spec.provides_show(options.provides_show.split(':'), f)

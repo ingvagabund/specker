@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - basic operations on spec sections and spec section encapsulation
+Basic operations on spec sections and spec section encapsulation
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -29,7 +29,7 @@ from specSection import *
 
 class SpecModel(object):
 	'''
-	TODO
+	A model representing spec file sections and basic manipulation methods
 	'''
 	# Default section order in a spec file
 	SPEC_SECTION_ORDER = [
@@ -58,57 +58,51 @@ class SpecModel(object):
 
 	def __init__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
 		'''
 		self.sections = []
 
 	def append(self, section):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Append a section
+		@param section: a section to be appended
+		@type section: L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.sections.append(section)
 
 	def remove(self, section):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Remove a section
+		@param section: a section to be removed
+		@type section: L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
+		@raise SpecNotFound: if section is not found
 		'''
-		self.sections.remove(section)
+		if section in self.sections:
+			self.sections.remove(section)
+		else:
+			raise SpecNotFound("Section '%s' not found", str(section))
 
-	def append_items(self, array):
+	def append_items(self, items):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Append multiple sections
+		@param items: sections to be added
+		@type items: list of L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
-		for item in array:
+		for item in items:
 			self.sections.append(item)
 
 	def add(self, section):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Add a section, try to guess the most suitable position for the section
+		@param section: section to be added
+		@type section: L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		# TODO: add section based on order
 		#def get_add_index(idx_find, idx):
@@ -168,36 +162,21 @@ class SpecModel(object):
 		#		raise SpecNotFound("Section '%s' was not added" % section)
 		self.sections.insert(0, section)
 
-	def remove(self, section):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
-		'''
-		self.sections.remove(section)
-
 	def getSections(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get list of all sections
+		@return: list of sections
+		@rtype: list of L{SpecSection}
 		'''
 		return self.sections
 
-	def find_section(self, section):
+	def find_section(self, section_type):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Find a section of a specific type type
+		@param section_type: section type to look for
+		@type section_type: __class__
+		@return: list of sections of the provided type or None
+		@rtype: list of L{SpecSection}
 		'''
 		ret = None
 		for s in self.sections:

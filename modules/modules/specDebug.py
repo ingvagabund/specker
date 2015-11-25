@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - library debug control
+Library debug control
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -30,8 +30,17 @@ import logging
 
 class SpecDebug(object):
 	'''
-	TODO
-	@cvar logger: TODO
+	Library debug control, use C{SpecDebug.logger.serLoggingLevel(level)} to
+	initialize logger. Level could be one of the following (C{import logging}):
+	  - logging.DEBUG
+	  - logging.CRITICAL
+	  - logging.ERROR
+	  - logging.WARNING
+	  - logging.INFO
+	  - logging.DEBUG
+	You can adjust handler when initializing, otherwise it defaults to
+	C{sys.stderr}.
+	@cvar logger: library logger
 	'''
 	logger = logging.getLogger('specker-lib')
 	logger.addHandler(logging.StreamHandler(sys.stderr))

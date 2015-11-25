@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - basic L{SpecSection} and inherited classes representing a section
+Basic L{SpecSection} and derived classes representing a section
 in a specfile
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com

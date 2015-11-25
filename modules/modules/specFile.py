@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - spec FILE abstraction
+A spec FILE abstraction
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -30,16 +30,16 @@ from specError import SpecBadIndex
 
 class SpecFile:
 	'''
-	TODO
+	A file abstraction with relative and absolute access using a pointer into
+	a buffer.
 	'''
 	def __init__(self, spec):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Initialize C{SpecFile}
+		@param spec: file or string to be read
+		@type spec: file or string
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		if type(spec) is file:
 			self.content = spec.read()
@@ -50,12 +50,11 @@ class SpecFile:
 
 	def inFile(self, position = None):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if (current/absolute) position is in file
+		@param position: Position within a file (number of bytes offset)
+		@type position: number or number
+		@return: True if current position is still in file boundaries
+		@rtype: Boolean
 		'''
 		if position == None:
 			position = self.pointer
@@ -63,12 +62,11 @@ class SpecFile:
 
 	def seek(self, offset):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Set pointer relatively to the current position according to offset
+		@param offset: relative positive/negative offset
+		@type offset: number
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		tmp = offset + self.pointer
 
@@ -79,12 +77,9 @@ class SpecFile:
 
 	def readLine(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Read rest of the line
+		@return: line read
+		@rtype: string
 		'''
 		if not self.inFile('Not in File'):
 			return -1
@@ -108,12 +103,9 @@ class SpecFile:
 
 	def getc(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get one char from the buffer and advance the buffer pointer
+		@return: character read from the buffer or -1 if end of buffer reached
+		@rtype: char
 		'''
 		if self.pointer == self.length:
 			return -1
@@ -124,23 +116,21 @@ class SpecFile:
 
 	def touch(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get one char from the buffer and B{DO NOT} advance the buffer pointer
+		@return: character read from the buffer or -1 if end of buffer reached
+		@rtype: char
 		'''
-		return self.content[self.pointer]
+		if self.pointer == self.length:
+			return -1
+		else:
+			return self.content[self.pointer]
 
 	def ungetc(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Move the buffer pointer one step back
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
+		@raise SpecBadIndex: if called when pointing at the beginning of the buffer
 		'''
 		if self.pointer == 0:
 			raise SpecBadIndex('Cannot do ungetc at the beginning')
@@ -150,12 +140,9 @@ class SpecFile:
 
 	def reset(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Reset buffer pointer to point at the beginning of the buffer
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.pointer = 0
 

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - spec file parser
+A spec file parser
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -36,7 +36,6 @@ from specModel import SpecModel
 from specManipulator import SpecManipulator
 from specDebug import SpecDebug
 from specError import SpecBadToken, SpecBadIf
-
 
 class SpecParser(SpecManipulator):
 	'''

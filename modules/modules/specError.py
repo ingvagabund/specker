@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - exceptions used within library
+Exceptions used within library
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -27,145 +27,62 @@ specker-lib - exceptions used within library
 
 class SpecNotImplemented(NotImplementedError):
 	'''
-	TODO
+	Exception used for not implemented actions
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 
 class SpecBadToken(ValueError):
 	'''
-	TODO
+	Exception used when an unexpected token is reached
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 
 class SpecNotFound(ValueError):
 	'''
-	TODO
+	Exception used when desired object is not found (e.g. editing not-existing
+	section in a spec file)
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 
 class SpecBadIf(ValueError):
 	'''
-	TODO
+	Exception used when an unterminated or malformed if is found
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 
 class SpecBadIndex(IndexError):
 	'''
-	TODO
+	Exception used when indexing outside boundaries
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 
 class SpecBadParam(ValueError):
 	'''
-	TODO
+	Exception used when an unknown parameter is passed
 	'''
 	def __init__(self, message):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		self.message = message
 
 	def __str__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype: None
-		'''
 		return self.message
 

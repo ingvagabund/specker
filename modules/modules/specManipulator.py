@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - spec main manipulator
+A spec main manipulator
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -29,49 +29,38 @@ from specSection import *
 
 class SpecManipulator(object):
 	'''
-	TODO
+	A generic class for classes which tend to manipulate with spec model
 	'''
-	def __init__(self, model):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
-		'''
+	def __init__(self, model = None):
 		self.model = model
 
 	def setModel(self, model):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Set model to manipulate with
+		@param model: a spec model
+		@type model: L{SpecModel}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.model = model
 
 	def getModel(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get used spec model
+		@return: spec model
+		@rtype: L{SpecModel}
 		'''
 		return self.model
 
 	def find_definitions_all(self, statements):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
+		Find all definitions within spec model
+		@param statements: statements to be looked for in
+		@type statements: list of L{SpecSection}
+		@return: list of definitions
+		@rtype: list of L{SpecStDefinition}
 		@raise SpecNotFound:
+		@todo: move to the model itself?
 		'''
 		ret = []
 

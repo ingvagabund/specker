@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - metadata of L{SpecSection} and inherited classes
+Metadata of L{SpecSection} and derived classes
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -27,7 +27,7 @@ specker-lib - metadata of L{SpecSection} and inherited classes
 
 class SpecSectionMeta(type):
 	'''
-	TODO
+	metaclass for L{SpecSection}
 	'''
 	def __repr__(c):
 		'''
@@ -37,7 +37,7 @@ class SpecSectionMeta(type):
 
 class SpecStIfMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStIf}
 	'''
 	def __repr__(c):
 		'''
@@ -47,7 +47,7 @@ class SpecStIfMeta(SpecSectionMeta):
 
 class SpecStDefinitionMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStDefinition}
 	'''
 	def __repr__(c):
 		'''
@@ -57,7 +57,7 @@ class SpecStDefinitionMeta(SpecSectionMeta):
 
 class SpecStGlobalMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStGlobal}
 	'''
 	def __repr__(c):
 		'''
@@ -67,7 +67,7 @@ class SpecStGlobalMeta(SpecSectionMeta):
 
 class SpecStEofMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStEof}
 	'''
 	def __repr__(c):
 		'''
@@ -77,7 +77,7 @@ class SpecStEofMeta(SpecSectionMeta):
 
 class SpecStExpressionMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStExpression}
 	'''
 	def __repr__(c):
 		'''
@@ -87,7 +87,7 @@ class SpecStExpressionMeta(SpecSectionMeta):
 
 class SpecStSectionMeta(SpecSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStSection}
 	'''
 	def __repr__(c):
 		'''
@@ -97,7 +97,7 @@ class SpecStSectionMeta(SpecSectionMeta):
 
 class SpecStDescriptionMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStDescription}
 	'''
 	def __repr__(c):
 		'''
@@ -107,7 +107,7 @@ class SpecStDescriptionMeta(SpecStSectionMeta):
 
 class SpecStBuildMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStBuild}
 	'''
 	def __repr__(c):
 		'''
@@ -117,7 +117,7 @@ class SpecStBuildMeta(SpecStSectionMeta):
 
 class SpecStChangelogEntryMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStChangelogEntry}
 	'''
 	def __repr__(c):
 		'''
@@ -127,7 +127,7 @@ class SpecStChangelogEntryMeta(SpecStSectionMeta):
 
 class SpecStChangelogMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStChangelog}
 	'''
 	def __repr__(c):
 		'''
@@ -137,7 +137,7 @@ class SpecStChangelogMeta(SpecStSectionMeta):
 
 class SpecStCheckMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStCheck}
 	'''
 	def __repr__(c):
 		'''
@@ -147,7 +147,7 @@ class SpecStCheckMeta(SpecStSectionMeta):
 
 class SpecStCleanMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStClean}
 	'''
 	def __repr__(c):
 		'''
@@ -157,7 +157,7 @@ class SpecStCleanMeta(SpecStSectionMeta):
 
 class SpecStFilesMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStFiles}
 	'''
 	def __repr__(c):
 		'''
@@ -167,7 +167,7 @@ class SpecStFilesMeta(SpecStSectionMeta):
 
 class SpecStInstallMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStInstall}
 	'''
 	def __repr__(c):
 		'''
@@ -177,7 +177,7 @@ class SpecStInstallMeta(SpecStSectionMeta):
 
 class SpecStPackageMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPackage}
 	'''
 	def __repr__(c):
 		'''
@@ -187,7 +187,7 @@ class SpecStPackageMeta(SpecStSectionMeta):
 
 class SpecStPrepMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPrep}
 	'''
 	def __repr__(c):
 		'''
@@ -197,7 +197,7 @@ class SpecStPrepMeta(SpecStSectionMeta):
 
 class SpecStPreMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPre}
 	'''
 	def __repr__(c):
 		'''
@@ -207,7 +207,7 @@ class SpecStPreMeta(SpecStSectionMeta):
 
 class SpecStPostMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPost}
 	'''
 	def __repr__(c):
 		'''
@@ -217,7 +217,7 @@ class SpecStPostMeta(SpecStSectionMeta):
 
 class SpecStPreunMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPreun}
 	'''
 	def __repr__(c):
 		'''
@@ -227,7 +227,7 @@ class SpecStPreunMeta(SpecStSectionMeta):
 
 class SpecStPostunMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPostun}
 	'''
 	def __repr__(c):
 		'''
@@ -237,7 +237,7 @@ class SpecStPostunMeta(SpecStSectionMeta):
 
 class SpecStPretransMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPretrans}
 	'''
 	def __repr__(c):
 		'''
@@ -247,7 +247,7 @@ class SpecStPretransMeta(SpecStSectionMeta):
 
 class SpecStPosttransMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStPosttrans}
 	'''
 	def __repr__(c):
 		'''
@@ -257,7 +257,7 @@ class SpecStPosttransMeta(SpecStSectionMeta):
 
 class SpecStTriggerMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStTrigger}
 	'''
 	def __repr__(c):
 		'''
@@ -267,7 +267,7 @@ class SpecStTriggerMeta(SpecStSectionMeta):
 
 class SpecStTriggerinMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStTriggerin}
 	'''
 	def __repr__(c):
 		'''
@@ -277,7 +277,7 @@ class SpecStTriggerinMeta(SpecStSectionMeta):
 
 class SpecStTriggerpreinMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStTriggerprein}
 	'''
 	def __repr__(c):
 		'''
@@ -287,7 +287,7 @@ class SpecStTriggerpreinMeta(SpecStSectionMeta):
 
 class SpecStTriggerunMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStTriggerun}
 	'''
 	def __repr__(c):
 		'''
@@ -297,7 +297,7 @@ class SpecStTriggerunMeta(SpecStSectionMeta):
 
 class SpecStTriggerpostunMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStTriggerpostun}
 	'''
 	def __repr__(c):
 		'''
@@ -307,12 +307,11 @@ class SpecStTriggerpostunMeta(SpecStSectionMeta):
 
 class SpecStVerifyscriptMeta(SpecStSectionMeta):
 	'''
-	TODO
+	metaclass for L{SpecStVerifyscript}
 	'''
 	def __repr__(c):
 		'''
 		section representation
 		'''
 		return "%verifyscript"
-
 

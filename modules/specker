@@ -18,6 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+command line tool designed to cooperate with specker-lib library
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
 
 import optparse
 import sys
@@ -33,6 +40,15 @@ logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
 
 def check_opts(options, input_file):
+	'''
+	Check passed command line arguments
+	@param options: parsed command line options
+	@type options: optparse instance
+	@param input_file: name of the input file to be used
+	@type input_file: string
+	@return: True if arguments were passed correctly
+	@rtype: Boolean
+	'''
 	opts_show = [ options.changelog_show,
 						options.description_show,
 						options.build_show,
@@ -99,6 +115,13 @@ def check_opts(options, input_file):
 	return True
 
 def parse_multiarg(arg):
+	'''
+	Parse arguments composed of multiple values
+	@param arg: String of arguments in a from C{"val1:res1,res2,val2:res3"}
+	@type arg: string
+	@return: Parsed arguments in a form C{{ 'val1': ['res1', 'res2' ], 'val2': ['res3'] }}
+	@rtype: dict
+	'''
 	vals = arg.split(',')
 	pkgs = {}
 

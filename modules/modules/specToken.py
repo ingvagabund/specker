@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-specker-lib - a spec file token abstraction and token list representation
+A spec file token abstraction and token list representation
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -30,16 +30,15 @@ from specError import SpecBadIndex
 
 class SpecToken:
 	'''
-	TODO
+	Token abstraction
 	'''
 	def __init__(self, specFile = None):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init L{SpecToken}
+		@param specFile: L{SpecFile} to parse
+		@type XXX: L{SpecFile}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		def readComment(specFile):
 			ret = ""
@@ -112,12 +111,9 @@ class SpecToken:
 
 	def __str__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get raw string representation
+		@return: string representation of a token
+		@rtype: string
 		'''
 		if self.token == None:
 			return "<EOF>"
@@ -126,23 +122,21 @@ class SpecToken:
 
 	def __len__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Length of the token itself
+		@return: token length
+		@rtype: number
 		'''
 		return len(self.token)
 
 	def write(self, f, raw = False):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Write token to a file
+		@param f: file to write token to
+		@type f: FILE
+		@param raw: if True, token is written without append and prepend part
+		@type raw: Boolean
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		if not raw:
 			f.write(self.prepend)
@@ -155,12 +149,11 @@ class SpecToken:
 
 	def string(self, raw = False):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get token string representation
+		@param raw: if True, token is written without append and prepend part
+		@type raw: True
+		@return: string representation of a token
+		@rtype: string
 		'''
 		ret = ""
 		if not raw:
@@ -171,26 +164,28 @@ class SpecToken:
 			ret +=  self.append
 		return ret
 
-	def sameLine(self, token2):
+	def sameLine(self, token):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if token is on the same line as myself
+		@param token: token to be checked
+		@type token: L{SpecToken}
+		@return: True if token is on the same line
+		@rtype: Boolean
 		'''
-		return self.line == token2.line
+		return self.line == token.line
 
 	@staticmethod
 	def create(token, prepend = '', append = ' '):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Create a token
+		@param token: string which represents token
+		@type token: string
+		@param prepend: string to be prepended before token
+		@type prepend: string
+		@param append: string to be appended after token
+		@type append: string
+		@return: newly instantiated token
+		@rtype: L{SpecToken}
 		'''
 		# note that line is not set
 		ret = SpecToken()
@@ -201,71 +196,61 @@ class SpecToken:
 
 	def isEOF(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if token is EOF token
+		@return: True if token is EOF token
+		@rtype: Boolean
 		'''
 		return self.token == None
 
 	def getLine(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get line number where token was presented
+		@return: line number or None if no line info was provided
+		@rtype: number
 		'''
 		return self.line
 
 	def setAppend(self, append):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Set append part for the token
+		@param append: a string to be appended
+		@type append: string
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.append = append
 
 	def setPrepend(self, prepend):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Set prepend part for the token
+		@param prepend: a string to be prepended
+		@type prepend: string
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.prepend = prepend
 
 	def setToken(self, token):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Set token
+		@param token: token which should be used for token instance
+		@type: string
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.token = token
 
 class SpecTokenList:
 	'''
-	TODO
+	List of token abstraction with a working pointer
 	'''
 	def __init__(self, spec = None):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init L{SpecTokenList}
+		@param spec: file or string to be parsed
+		@type spec: string/file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.current = 0
 		self.pointer = 0
@@ -289,23 +274,18 @@ class SpecTokenList:
 
 	def isEOF(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if pointer points at the end of file
+		@return: True if pointer points at the end of file
+		@rtype: Boolean
 		'''
 		return self.pointer == len(self.token_list)
 
 	def next(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get next token from list
+		@return: next token
+		@rtype: L{SpecToken}
+		@raise StopIteration: when end of token list is reached
 		'''
 		if self.current == len(self.token_list):
 			raise StopIteration
@@ -315,12 +295,9 @@ class SpecTokenList:
 
 	def get(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get token from list and advance pointer
+		@return: next token
+		@rtype: L{SpecToken}
 		'''
 		if self.pointer == len(self.token_list):
 			return self.token_list[-1] # eof
@@ -329,11 +306,9 @@ class SpecTokenList:
 
 	def touch(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
+		Get token from list and B{DO NOT} advance pointer
+		@return: next token
+		@rtype: L{SpecToken}
 		@raise SpecNotFound:
 		'''
 		if self.pointer == len(self.token_list):
@@ -343,12 +318,9 @@ class SpecTokenList:
 
 	def getLine(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get tokens on the current line
+		@return: list of tokens on the same line
+		@rtype: L{SpecTokenList}
 		'''
 		ret = []
 
@@ -367,19 +339,17 @@ class SpecTokenList:
 					break
 			ret.append(self.get())
 
-		# return TokenList
 		l = SpecTokenList()
 		l.token_list = ret
 		return l
 
 	def getWhileNot(self, callback):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get list of token until predicate is False
+		@param callback: callback to be called, predicate
+		@type callback: func(L{SpecTokenList}) -> Boolean
+		@return: list of tokens until predicate was not True
+		@rtype: L{SpecTokenList}
 		'''
 		ret = []
 
@@ -395,36 +365,29 @@ class SpecTokenList:
 
 	def unget(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Move the buffer pointer one step back
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
+		@raise SpecBadIndex: when called at the beginning
 		'''
 		if self.pointer == 0:
-			raise SpecBadIndex('Cannot unget')
+			raise SpecBadIndex('Cannot unget at the beginning')
 		self.pointer -= 1
 
 	def getPointer(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get value of the current buffer pointer
+		@return: buffer pointer
+		@rtype: number
 		'''
 		return self.pointer
 
 	def setPointer(self, val):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Set value of the current buffer pointer
+		@param val: new buffer pointer
+		@type val: number
+		@raise SpecBadIndex: when a pointer reaches boundaries
 		'''
 		if val < 0 or val > len(self.token_list):
 			raise SpecBadIndex('TokenList pointer out of bound')
@@ -432,80 +395,69 @@ class SpecTokenList:
 
 	def __len__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Return length of the list
+		@return: length of the list
+		@rtype: number
 		'''
 		return len(self.token_list)
 
 	def __iter__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get iterator
+		@return: token list
+		@rtype: L{SpecTokenList}
 		'''
 		self.current = 0
 		return self
 
 	def __next__(self): # Python 3
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get next token when iterating
+		@return: next token
+		@rtype: L{SpecToken}
 		'''
 		return self.next()
 
 	def write(self, f, raw = False):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Write whole token to a file
+		@param f: file to write to
+		@type f: FILE
+		@param raw: True if write without append and prepend token part
+		@type raw: Boolean
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		for token in self.token_list:
 			token.write(f, raw)
 
 	def tokenListAppend(self, item):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Append item to the token list
+		@param item: item to be added
+		@type item: L{SpecToken}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.token_list.append(item)
 
 	def __getitem__(self, i):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Get item for direct access
+		@param i: index to token list
+		@type i: number
+		@return: token on given position
+		@rtype: L{SpecToken}
 		'''
 		return self.token_list[i]
 
 	def __eq__(self, str_compare):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Compare token list with a string
+		@param str_compare: string to be compared with
+		@type str_compare: string
+		@return: True if string is same as value of tokens in token list
+		@rtype: None
 		'''
 		str_created = ""
 		for token in self.token_list:

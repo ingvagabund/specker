@@ -709,7 +709,7 @@ class SpecChangelogEditor(SpecSectionEditor):
 	Changelog section editor
 	@cvar obj: sections that could be edited with this editor
 	'''
-	obj = [SpecStChangelog, SpecStChangelogEntry]
+	obj = [SpecStChangelog, SpecStChangelog.SpecStChangelogEntry]
 
 	@classmethod
 	def addEntry(cls, changelog, date, username, email, version, msg):

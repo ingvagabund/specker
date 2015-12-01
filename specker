@@ -18,16 +18,37 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
+'''
+command line tool designed to cooperate with specker-lib library
+@author: Fridolin Pokorny
+@contact: fpokorny@redhat.com
+@organization: Red Hat Inc.
+@license: GPL 2.0
+'''
+
 import optparse
 import sys
 import logging
-from lib.specParser import SpecParser
-from lib.specChanger import SpecChanger
+from dateutil.parser import parse as date_parse
+from modules.specParser import SpecParser
+from modules.specEditor import SpecEditor
+from modules.specRenderer import SpecRenderer
+from modules.specDebug import SpecDebug
+from modules.specError import SpecBadParam
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
 
 def check_opts(options, input_file):
+	'''
+	Check passed command line arguments
+	@param options: parsed command line options
+	@type options: optparse instance
+	@param input_file: name of the input file to be used
+	@type input_file: string
+	@return: True if arguments were passed correctly
+	@rtype: Boolean
+	'''
 	opts_show = [ options.changelog_show,
 						options.description_show,
 						options.build_show,
@@ -94,6 +115,13 @@ def check_opts(options, input_file):
 	return True
 
 def parse_multiarg(arg):
+	'''
+	Parse arguments composed of multiple values
+	@param arg: String of arguments in a from C{"val1:res1,res2,val2:res3"}
+	@type arg: string
+	@return: Parsed arguments in a form C{{ 'val1': ['res1', 'res2' ], 'val2': ['res3'] }}
+	@rtype: dict
+	'''
 	vals = arg.split(',')
 	pkgs = {}
 
@@ -185,8 +213,18 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--custom-manipulator", dest="custom_manipulator", action = "store", type = "string",
-		help = "custom manipulator source file"
+		"", "", "--custom-editor", dest="custom_editor", action = "store", type = "string",
+		help = "custom editor source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-parser", dest="custom_parser", action = "store", type = "string",
+		help = "custom parser source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-renderer", dest="custom_renderer", action = "store", type = "string",
+		help = "custom renderer source file"
 	)
 
 	parser.add_option(
@@ -247,11 +285,6 @@ if __name__ == "__main__":
 	parser.add_option(
 		"", "", "--changelog-add", dest="changelog_add", action = "store", type = "string",
 		help = "add changelog entry"
-	)
-
-	parser.add_option(
-		"", "", "--changelog-remove", dest="changelog_remove", action = "store_true", default = False,
-		help = "remove changelog entry"
 	)
 
 	parser.add_option(
@@ -325,7 +358,7 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
-		"", "", "--package-remove", dest="package_remove", action = "store_true", default = False,
+		"", "", "--package-remove", dest="package_remove", action = "store", type = "string",
 		help = "remove package provided by spec file"
 	)
 
@@ -464,14 +497,15 @@ if __name__ == "__main__":
 
 	if options.verbose:
 		logger.setLevel(logging.DEBUG)
+		SpecDebug.logger.setLevel(logging.DEBUG)
 
 	parser = SpecParser()
 
 	try:
-		if options.custom_manipulator:
-			execfile(options.custom_manipulator)
-			for manipulator in custom_manipulators:
-				parser.register_manipulator(manipulator)
+		if options.custom_parser:
+			execfile(options.custom_parser)
+			for my_parser in custom_parsers:
+				parser.register(my_parser)
 
 		if input_file is None:
 			parser.init(sys.stdin)
@@ -479,13 +513,15 @@ if __name__ == "__main__":
 			with open(input_file, 'r') as f:
 				parser.init(f)
 
-		if options.verbose:
-			parser.setLoggingLevel(logging.DEBUG)
-
 		parser.parse()
 
-		spec = SpecChanger(parser.getStatements())
+		spec = SpecEditor(parser.getModel())
 		del parser
+
+		if options.custom_editor:
+			execfile(options.custom_editor)
+			for my_editor in custom_editors:
+				spec.register(my_editor)
 
 		if options.output is not None:
 			logger.debug("writting output to '%s'" % options.output)
@@ -494,25 +530,32 @@ if __name__ == "__main__":
 			f = sys.stdout
 
 		# modify operations before shows
+		if options.changelog_add:
+			vals = options.changelog_add.split(':')
+			print vals
+			if len(vals) != 5:
+				raise SpecBadParam("Changelog entry must be in a form 'date:username:email:version:message'")
+			date = date_parse(vals[0])
+			username = vals[1]
+			email = vals[2]
+			version = vals[3]
+			msg = vals[4] + '\n' # make a gap between entries
+			spec.changelogentry_add(date, username, email, version, msg)
 		if options.provides_add:
 			spec.provides_add(parse_multiarg(options.provides_add))
 		if options.requires_add:
 			spec.requires_add(parse_multiarg(options.requires_add))
 		if options.buildrequires_add:
 			spec.buildrequires_add(parse_multiarg(options.buildrequires_add))
-		if options.changelog_add:
-			spec.changelog_add(options.changelog_add.split(':'))
 		if options.package_add:
 			spec.package_add(options.package_add.split(','))
 
 		if options.provides_remove:
-			spec.provides_remove(parse_multiarg(options.provides_remove), f)
+			spec.provides_remove(parse_multiarg(options.provides_remove))
 		if options.requires_remove:
-			spec.requires_remove(parse_multiarg(options.requires_remove), f)
+			spec.requires_remove(parse_multiarg(options.requires_remove))
 		if options.buildrequires_remove:
-			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove), f)
-		if options.changelog_remove:
-			spec.changelog_remove(options.changelog_remove.split(','))
+			spec.buildrequires_remove(parse_multiarg(options.buildrequires_remove))
 		if options.package_remove:
 			spec.package_remove(options.package_remove.split(','))
 
@@ -571,7 +614,14 @@ if __name__ == "__main__":
 		if options.sections_add:
 			spec2 = SpecParser()
 			spec2.init(sys.stdin)
-			spec.sections_add(spec2.parse_loop_section())
+			spec.sections_add(spec2.parse_loop_section(None))
+
+		spec = SpecRenderer(spec.getModel())
+
+		if options.custom_renderer:
+			execfile(options.custom_renderer)
+			for my_renderer in custom_renderers:
+				spec.register(my_renderer)
 
 		# yo mama, show results!
 		if options.provides_show:
@@ -621,7 +671,7 @@ if __name__ == "__main__":
 		elif options.verifyscript_show:
 			spec.verifyscript_show(f)
 		else:
-			spec.print_file(f)
+			spec.render(f)
 
 		f.close()
 

@@ -25,13 +25,13 @@ A spec model rendering
 @license: GPL 2.0
 '''
 
-import sys
 import re
-from specError import SpecNotFound
+import sys
+from specError import SpecNotFound, SpecNotImplemented
+from specModelRenderer import SpecModelRenderer
 from specSection import *
-from specManipulator import SpecManipulator
 
-class SpecRenderer(SpecManipulator):
+class SpecFileRenderer(SpecModelRenderer):
 	'''
 	A spec renderer
 	'''

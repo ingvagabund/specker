@@ -29,9 +29,9 @@ import re
 from specSection import *
 from specToken import SpecToken, SpecTokenList
 from specError import SpecNotFound, SpecNotImplemented
-from specManipulator import SpecManipulator
+from specModelManipulator import SpecModelManipulator
 
-class SpecEditor(SpecManipulator):
+class SpecDefaultEditor(SpecModelManipulator):
 	'''
 	A spec model editor
 	'''

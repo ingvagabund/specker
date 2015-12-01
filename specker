@@ -30,9 +30,9 @@ import optparse
 import sys
 import logging
 from dateutil.parser import parse as date_parse
-from modules.specParser import SpecParser
-from modules.specEditor import SpecEditor
-from modules.specRenderer import SpecRenderer
+from modules.specFileParser import SpecFileParser
+from modules.specDefaultEditor import SpecDefaultEditor
+from modules.specFileRenderer import SpecFileRenderer
 from modules.specDebug import SpecDebug
 from modules.specError import SpecBadParam
 
@@ -499,7 +499,7 @@ if __name__ == "__main__":
 		logger.setLevel(logging.DEBUG)
 		SpecDebug.logger.setLevel(logging.DEBUG)
 
-	parser = SpecParser()
+	parser = SpecFileParser()
 
 	try:
 		if options.custom_parser:
@@ -515,7 +515,7 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		spec = SpecEditor(parser.get_model())
+		spec = SpecDefaultEditor(parser.get_model())
 		del parser
 
 		if options.custom_editor:
@@ -612,11 +612,11 @@ if __name__ == "__main__":
 			spec.verifyscript_edit(what)
 
 		if options.sections_add:
-			spec2 = SpecParser()
+			spec2 = SpecFileParser()
 			spec2.init(sys.stdin)
 			spec.sections_add(spec2.parse_loop_section(None))
 
-		spec = SpecRenderer(spec.get_model())
+		spec = SpecFileRenderer(spec.get_model())
 
 		if options.custom_renderer:
 			execfile(options.custom_renderer)

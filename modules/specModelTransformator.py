@@ -18,30 +18,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-Library debug control
+An adapter used to communicate with model
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
-
-import logging
-import sys
-
-class SpecDebug(object):
+class SpecModelTransformator(object):
 	'''
-	Library debug control, use C{SpecDebug.logger.setLoggingLevel(level)} to
-	initialize logger. Level could be one of the following (C{import logging}):
-	  - logging.DEBUG
-	  - logging.CRITICAL
-	  - logging.ERROR
-	  - logging.WARNING
-	  - logging.INFO
-	  - logging.DEBUG
-	You can adjust handler when initializing, otherwise it defaults to
-	C{sys.stderr}.
-	@cvar logger: library logger
+	An adapter used to communicate with model
 	'''
-	logger = logging.getLogger('specker-lib')
-	logger.addHandler(logging.StreamHandler(sys.stderr))
+	pass
+
+class SpecModelWriter(SpecModelTransformator):
+	'''
+	An adapter used to communicate with model - modifying methods used by
+	L{SpecModelEditor} and L{SpecModelParser}
+	'''
+	pass
+
+class SpecModelReader(SpecModelTransformator):
+	'''
+	An adapter used to communicate with model - non-modifying methods
+	'''
+	pass
 

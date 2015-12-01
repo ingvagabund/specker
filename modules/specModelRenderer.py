@@ -18,30 +18,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-Library debug control
+A generic spec model renderer class
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
 
-import logging
-import sys
+# TODO
 
-class SpecDebug(object):
+from specModelManipulator import SpecModelManipulator
+
+class SpecModelRenderer(SpecModelManipulator):
 	'''
-	Library debug control, use C{SpecDebug.logger.setLoggingLevel(level)} to
-	initialize logger. Level could be one of the following (C{import logging}):
-	  - logging.DEBUG
-	  - logging.CRITICAL
-	  - logging.ERROR
-	  - logging.WARNING
-	  - logging.INFO
-	  - logging.DEBUG
-	You can adjust handler when initializing, otherwise it defaults to
-	C{sys.stderr}.
-	@cvar logger: library logger
+	A generic spec model renderer class
 	'''
-	logger = logging.getLogger('specker-lib')
-	logger.addHandler(logging.StreamHandler(sys.stderr))
+	pass
 

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-A spec main manipulator
+A spec main model manipulator
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
@@ -27,7 +27,7 @@ A spec main manipulator
 
 from specSection import *
 
-class SpecManipulator(object):
+class SpecModelManipulator(object):
 	'''
 	A generic class for classes which tend to manipulate with spec model
 	'''

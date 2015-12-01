@@ -25,19 +25,19 @@ A spec file parser
 @license: GPL 2.0
 '''
 
-import re
 import copy
 import datetime
 import functools
+import re
 import sys
-from specSection import *
-from specToken import SpecTokenList
-from specModel import SpecModel
-from specManipulator import SpecManipulator
 from specDebug import SpecDebug
 from specError import SpecBadToken, SpecBadIf
+from specModel import SpecModel
+from specModelParser import SpecModelParser
+from specSection import *
+from specToken import SpecTokenList
 
-class SpecParser(SpecManipulator):
+class SpecFileParser(SpecModelParser):
 	'''
 	A spec parser
 	'''
@@ -599,7 +599,7 @@ class SpecChangelogParser(SpecSectionParser):
 		entry.set_version(version)
 
 		entry.set_message(token_list.get_while_not(
-									functools.partial(changelogEntryBeginningCallback, ctx )
+									functools.partial(changelog_entry_beginning_callback, ctx )
 									)
 								)
 

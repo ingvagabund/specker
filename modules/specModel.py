@@ -180,7 +180,7 @@ class SpecModel(object):
 		'''
 		ret = None
 		for s in self.sections:
-			if issubclass(s.__class__, section):
+			if issubclass(s.__class__, section_type):
 				if not ret:
 					ret = []
 				ret.append(s)

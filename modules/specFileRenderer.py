@@ -27,6 +27,7 @@ A spec model rendering
 
 import re
 import sys
+from specDebug import SpecDebug
 from specError import SpecNotFound, SpecNotImplemented
 from specModelRenderer import SpecModelRenderer
 from specSection import *
@@ -79,6 +80,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		for idx, item in enumerate(self.RENDERERS):
 			if issubclass(renderer, item):
 				found = True
+				SpecDebug.logger.debug("- registered renderer '%s'", str(renderer))
 				self.RENDERERS[idx] = renderer
 				break
 
@@ -123,6 +125,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		for renderer in self.RENDERERS:
 			if issubclass(s.__class__, renderer.obj):
 				found = True
+				SpecDebug.logger.debug("- rendering section '%s'" % str(s))
 				renderer(s).render(f, self)
 		if not found:
 			raise SpecNotImplemented("Not implemented renderer")

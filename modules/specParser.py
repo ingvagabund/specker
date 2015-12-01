@@ -102,7 +102,7 @@ class SpecParser(SpecManipulator):
 		self.token_list = SpecTokenList(f)
 
 	@staticmethod
-	def sectionBeginningCallback(obj, token_list):
+	def section_beginning_callback(obj, token_list):
 		'''
 		A callback for L{SpecTokenList} used to check whether next token is
 		a section token
@@ -113,9 +113,9 @@ class SpecParser(SpecManipulator):
 		@return: section parser to be used for parsing the upcoming section
 		@rtype: L{SpecParser}
 		'''
-		return obj.sectionBegining(token_list)
+		return obj.section_beginning(token_list)
 
-	def sectionBegining(self, token_list):
+	def section_beginning(self, token_list):
 		'''
 		Check whether next token is a section token
 		@param token_list: token list to be used
@@ -124,7 +124,7 @@ class SpecParser(SpecManipulator):
 		@rtype: L{SpecParser}
 		'''
 		for parser in self.PARSERS:
-			ret = parser.sectionBegining(token_list)
+			ret = parser.section_beginning(token_list)
 			if ret is not None:
 				return ret
 
@@ -150,7 +150,7 @@ class SpecParser(SpecManipulator):
 			token = token_list.touch()
 			SpecDebug.logger.debug("- parsing round: '%s'" % str(token))
 
-			if token.isEOF():
+			if token.is_eof():
 				break
 
 			for t in allowed:
@@ -195,7 +195,7 @@ class SpecParser(SpecManipulator):
 
 			SpecDebug.logger.debug("-- parsing section '%s' " % str(token))
 
-			if token.isEOF():
+			if token.is_eof():
 				break
 
 			for t in allowed:
@@ -229,7 +229,7 @@ class SpecParser(SpecManipulator):
 		self.model.append_items(self.parse_loop_section())
 
 		eof = self.token_list.touch()
-		if not eof.isEOF():
+		if not eof.is_eof():
 			raise SpecBadToken("Unexpected symbol '" + str(eof.token) + "' on line " + str(eof.line))
 
 class SpecSectionParser(object):
@@ -252,7 +252,7 @@ class SpecSectionParser(object):
 		raise SpecNotImplemented("Cannot instantiate")
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -283,14 +283,14 @@ class SpecSectionParser(object):
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
-		section = cls.sectionBegining(token_list)
+		section = cls.section_beginning(token_list)
 		if not section: # section not found
 			return None
 
 		ret = section(parent)
-		ret.setTokenSection(token_list.get())
+		ret.set_token_section(token_list.get())
 		#could be empty
-		ret.setTokens(token_list.getWhileNot(functools.partial(ctx.sectionBeginningCallback, ctx)))
+		ret.set_tokens(token_list.get_while_not(functools.partial(ctx.section_beginning_callback, ctx)))
 
 		return ret
 
@@ -301,7 +301,7 @@ class SpecExpressionParser(SpecSectionParser):
 	obj = SpecStExpression
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -309,7 +309,7 @@ class SpecExpressionParser(SpecSectionParser):
 		@return: None or a parser to be used to parse the section
 		@rtype: L{SpecSectionParser}
 		'''
-		raise ValueError("Spec expression has no beginning")
+		raise SpecNotImplemented("Spec expression has no beginning")
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
@@ -330,12 +330,12 @@ class SpecExpressionParser(SpecSectionParser):
 
 		tokens = SpecTokenList()
 		tkn = token_list.get()
-		tokens.tokenListAppend(tkn)
-		while tkn.sameLine(token_list.touch()):
+		tokens.token_list_append(tkn)
+		while tkn.same_line(token_list.touch()):
 			tkn = token_list.get()
-			tokens.tokenListAppend(tkn)
+			tokens.token_list_append(tkn)
 
-		ret.setTokens(tokens)
+		ret.set_tokens(tokens)
 		return ret
 
 class SpecIfParser(SpecSectionParser):
@@ -345,7 +345,7 @@ class SpecIfParser(SpecSectionParser):
 	obj = SpecStIf
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -373,28 +373,29 @@ class SpecIfParser(SpecSectionParser):
 		@type ctx: L{SpecParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
+		@raises SpecBadToken: if an unexpected token is reached
 		'''
-		if not cls.sectionBegining(token_list):
+		if not cls.section_beginning(token_list):
 			return None
 
-		pointer = token_list.getPointer()
+		pointer = token_list.get_pointer()
 
 		stif = SpecIfParser.obj(parent)
-		stif.setIfToken(token_list.get())
-		stif.setExpr(SpecExpressionParser.parse(token_list, parent, allowed, ctx))
-		stif.setTrueBranch(ctx.parse_loop(token_list, stif, allowed))
+		stif.set_if_token(token_list.get())
+		stif.set_expr(SpecExpressionParser.parse(token_list, parent, allowed, ctx))
+		stif.set_true_branch(ctx.parse_loop(token_list, stif, allowed))
 		token = token_list.touch()
 		if str(token) == '%else':
-			stif.setElseToken(token_list.get())
-			stif.setFalseBranch(ctx.parse_loop(token_list, stif, allowed))
+			stif.set_else_token(token_list.get())
+			stif.set_false_branch(ctx.parse_loop(token_list, stif, allowed))
 			token = token_list.touch()
 
 		if str(token) != '%endif':
-			token_list.setPointer(pointer)
-			raise ValueError("Unexpected token '%s' on line '%s', expected 'endif'"
-					% (str(token), str(token.getLine())))
+			token_list.set_pointer(pointer)
+			raise SpecBadToken("Unexpected token '%s' on line '%s', expected 'endif'"
+					% (str(token), str(token.get_line())))
 
-		stif.setEndifToken(token_list.get())
+		stif.set_endif_token(token_list.get())
 		return stif
 
 class SpecDefinitionParser(SpecSectionParser):
@@ -404,7 +405,7 @@ class SpecDefinitionParser(SpecSectionParser):
 	obj = SpecStDefinition
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -452,14 +453,14 @@ class SpecDefinitionParser(SpecSectionParser):
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
-		if not cls.sectionBegining(token_list):
+		if not cls.section_beginning(token_list):
 			return None
 
 		ret = SpecDefinitionParser.obj(parent)
-		ret.setName(token_list.get())
-		ret.setValue(token_list.getLine())
-		if ret.getValue().isEOF():
-			raise ValueError("Expected definition value, got '%s'" % str(ret.getValue()))
+		ret.set_name(token_list.get())
+		ret.set_value(token_list.get_line())
+		if ret.get_value().is_eof():
+			raise ValueError("Expected definition value, got '%s'" % str(ret.get_value()))
 
 		return ret
 
@@ -470,7 +471,7 @@ class SpecGlobalParser(SpecSectionParser):
 	obj = SpecStGlobal
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -499,16 +500,16 @@ class SpecGlobalParser(SpecSectionParser):
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
-		if not cls.sectionBegining(token_list):
+		if not cls.section_beginning(token_list):
 			return None
 
 		ret = SpecGlobalParser.obj(parent)
-		ret.setGlobalToken(token_list.get())
-		ret.setVariable(token_list.get())
-		if ret.getVariable().isEOF():
-			raise ValueError("Expected variable, got '%s'" % str(ret.getVariable()))
+		ret.set_global_token(token_list.get())
+		ret.set_variable(token_list.get())
+		if ret.get_variable().is_eof():
+			raise SpecBedToken("Expected variable, got '%s'" % str(ret.get_variable()))
 
-		ret.setValue(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
+		ret.set_value(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
 		return ret
 
 class SpecBuildParser(SpecSectionParser):
@@ -524,7 +525,7 @@ class SpecChangelogParser(SpecSectionParser):
 	obj = SpecStChangelog
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -539,7 +540,7 @@ class SpecChangelogParser(SpecSectionParser):
 		return None
 
 	@classmethod
-	def parseEntry(cls, token_list, parent, ctx):
+	def parse_entry(cls, token_list, parent, ctx):
 		'''
 		Parse a changelog entry
 		@param token_list: a token list to be used
@@ -556,9 +557,9 @@ class SpecChangelogParser(SpecSectionParser):
 			s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
 			return datetime.datetime.strptime(s, '%a %b %d %Y')
 
-		def changelogEntryBeginningCallback(obj, token_list):
+		def changelog_entry_beginning_callback(obj, token_list):
 			# is there some section?
-			if obj.sectionBeginningCallback(obj, token_list):
+			if obj.section_beginning_callback(obj, token_list):
 				return True
 
 			# or is there another changelog entry?
@@ -570,34 +571,37 @@ class SpecChangelogParser(SpecSectionParser):
 		if str(star) != '*':
 			token_list.unget()
 			raise SpecBadToken("Expected token '*', got '%s'" % star)
-		entry.setStar(star)
+		entry.set_star(star)
 
 		date = SpecTokenList()
 		for _ in xrange(0, 4):
-			date.tokenListAppend(token_list.get())
-		entry.setDate(date)
+			date.token_list_append(token_list.get())
+		entry.set_date(date)
 
 		date_parsed = parse_date(date)
-		entry.setDateParsed(date_parsed)
+		entry.set_date_parsed(date_parsed)
 
 		user = SpecTokenList()
 		while not str(token_list.touch()).startswith('<'):
-			user.tokenListAppend(token_list.get())
-		entry.setUser(user)
+			user.token_list_append(token_list.get())
+		entry.set_user(user)
 
 		user_email = token_list.get()
-		entry.setUserEmail(user_email)
+		entry.set_user_email(user_email)
 
 		version_delim = token_list.get()
 		if str(version_delim) != '-':
 			token_list.unget()
-			raise SpecBadToken("Expected token '-', got '%s'" % self.star)
-		entry.setVersionDelim(version_delim)
+			raise SpecBadToken("Expected token '-', got '%s'" % str(version_delim))
+		entry.set_version_delim(version_delim)
 
 		version = token_list.get()
-		entry.setVersion(version)
+		entry.set_version(version)
 
-		entry.setMessage(token_list.getWhileNot(functools.partial(changelogEntryBeginningCallback, ctx)))
+		entry.set_message(token_list.get_while_not(
+									functools.partial(changelogEntryBeginningCallback, ctx )
+									)
+								)
 
 		return entry
 
@@ -616,16 +620,16 @@ class SpecChangelogParser(SpecSectionParser):
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
-		if not cls.sectionBegining(token_list):
+		if not cls.section_beginning(token_list):
 			return None
 
 		ret = SpecChangelogParser.obj(parent)
-		ret.setTokenSection(token_list.get())
+		ret.set_token_section(token_list.get())
 
 		while str(token_list.touch()) == '*':
-			entry = cls.parseEntry(token_list, ret, ctx)
+			entry = cls.parse_entry(token_list, ret, ctx)
 			if entry:
-				ret.appendEntry(entry)
+				ret.append_entry(entry)
 
 		return ret
 
@@ -666,7 +670,7 @@ class SpecPackageParser(SpecSectionParser):
 	obj = SpecStPackage
 
 	@staticmethod
-	def sectionBegining(token_list):
+	def section_beginning(token_list):
 		'''
 		Check if next token is a section beginning
 		@param token_list: token list to use
@@ -696,14 +700,14 @@ class SpecPackageParser(SpecSectionParser):
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
-		if not cls.sectionBegining(token_list):
+		if not cls.section_beginning(token_list):
 			return None
 
 		section = SpecPackageParser.obj(parent)
-		section.setTokenSection(token_list.get())
-		if section.getTokenSection().sameLine(token_list.touch()):
-			section.setPackage(token_list.get())
-		section.setDefs(ctx.parse_loop(token_list, section, [SpecIfParser, SpecDefinitionParser]))
+		section.set_token_section(token_list.get())
+		if section.get_token_section().same_line(token_list.touch()):
+			section.set_package(token_list.get())
+		section.set_defs(ctx.parse_loop(token_list, section, [SpecIfParser, SpecDefinitionParser]))
 
 		return section
 

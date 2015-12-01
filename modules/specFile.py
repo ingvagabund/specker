@@ -48,7 +48,7 @@ class SpecFile:
 		self.pointer = 0
 		self.length = len(self.content)
 
-	def inFile(self, position = None):
+	def in_file(self, position = None):
 		'''
 		Check if (current/absolute) position is in file
 		@param position: Position within a file (number of bytes offset)
@@ -70,18 +70,18 @@ class SpecFile:
 		'''
 		tmp = offset + self.pointer
 
-		if not self.inFile(tmp):
+		if not self.in_file(tmp):
 			raise SpecBadIndex('Bad seek')
 
 		self.pointer = tmp
 
-	def readLine(self):
+	def read_line(self):
 		'''
 		Read rest of the line
 		@return: line read
 		@rtype: string
 		'''
-		if not self.inFile('Not in File'):
+		if not self.in_file():
 			return -1
 
 		res = ""

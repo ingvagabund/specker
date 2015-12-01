@@ -515,7 +515,7 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		spec = SpecEditor(parser.getModel())
+		spec = SpecEditor(parser.get_model())
 		del parser
 
 		if options.custom_editor:
@@ -616,7 +616,7 @@ if __name__ == "__main__":
 			spec2.init(sys.stdin)
 			spec.sections_add(spec2.parse_loop_section(None))
 
-		spec = SpecRenderer(spec.getModel())
+		spec = SpecRenderer(spec.get_model())
 
 		if options.custom_renderer:
 			execfile(options.custom_renderer)

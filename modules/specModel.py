@@ -162,7 +162,7 @@ class SpecModel(object):
 		#		raise SpecNotFound("Section '%s' was not added" % section)
 		self.sections.insert(0, section)
 
-	def getSections(self):
+	def get_sections(self):
 		'''
 		Get list of all sections
 		@return: list of sections

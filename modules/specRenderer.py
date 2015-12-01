@@ -106,7 +106,7 @@ class SpecRenderer(SpecManipulator):
 		@return: None
 		@rtype: None
 		'''
-		self.render_list(self.model.getSections(), f)
+		self.render_list(self.model.get_sections(), f)
 
 	def render_section(self, s, f):
 		'''
@@ -166,9 +166,9 @@ class SpecRenderer(SpecManipulator):
 		'''
 		for d in defs:
 			if definition.match(str(d.name)):
-				pkg = d.getPackage()
+				pkg = d.get_package()
 				if pkg:
-					pkg = pkg.getPackage()
+					pkg = pkg.get_package()
 				if str(pkg) in packages or (pkg is None and '-' in packages) or '*' in packages:
 					if pkg is None:
 						f.write('-:')
@@ -176,7 +176,7 @@ class SpecRenderer(SpecManipulator):
 						pkg.write(f, raw = True)
 						f.write(':') # add delim since raw
 
-					d.getValue().write(f, raw = True)
+					d.get_value().write(f, raw = True)
 					f.write('\n') # Add delim since raw token is printed
 
 	def provides_show(self, packages, f = sys.stdout):
@@ -189,7 +189,7 @@ class SpecRenderer(SpecManipulator):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.getSections())
+		defs = self.find_definitions_all(self.model.get_sections())
 		self.print_definitions(defs, re.compile('Provides:'), packages, f)
 
 	def requires_show(self, packages, f = sys.stdout):
@@ -202,7 +202,7 @@ class SpecRenderer(SpecManipulator):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.getSections())
+		defs = self.find_definitions_all(self.model.get_sections())
 		self.print_definitions(defs, re.compile('Requires:'), packages, f)
 
 	def buildrequires_show(self, packages, f = sys.stdout):
@@ -215,7 +215,7 @@ class SpecRenderer(SpecManipulator):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.getSections())
+		defs = self.find_definitions_all(self.model.get_sections())
 		self.print_definitions(defs, re.compile('BuildRequires:'), packages, f)
 
 	def changelog_show(self, f = sys.stdout):
@@ -449,8 +449,8 @@ class SpecSectionRenderer(object):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getTokenSection().write(f)
-		self.section.getTokens().write(f)
+		self.section.get_token_section().write(f)
+		self.section.get_tokens().write(f)
 
 class SpecExpressionRenderer(object):
 	'''
@@ -479,7 +479,7 @@ class SpecExpressionRenderer(object):
 		@return: None
 		@rtype: None
 		'''
-		for token in self.section.getTokens():
+		for token in self.section.get_tokens():
 			token.write(f)
 
 class SpecIfRenderer(SpecSectionRenderer):
@@ -499,13 +499,13 @@ class SpecIfRenderer(SpecSectionRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getIfToken().write(f)
-		SpecExpressionRenderer(self.section.getExpr()).render(f, ctx)
-		ctx.render_list(self.section.getTrueBranch(), f)
-		if self.section.getElseToken():
-			self.section.getElseToken().write(f)
-			ctx.render_list(self.section.getFalseBranch(), f)
-		self.section.getEndifToken().write(f)
+		self.section.get_if_token().write(f)
+		SpecExpressionRenderer(self.section.get_expr()).render(f, ctx)
+		ctx.render_list(self.section.get_true_branch(), f)
+		if self.section.get_else_token():
+			self.section.get_else_token().write(f)
+			ctx.render_list(self.section.get_false_branch(), f)
+		self.section.get_endif_token().write(f)
 
 class SpecGlobalRenderer(SpecSectionRenderer):
 	'''
@@ -524,9 +524,9 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getGlobalToken().write(f)
-		self.section.getVariable().write(f)
-		SpecExpressionRenderer(self.section.getValue()).render(f, ctx)
+		self.section.get_global_token().write(f)
+		self.section.get_variable().write(f)
+		SpecExpressionRenderer(self.section.get_value()).render(f, ctx)
 
 class SpecBuildRenderer(SpecSectionRenderer):
 	'''
@@ -552,16 +552,16 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getTokenSection().write(f)
+		self.section.get_token_section().write(f)
 
-		for entry in self.section.getEntries():
-			entry.getStar().write(f)
-			entry.getDate().write(f)
-			entry.getUser().write(f)
-			entry.getUserEmail().write(f)
-			entry.getVersionDelim().write(f)
-			entry.getVersion().write(f)
-			entry.getMessage().write(f)
+		for entry in self.section.get_entries():
+			entry.get_star().write(f)
+			entry.get_date().write(f)
+			entry.get_user().write(f)
+			entry.get_user_email().write(f)
+			entry.get_version_delim().write(f)
+			entry.get_version().write(f)
+			entry.get_message().write(f)
 
 class SpecCheckRenderer(SpecSectionRenderer):
 	'''
@@ -615,10 +615,10 @@ class SpecPackageRenderer(SpecSectionRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getTokenSection().write(f)
-		if self.section.getPackage():
-			self.section.getPackage().write(f)
-		ctx.render_list(self.section.getDefs(), f)
+		self.section.get_token_section().write(f)
+		if self.section.get_package():
+			self.section.get_package().write(f)
+		ctx.render_list(self.section.get_defs(), f)
 
 class SpecPrepRenderer(SpecSectionRenderer):
 	'''
@@ -686,8 +686,8 @@ class SpecDefinitionRenderer(SpecSectionRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.section.getName().write(f)
-		self.section.getValue().write(f)
+		self.section.get_name().write(f)
+		self.section.get_value().write(f)
 
 class SpecTriggerRenderer(SpecSectionRenderer):
 	'''

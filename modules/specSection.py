@@ -44,7 +44,7 @@ class SpecSection(object):
 	@return: parent section
 	@rtype: L{SpecSection}
 	'''
-	def getParent(self):
+	def get_parent(self):
 		return self.parent
 
 	'''
@@ -54,7 +54,7 @@ class SpecSection(object):
 	@return: None
 	@rtype: None
 	'''
-	def setParent(self, parent):
+	def set_parent(self, parent):
 		self.parent = parent
 
 class SpecStIf(SpecSection):
@@ -79,7 +79,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setIfToken(self, token):
+	def set_if_token(self, token):
 		self.if_token = token
 
 	'''
@@ -89,7 +89,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setExpr(self, expr):
+	def set_expr(self, expr):
 		self.expr = expr
 
 	'''
@@ -99,7 +99,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setTrueBranch(self, branch):
+	def set_true_branch(self, branch):
 		self.true_branch = branch
 
 	'''
@@ -109,7 +109,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setElseToken(self, els):
+	def set_else_token(self, els):
 		self.else_token = els
 
 	'''
@@ -119,7 +119,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setFalseBranch(self, branch):
+	def set_false_branch(self, branch):
 		self.false_branch = branch
 
 	'''
@@ -129,7 +129,7 @@ class SpecStIf(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setEndifToken(self, endi):
+	def set_endif_token(self, endi):
 		self.endif_token = endi
 
 	'''
@@ -137,7 +137,7 @@ class SpecStIf(SpecSection):
 	@return: %if token
 	@rtype: L{SpecToken}
 	'''
-	def getIfToken(self):
+	def get_if_token(self):
 		return self.if_token
 
 	'''
@@ -145,7 +145,7 @@ class SpecStIf(SpecSection):
 	@return: expression
 	@rtype: L{SpecExpression}
 	'''
-	def getExpr(self):
+	def get_expr(self):
 		return self.expr
 
 	'''
@@ -153,7 +153,7 @@ class SpecStIf(SpecSection):
 	@return: true branch
 	@rtype: list of L{SpecSection}
 	'''
-	def getTrueBranch(self):
+	def get_true_branch(self):
 		return self.true_branch
 
 	'''
@@ -161,7 +161,7 @@ class SpecStIf(SpecSection):
 	@return: else token
 	@rtype: L{SpecToken}
 	'''
-	def getElseToken(self):
+	def get_else_token(self):
 		return self.else_token
 
 	'''
@@ -169,7 +169,7 @@ class SpecStIf(SpecSection):
 	@return: false branch
 	@rtype: list of L{SpecSection}
 	'''
-	def getFalseBranch(self):
+	def get_false_branch(self):
 		return self.false_branch
 
 	'''
@@ -177,7 +177,7 @@ class SpecStIf(SpecSection):
 	@return: endif token
 	@rtype: L{SpecToken}
 	'''
-	def getEndifToken(self):
+	def get_endif_token(self):
 		return self.endif_token
 
 class SpecStDefinition(SpecSection):
@@ -198,7 +198,7 @@ class SpecStDefinition(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setName(self, name):
+	def set_name(self, name):
 		self.name = name
 
 	'''
@@ -208,7 +208,7 @@ class SpecStDefinition(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setValue(self, val):
+	def set_value(self, val):
 		self.value = val
 
 	'''
@@ -216,7 +216,7 @@ class SpecStDefinition(SpecSection):
 	@return: definition name
 	@rtype: L{SpecToken}
 	'''
-	def getName(self):
+	def get_name(self):
 		return self.name
 
 	'''
@@ -224,7 +224,7 @@ class SpecStDefinition(SpecSection):
 	@return: definition value
 	@rtype: list of L{SpecToken}
 	'''
-	def getValue(self):
+	def get_value(self):
 		return self.value
 
 	'''
@@ -232,7 +232,7 @@ class SpecStDefinition(SpecSection):
 	@return: referred package
 	@rtype: L{SpecStPackage}
 	'''
-	def getPackage(self):
+	def get_package(self):
 		parent = self.parent
 		while parent != None:
 			if issubclass(parent.__class__, SpecStPackage):
@@ -260,7 +260,7 @@ class SpecStGlobal(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setGlobalToken(self, glb):
+	def set_global_token(self, glb):
 		self.global_token = glb
 
 	'''
@@ -270,7 +270,7 @@ class SpecStGlobal(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setVariable(self, var):
+	def set_variable(self, var):
 		self.variable = var
 
 	'''
@@ -280,7 +280,7 @@ class SpecStGlobal(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setValue(self, val):
+	def set_value(self, val):
 		self.value = val
 
 	'''
@@ -288,7 +288,7 @@ class SpecStGlobal(SpecSection):
 	@return: global token
 	@rtype: L{SpecToken}
 	'''
-	def getGlobalToken(self):
+	def get_global_token(self):
 		return self.global_token
 
 	'''
@@ -296,7 +296,7 @@ class SpecStGlobal(SpecSection):
 	@return: global variable
 	@rtype: L{SpecToken}
 	'''
-	def getVariable(self):
+	def get_variable(self):
 		return self.variable
 
 	'''
@@ -304,7 +304,7 @@ class SpecStGlobal(SpecSection):
 	@return: global value
 	@rtype: list of L{SpecToken}
 	'''
-	def getValue(self):
+	def get_value(self):
 		return self.value
 
 class SpecStEof(SpecSection):
@@ -326,7 +326,7 @@ class SpecStEof(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setEofToken(self, eof):
+	def set_eof_token(self, eof):
 		self.eof_token = eof
 
 	'''
@@ -334,7 +334,7 @@ class SpecStEof(SpecSection):
 	@return: EOF token
 	@rtype: L{SpecToken}
 	'''
-	def getEofToken(self):
+	def get_eof_token(self):
 		return self.eof_token
 
 class SpecStExpression(SpecSection):
@@ -354,7 +354,7 @@ class SpecStExpression(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setTokens(self, tkns):
+	def set_tokens(self, tkns):
 		self.tokens = tkns
 
 	'''
@@ -362,7 +362,7 @@ class SpecStExpression(SpecSection):
 	@return: expression tokens
 	@rtype: list of L{SpecToken}
 	'''
-	def getTokens(self):
+	def get_tokens(self):
 		return self.tokens
 
 class SpecStSection(SpecSection):
@@ -383,7 +383,7 @@ class SpecStSection(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setTokenSection(self, tkn):
+	def set_token_section(self, tkn):
 		self.token_section = tkn
 
 	'''
@@ -393,7 +393,7 @@ class SpecStSection(SpecSection):
 	@return: None
 	@rtype: None
 	'''
-	def setTokens(self, tkns):
+	def set_tokens(self, tkns):
 		self.tokens = tkns
 
 	'''
@@ -401,7 +401,7 @@ class SpecStSection(SpecSection):
 	@return: section token, e.g. '%build'
 	@rtype: L{SpecToken}
 	'''
-	def getTokenSection(self):
+	def get_token_section(self):
 		return self.token_section
 
 	'''
@@ -409,7 +409,7 @@ class SpecStSection(SpecSection):
 	@return: section tokens
 	@rtype: list of L{SpecToken}
 	'''
-	def getTokens(self):
+	def get_tokens(self):
 		return self.tokens
 
 class SpecStDescription(SpecStSection):
@@ -452,7 +452,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setStar(self, star):
+		def set_star(self, star):
 			self.star = star
 
 		'''
@@ -462,7 +462,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setDate(self, date):
+		def set_date(self, date):
 			self.date = date
 
 		'''
@@ -472,7 +472,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setDateParsed(self, date_parsed):
+		def set_date_parsed(self, date_parsed):
 			self.date_parsed = date_parsed
 
 		'''
@@ -482,7 +482,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setUser(self, user):
+		def set_user(self, user):
 			self.user = user
 
 		'''
@@ -492,7 +492,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setUserEmail(self, user_email):
+		def set_user_email(self, user_email):
 			self.user_email = user_email
 
 		'''
@@ -502,7 +502,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setVersionDelim(self, version_delim):
+		def set_version_delim(self, version_delim):
 			self.version_delim = version_delim
 
 		'''
@@ -512,7 +512,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setVersion(self, version):
+		def set_version(self, version):
 			self.version = version
 
 		'''
@@ -522,7 +522,7 @@ class SpecStChangelog(SpecStSection):
 		@return: None
 		@rtype: None
 		'''
-		def setMessage(self, message):
+		def set_message(self, message):
 			self.message = message
 
 		'''
@@ -530,7 +530,7 @@ class SpecStChangelog(SpecStSection):
 		@return: star token
 		@rtype: L{SpecToken}
 		'''
-		def getStar(self):
+		def get_star(self):
 			return self.star
 
 		'''
@@ -538,7 +538,7 @@ class SpecStChangelog(SpecStSection):
 		@return: date tokens
 		@rtype: list of L{SpecToken}
 		'''
-		def getDate(self):
+		def get_date(self):
 			return self.date
 
 		'''
@@ -546,7 +546,7 @@ class SpecStChangelog(SpecStSection):
 		@return: parsed date
 		@rtype: datetime
 		'''
-		def getDateParsed(self):
+		def get_date_parsed(self):
 			return self.date_parsed
 
 		'''
@@ -554,7 +554,7 @@ class SpecStChangelog(SpecStSection):
 		@return: user token
 		@rtype: L{SpecToken}
 		'''
-		def getUser(self):
+		def get_user(self):
 			return self.user
 
 		'''
@@ -562,7 +562,7 @@ class SpecStChangelog(SpecStSection):
 		@return: user email token
 		@rtype: L{SpecToken}
 		'''
-		def getUserEmail(self):
+		def get_user_email(self):
 			return self.user_email
 
 		'''
@@ -570,7 +570,7 @@ class SpecStChangelog(SpecStSection):
 		@return: version delimiter
 		@rtype: L{SpecToken}
 		'''
-		def getVersionDelim(self):
+		def get_version_delim(self):
 			return self.version_delim
 
 		'''
@@ -578,7 +578,7 @@ class SpecStChangelog(SpecStSection):
 		@return: version token
 		@rtype: L{SpecToken}
 		'''
-		def getVersion(self):
+		def get_version(self):
 			return self.version
 
 		'''
@@ -586,7 +586,7 @@ class SpecStChangelog(SpecStSection):
 		@return: changelog entry message
 		@rtype: list of L{SpecToken}
 		'''
-		def getMessage(self):
+		def get_message(self):
 			return self.message
 
 	__metaclass__ = SpecStChangelogMeta
@@ -603,7 +603,7 @@ class SpecStChangelog(SpecStSection):
 	@return: None
 	@rtype: None
 	'''
-	def setEntries(self, entries):
+	def set_entries(self, entries):
 		self.entries = entries
 
 	'''
@@ -611,7 +611,7 @@ class SpecStChangelog(SpecStSection):
 	@return: list of changelog entries
 	@rtype: list of L{SpecStChangelogEntry}
 	'''
-	def getEntries(self):
+	def get_entries(self):
 		return self.entries
 
 	'''
@@ -619,7 +619,7 @@ class SpecStChangelog(SpecStSection):
 	@param entry: changelog entry to be appended
 	@type entry: L{SpecStChangelogEntry}
 	'''
-	def appendEntry(self, entry):
+	def append_entry(self, entry):
 		self.entries.append(entry)
 
 	'''
@@ -627,7 +627,7 @@ class SpecStChangelog(SpecStSection):
 	@param entry: changelog entry to be inserted
 	@type entry: L{SpecChangelogEntry}
 	'''
-	def insertEntry(self, entry):
+	def insert_entry(self, entry):
 		self.entries.insert(0, entry)
 
 class SpecStCheck(SpecStSection):
@@ -673,7 +673,7 @@ class SpecStPackage(SpecStSection):
 	@return: None
 	@rtype: None
 	'''
-	def setDefs(self, defs):
+	def set_defs(self, defs):
 		self.defs = defs
 
 	'''
@@ -683,7 +683,7 @@ class SpecStPackage(SpecStSection):
 	@return: None
 	@rtype: None
 	'''
-	def setPackage(self, pkg):
+	def set_package(self, pkg):
 		self.pkg = pkg
 
 	'''
@@ -691,7 +691,7 @@ class SpecStPackage(SpecStSection):
 	@return: package token
 	@rtype: L{SpecToken}
 	'''
-	def getPackage(self):
+	def get_package(self):
 		return self.pkg
 
 	'''
@@ -699,7 +699,7 @@ class SpecStPackage(SpecStSection):
 	@return: package definitions
 	@rtype: list of L{SpecStDefinition}
 	'''
-	def getDefs(self):
+	def get_defs(self):
 		return self.defs
 
 	'''
@@ -709,7 +709,7 @@ class SpecStPackage(SpecStSection):
 	@return: None
 	@rtype: None
 	'''
-	def defsAppend(self, item):
+	def defs_append(self, item):
 		self.defs.append(item)
 
 class SpecStPrep(SpecStSection):

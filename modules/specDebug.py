@@ -30,7 +30,7 @@ import logging
 
 class SpecDebug(object):
 	'''
-	Library debug control, use C{SpecDebug.logger.serLoggingLevel(level)} to
+	Library debug control, use C{SpecDebug.logger.setLoggingLevel(level)} to
 	initialize logger. Level could be one of the following (C{import logging}):
 	  - logging.DEBUG
 	  - logging.CRITICAL

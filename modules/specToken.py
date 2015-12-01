@@ -40,7 +40,7 @@ class SpecToken:
 		@return: None
 		@rtype: None
 		'''
-		def readComment(specFile):
+		def read_comment(specFile):
 			ret = ""
 			while True:
 				c = specFile.touch()
@@ -96,10 +96,10 @@ class SpecToken:
 						break
 					else:
 						self.append += c
-						self.append += readComment(specFile)
+						self.append += read_comment(specFile)
 				else:
 					self.prepend += c
-					self.prepend += readComment(specFile)
+					self.prepend += read_comment(specFile)
 
 			else:
 				if len(self.append) == 0:
@@ -164,7 +164,7 @@ class SpecToken:
 			ret +=  self.append
 		return ret
 
-	def sameLine(self, token):
+	def same_line(self, token):
 		'''
 		Check if token is on the same line as myself
 		@param token: token to be checked
@@ -194,7 +194,7 @@ class SpecToken:
 		ret.append = append
 		return ret
 
-	def isEOF(self):
+	def is_eof(self):
 		'''
 		Check if token is EOF token
 		@return: True if token is EOF token
@@ -202,7 +202,7 @@ class SpecToken:
 		'''
 		return self.token == None
 
-	def getLine(self):
+	def get_line(self):
 		'''
 		Get line number where token was presented
 		@return: line number or None if no line info was provided
@@ -210,7 +210,7 @@ class SpecToken:
 		'''
 		return self.line
 
-	def setAppend(self, append):
+	def set_append(self, append):
 		'''
 		Set append part for the token
 		@param append: a string to be appended
@@ -220,7 +220,7 @@ class SpecToken:
 		'''
 		self.append = append
 
-	def setPrepend(self, prepend):
+	def set_prepend(self, prepend):
 		'''
 		Set prepend part for the token
 		@param prepend: a string to be prepended
@@ -230,7 +230,7 @@ class SpecToken:
 		'''
 		self.prepend = prepend
 
-	def setToken(self, token):
+	def set_token(self, token):
 		'''
 		Set token
 		@param token: token which should be used for token instance
@@ -272,7 +272,7 @@ class SpecTokenList:
 			if t.token == None:
 				break
 
-	def isEOF(self):
+	def is_eof(self):
 		'''
 		Check if pointer points at the end of file
 		@return: True if pointer points at the end of file
@@ -316,7 +316,7 @@ class SpecTokenList:
 
 		return self.token_list[self.pointer]
 
-	def getLine(self):
+	def get_line(self):
 		'''
 		Get tokens on the current line
 		@return: list of tokens on the same line
@@ -324,7 +324,7 @@ class SpecTokenList:
 		'''
 		ret = []
 
-		while not self.isEOF():
+		while not self.is_eof():
 			token_next = self.touch()
 
 			if len(ret) == 0:
@@ -343,7 +343,7 @@ class SpecTokenList:
 		l.token_list = ret
 		return l
 
-	def getWhileNot(self, callback):
+	def get_while_not(self, callback):
 		'''
 		Get list of token until predicate is False
 		@param callback: callback to be called, predicate
@@ -353,7 +353,7 @@ class SpecTokenList:
 		'''
 		ret = []
 
-		while not self.touch().isEOF():
+		while not self.touch().is_eof():
 			if callback(self):
 				break
 			ret.append(self.get())
@@ -374,7 +374,7 @@ class SpecTokenList:
 			raise SpecBadIndex('Cannot unget at the beginning')
 		self.pointer -= 1
 
-	def getPointer(self):
+	def get_pointer(self):
 		'''
 		Get value of the current buffer pointer
 		@return: buffer pointer
@@ -382,7 +382,7 @@ class SpecTokenList:
 		'''
 		return self.pointer
 
-	def setPointer(self, val):
+	def set_pointer(self, val):
 		'''
 		Set value of the current buffer pointer
 		@param val: new buffer pointer
@@ -431,7 +431,7 @@ class SpecTokenList:
 		for token in self.token_list:
 			token.write(f, raw)
 
-	def tokenListAppend(self, item):
+	def token_list_append(self, item):
 		'''
 		Append item to the token list
 		@param item: item to be added

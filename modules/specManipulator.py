@@ -34,7 +34,7 @@ class SpecManipulator(object):
 	def __init__(self, model = None):
 		self.model = model
 
-	def setModel(self, model):
+	def set_model(self, model):
 		'''
 		Set model to manipulate with
 		@param model: a spec model
@@ -44,7 +44,7 @@ class SpecManipulator(object):
 		'''
 		self.model = model
 
-	def getModel(self):
+	def get_model(self):
 		'''
 		Get used spec model
 		@return: spec model
@@ -66,16 +66,16 @@ class SpecManipulator(object):
 
 		for s in statements:
 			if issubclass(s.__class__, SpecStIf):
-				b = self.find_definitions_all(s.getTrueBranch())
+				b = self.find_definitions_all(s.get_true_branch())
 				if b:
 					ret += b
-				b = self.find_definitions_all(s.getFalseBranch())
+				b = self.find_definitions_all(s.get_false_branch())
 				if b:
 					ret += b
 			elif issubclass(s.__class__, SpecStDefinition):
 				ret.append(s)
 			elif issubclass(s.__class__, SpecStPackage):
-				b = self.find_definitions_all(s.getDefs())
+				b = self.find_definitions_all(s.get_defs())
 				if b:
 					ret += b
 

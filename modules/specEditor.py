@@ -83,7 +83,7 @@ class SpecEditor(SpecManipulator):
 		if not found:
 			raise SpecNotFound("Invalid editor '%s' registration" % editor.__name__)
 
-	def getEditorClass(self, cls):
+	def get_editor_class(self, cls):
 		'''
 		Get editor based on class
 		@param cls: class to be used
@@ -100,7 +100,7 @@ class SpecEditor(SpecManipulator):
 		if not found:
 			raise SpecNotImplemented("Not implemented editor")
 
-	def getEditor(self, section):
+	def get_editor(self, section):
 		'''
 		Get editor based on instance
 		@param section: instance to be used to get editor
@@ -109,7 +109,7 @@ class SpecEditor(SpecManipulator):
 		@rtype:  L{SpecSectionEditor}
 		@raise SpecNotFound: if editor is not found
 		'''
-		return self.getEditorClass(section.__class__)
+		return self.get_editor_class(section.__class__)
 
 	def find_section_edit(self, section_type, replacement, verbose = True):
 		'''
@@ -131,7 +131,7 @@ class SpecEditor(SpecManipulator):
 			if len(s) > 1:
 				raise SpecNotImplemented("Cannot edit more then one section")
 
-			self.getEditor(s[0]).edit(s[0], replacement)
+			self.get_editor(s[0]).edit(s[0], replacement)
 		elif verbose:
 			raise SpecNotFound("Error: section type '%s' not found" % section_type)
 
@@ -166,7 +166,7 @@ class SpecEditor(SpecManipulator):
 		s = self.model.find_section(section_type)
 
 		if s is not None:
-			self.getEditor(s[0]).add(s[0], items)
+			self.get_editor(s[0]).add(s[0], items)
 		elif verbose:
 			raise SpecNotFound("Error: section '%s' not found" % section_type)
 
@@ -184,8 +184,8 @@ class SpecEditor(SpecManipulator):
 		@rtype: None
 		@raise SpecNotFound: if package is not found
 		'''
-		definition_editor = self.getEditorClass(SpecStDefinition)
-		package_editor = self.getEditorClass(SpecStPackage)
+		definition_editor = self.get_editor_class(SpecStDefinition)
+		package_editor = self.get_editor_class(SpecStPackage)
 
 		for pkg in packages:
 			if pkg == '-':
@@ -194,13 +194,13 @@ class SpecEditor(SpecManipulator):
 					self.model.add(d)
 			else:
 				found = False
-				for st_pkg in self.model.getSections():
+				for st_pkg in self.model.get_sections():
 					if issubclass(st_pkg.__class__, SpecStPackage):
-						if st_pkg.pkg != None and str(st_pkg.getPackage()) == pkg:
+						if st_pkg.pkg != None and str(st_pkg.get_package()) == pkg:
 							found = True
-							for val in packages[str(st_pkg.getPackage())]:
+							for val in packages[str(st_pkg.get_package())]:
 								d = definition_editor.create(st_pkg, definition, val)
-								package_editor.addDefinition(st_pkg, d)
+								package_editor.add_definition(st_pkg, d)
 
 				if not found:
 					raise SpecNotFound("Package '%s' not found" % pkg)
@@ -219,15 +219,15 @@ class SpecEditor(SpecManipulator):
 		'''
 		for pkg in packages:
 			if pkg == '-':
-				for st_def in self.model.getSections():
+				for st_def in self.model.get_sections():
 					if issubclass(st_def.__class__, SpecStDefinition):
-						if definition.match(str(st_def.getName())):
+						if definition.match(str(st_def.get_name())):
 							for val in packages['-']:
-								if st_def.getValue() == val:
+								if st_def.get_value() == val:
 									self.model.remove(st_def)
 			else:
 				found = False
-				for st_pkg in self.model.getSections():
+				for st_pkg in self.model.get_sections():
 					if type(st_pkg) is SpecStPackage:
 						if st_pkg.pkg != None and str(st_pkg.pkg) == pkg:
 								st_pkg.remove_definition(definition, packages[pkg])
@@ -332,7 +332,7 @@ class SpecEditor(SpecManipulator):
 		if len(changelog) != 1:
 			raise SpecNotFound("Cannot add changelog entry, changelog not found")
 
-		self.getEditor(changelog[0]).addEntry(changelog[0], date, username, email, version, msg)
+		self.get_editor(changelog[0]).add_entry(changelog[0], date, username, email, version, msg)
 
 	def description_edit(self, replacement, package = None):
 		'''
@@ -422,7 +422,7 @@ class SpecEditor(SpecManipulator):
 		'''
 		# TODO: check for duplicit entry
 		for pkg_name in items:
-			pkg = self.getEditorClass(SpecStPackage).create(None, pkg_name)
+			pkg = self.get_editor_class(SpecStPackage).create(None, pkg_name)
 			self.model.add(pkg)
 
 	def package_remove(self, items):
@@ -437,14 +437,14 @@ class SpecEditor(SpecManipulator):
 		@todo: rename to packages_remove()
 		'''
 		for item in items:
-			for st_pkg in self.model.getSections():
+			for st_pkg in self.model.get_sections():
 				if not issubclass(st_pkg.__class__, SpecStPackage):
 					continue
 
-				if (item == '-' or item is None) and st_pkg.getPackage() is None:
+				if (item == '-' or item is None) and st_pkg.get_package() is None:
 					self.model.remove(st_pkg)
-				elif item is not None and st_pkg.getPackage() is not None and \
-						item == str(st_pkg.getPackage()):
+				elif item is not None and st_pkg.get_package() is not None and \
+						item == str(st_pkg.get_package()):
 					self.model.remove(st_pkg)
 
 	def prep_edit(self, replacement):
@@ -613,7 +613,7 @@ class SpecSectionEditor(object):
 		@rtype: None
 		'''
 		new_tokens = SpecTokenList(replacement)
-		section.setTokens(new_tokens)
+		section.set_tokens(new_tokens)
 
 class SpecExpressionEditor(SpecSectionEditor):
 	'''
@@ -674,8 +674,8 @@ class SpecDefinitionEditor(SpecSectionEditor):
 		@rtype: L{SpecStDefinition}
 		'''
 		ret = SpecDefinitionEditor.obj(parent)
-		ret.setName(SpecToken.create(name))
-		ret.setValue(SpecToken.create(value, append="\n"))
+		ret.set_name(SpecToken.create(name))
+		ret.set_value(SpecToken.create(value, append="\n"))
 		return ret
 
 class SpecGlobalEditor(SpecSectionEditor):
@@ -712,7 +712,7 @@ class SpecChangelogEditor(SpecSectionEditor):
 	obj = [SpecStChangelog, SpecStChangelog.SpecStChangelogEntry]
 
 	@classmethod
-	def addEntry(cls, changelog, date, username, email, version, msg):
+	def add_entry(cls, changelog, date, username, email, version, msg):
 		'''
 		Add a changelog entry to provided changelog
 		@param changelog: a changelog section to be used
@@ -731,18 +731,18 @@ class SpecChangelogEditor(SpecSectionEditor):
 		@rtype: L{SpecStChangelogEntry}
 		'''
 		entry = SpecChangelogEditor.obj.SpecStChangelogEntry(changelog)
-		entry.setStar(SpecToken.create('*'))
-		entry.setDate(SpecToken.create(date.strftime("%a %b %d %Y")))
-		entry.setDateParsed(date)
-		entry.setUser(SpecToken.create(username))
-		entry.setUserEmail(SpecToken.create('<' + email + '>'))
-		entry.setVersionDelim(SpecToken.create('-'))
+		entry.set_star(SpecToken.create('*'))
+		entry.set_date(SpecToken.create(date.strftime("%a %b %d %Y")))
+		entry.set_date_parsed(date)
+		entry.set_user(SpecToken.create(username))
+		entry.set_user_email(SpecToken.create('<' + email + '>'))
+		entry.set_version_delim(SpecToken.create('-'))
 		if version is None:
-			entry.setVersion(changelog.getEntries()[0].getVersion())
+			entry.set_version(changelog.get_entries()[0].get_version())
 		else:
-			entry.setVersion(SpecToken.create(version, append = '\n'))
-		entry.setMessage(SpecToken.create(msg, append = '\n'))
-		changelog.insertEntry(entry)
+			entry.set_version(SpecToken.create(version, append = '\n'))
+		entry.set_message(SpecToken.create(msg, append = '\n'))
+		changelog.insert_entry(entry)
 
 		return entry
 
@@ -802,12 +802,12 @@ class SpecPackageEditor(SpecSectionEditor):
 		ret = SpecStPackage(parent)
 		pkg = None if pkg == None or pkg == '-' else pkg
 		if pkg is not None:
-			ret.setPackage(SpecToken().create(pkg, append = '\n'))
-		ret.setTokenSection(SpecToken().create('%package', append = '\n' if pkg is None else ' '))
+			ret.set_package(SpecToken().create(pkg, append = '\n'))
+		ret.set_token_section(SpecToken().create('%package', append = '\n' if pkg is None else ' '))
 		return ret
 
 	@classmethod
-	def addDefinition(cls, pkg, definition):
+	def add_definition(cls, pkg, definition):
 		'''
 		Add a definition to the package
 		@param pkg: package to add section to
@@ -816,7 +816,7 @@ class SpecPackageEditor(SpecSectionEditor):
 		@rtype: None
 		'''
 		# TODO: based on alphabet?
-		pkg.defsAppend(definition)
+		pkg.defs_append(definition)
 
 class SpecPrepEditor(SpecSectionEditor):
 	'''

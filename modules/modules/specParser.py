@@ -39,17 +39,9 @@ from specError import SpecBadToken, SpecBadIf
 
 class SpecParser(SpecManipulator):
 	'''
-	TODO
+	A spec parser
 	'''
 	def __init__(self):
-		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
-		'''
 		self.PARSERS = [
 				SpecIfParser,
 				SpecDefinitionParser,
@@ -82,14 +74,14 @@ class SpecParser(SpecManipulator):
 
 	def register(self, parser):
 		'''
-		TODO
-		@type parser: TODO
-		@param parser: TODO
-		@rtype: TODO
-		@return: TODO
-		@raises SpecNotFound: TODO
+		Register a spec parser
+		@param parser: parser to be registered
+		@type parser: L{SpecSectionParser}
+		@rtype: None
+		@return: None
+		@raise SpecNotFound: if provided parser cannot be registered e.g. invalid parser
+		@todo: move to SpecManipulator
 		'''
-		# TODO: move to SpecManipulator
 		found = False
 		for idx, item in enumerate(self.PARSERS):
 			if issubclass(parser, item):
@@ -101,35 +93,35 @@ class SpecParser(SpecManipulator):
 
 	def init(self, f):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init parser
+		@param f: FILE or a string to init parser from
+		@type f: FILE or a string
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.token_list = SpecTokenList(f)
 
 	@staticmethod
-	def sectionBeginingCallback(obj, token_list):
+	def sectionBeginningCallback(obj, token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		A callback for L{SpecTokenList} used to check whether next token is
+		a section token
+		@param obj: self instance
+		@type obj: L{SpecParser} instance
+		@param token_list: token list to be used
+		@type token_list: L{SpecTokenList}
+		@return: section parser to be used for parsing the upcoming section
+		@rtype: L{SpecParser}
 		'''
 		return obj.sectionBegining(token_list)
 
 	def sectionBegining(self, token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check whether next token is a section token
+		@param token_list: token list to be used
+		@type token_list: L{SpecTokenList}
+		@return: section parser to be used to parse the upcoming section
+		@rtype: L{SpecParser}
 		'''
 		for parser in self.PARSERS:
 			ret = parser.sectionBegining(token_list)
@@ -140,12 +132,15 @@ class SpecParser(SpecManipulator):
 
 	def parse_loop(self, token_list, parent, allowed):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Main parse loop to get list of parsed sections
+		@param token_list: a list of tokens to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections to be parsed, section parsers
+		@type allowed: list of L{SpecSectionParser}
+		@return: list of parsed sections
+		@rtype: L{SpecSection}
 		'''
 		ret = []
 
@@ -173,12 +168,9 @@ class SpecParser(SpecManipulator):
 
 	def parse_preamble(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse preamble of a spec file
+		@return: parsed sections in preamble
+		@rtype: list of L{SpecSection}
 		'''
 		allowed = [ SpecIfParser, SpecDefinitionParser, SpecGlobalParser ]
 
@@ -187,14 +179,11 @@ class SpecParser(SpecManipulator):
 		SpecDebug.logger.debug("-- preamble finished with token '%s' on line %d" % (str(unparsed), unparsed.line))
 		return ret
 
-	def parse_loop_section(self, parent):
+	def parse_loop_section(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse sections after preamble
+		@return: list of parsed sections
+		@rtype: list of L{SpecSection}
 		'''
 		ret = []
 		allowed = copy.deepcopy(self.PARSERS)
@@ -210,7 +199,7 @@ class SpecParser(SpecManipulator):
 				break
 
 			for t in allowed:
-				section = t.parse(self.token_list, parent, allowed, self)
+				section = t.parse(self.token_list, None, allowed, self)
 				if section:
 					found = True
 					SpecDebug.logger.debug("- adding parsed section '%s'" % type(section))
@@ -229,17 +218,15 @@ class SpecParser(SpecManipulator):
 
 	def parse(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Main parser entry point - parse provided spec file
 		@return: None
 		@rtype:
-		@raise SpecNotFound:
+		@raise SpecBadToken: when an unexpected token is reached
 		'''
 		self.model = SpecModel()
 
 		self.model.append_items(self.parse_preamble())
-		self.model.append_items(self.parse_loop_section(None))
+		self.model.append_items(self.parse_loop_section())
 
 		eof = self.token_list.touch()
 		if not eof.isEOF():
@@ -247,7 +234,8 @@ class SpecParser(SpecManipulator):
 
 class SpecSectionParser(object):
 	'''
-	TODO
+	Generic section parser
+	@cvar obj: sections parsed by this parser
 	'''
 	obj = [ SpecStBuild, SpecStCheck, SpecStClean, SpecStDescription, SpecStFiles, SpecStInstall,
 				SpecStPrep, SpecStPre, SpecStPost, SpecStPreun, SpecStPostun, SpecStPretrans,
@@ -256,24 +244,21 @@ class SpecSectionParser(object):
 
 	def __init__(self):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
+		@raise SpecNotImplemented: always, parser should not be instantiated
 		'''
-		raise ValueError("Cannot instantiate")
+		raise SpecNotImplemented("Cannot instantiate")
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 
@@ -286,12 +271,17 @@ class SpecSectionParser(object):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		section = cls.sectionBegining(token_list)
 		if not section: # section not found
@@ -300,37 +290,41 @@ class SpecSectionParser(object):
 		ret = section(parent)
 		ret.setTokenSection(token_list.get())
 		#could be empty
-		ret.setTokens(token_list.getWhileNot(functools.partial(ctx.sectionBeginingCallback, ctx)))
+		ret.setTokens(token_list.getWhileNot(functools.partial(ctx.sectionBeginningCallback, ctx)))
 
 		return ret
 
 class SpecExpressionParser(SpecSectionParser):
 	'''
-	TODO
+	Parse an expression
 	'''
 	obj = SpecStExpression
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		raise ValueError("Spec expression has no beginning")
 
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		ret = SpecExpressionParser.obj(parent)
 
@@ -346,19 +340,18 @@ class SpecExpressionParser(SpecSectionParser):
 
 class SpecIfParser(SpecSectionParser):
 	'''
-	TODO
+	Parse if
 	'''
 	obj = SpecStIf
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 		if str(token) == '%if' or str(token) == '%ifarch':
@@ -369,12 +362,17 @@ class SpecIfParser(SpecSectionParser):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		if not cls.sectionBegining(token_list):
 			return None
@@ -401,19 +399,18 @@ class SpecIfParser(SpecSectionParser):
 
 class SpecDefinitionParser(SpecSectionParser):
 	'''
-	TODO
+	Parse a definition
 	'''
 	obj = SpecStDefinition
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 
@@ -443,12 +440,17 @@ class SpecDefinitionParser(SpecSectionParser):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		if not cls.sectionBegining(token_list):
 			return None
@@ -463,19 +465,18 @@ class SpecDefinitionParser(SpecSectionParser):
 
 class SpecGlobalParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %global
 	'''
 	obj = SpecStGlobal
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 		if str(token) == str(SpecGlobalParser.obj):
@@ -486,12 +487,17 @@ class SpecGlobalParser(SpecSectionParser):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		if not cls.sectionBegining(token_list):
 			return None
@@ -507,25 +513,24 @@ class SpecGlobalParser(SpecSectionParser):
 
 class SpecBuildParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %build section
 	'''
 	obj = SpecStBuild
 
 class SpecChangelogParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %changelog section
 	'''
 	obj = SpecStChangelog
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 		if str(token) == str(SpecChangelogParser.obj):
@@ -536,12 +541,16 @@ class SpecChangelogParser(SpecSectionParser):
 	@classmethod
 	def parseEntry(cls, token_list, parent, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse a changelog entry
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
+
 		'''
 		def parse_date(date):
 			s = str(date[0]) + ' ' + str(date[1]) + ' ' + str(date[2]) + ' ' + str(date[3])
@@ -549,7 +558,7 @@ class SpecChangelogParser(SpecSectionParser):
 
 		def changelogEntryBeginningCallback(obj, token_list):
 			# is there some section?
-			if obj.sectionBeginingCallback(obj, token_list):
+			if obj.sectionBeginningCallback(obj, token_list):
 				return True
 
 			# or is there another changelog entry?
@@ -595,12 +604,17 @@ class SpecChangelogParser(SpecSectionParser):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		if not cls.sectionBegining(token_list):
 			return None
@@ -617,49 +631,48 @@ class SpecChangelogParser(SpecSectionParser):
 
 class SpecCheckParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %check section
 	'''
 	obj = SpecStCheck
 
 class SpecCleanParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %clean section
 	'''
 	obj = SpecStClean
 
 class SpecDescriptionParser(SpecSectionParser):
 	'''
-	TODO
+	Parse a description
 	'''
 	obj = SpecStDescription
 
 class SpecFilesParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %files section
 	'''
 	obj = SpecStFiles
 
 class SpecInstallParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %install section
 	'''
 	obj = SpecStInstall
 
 class SpecPackageParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %package section
 	'''
 	obj = SpecStPackage
 
 	@staticmethod
 	def sectionBegining(token_list):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
 		'''
 		token = token_list.touch()
 
@@ -671,12 +684,17 @@ class SpecPackageParser(SpecSectionParser):
 	@classmethod
 	def parse(cls, token_list, parent, allowed, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
 		'''
 		if not cls.sectionBegining(token_list):
 			return None
@@ -691,79 +709,79 @@ class SpecPackageParser(SpecSectionParser):
 
 class SpecPrepParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %prep section
 	'''
 	obj = SpecStPrep
 
 class SpecPreParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %pre section
 	'''
 	obj = SpecStPre
 
 class SpecPostParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %post section
 	'''
 	obj = SpecStPost
 
 class SpecPreunParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %preun section
 	'''
 	obj = SpecStPreun
 
 class SpecPostunParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %postun section
 	'''
 	obj = SpecStPostun
 
 class SpecPretransParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %pretrans section
 	'''
 	obj = SpecStPretrans
 
 class SpecPosttransParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %posttrans section
 	'''
 	obj = SpecStPosttrans
 
 class SpecTriggerParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %trigger section
 	'''
 	obj = SpecStTrigger
 
 class SpecTriggerinParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %triggerin section
 	'''
 	obj = SpecStTriggerin
 
 class SpecTriggerpreinParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %triggerprein section
 	'''
 	obj = SpecStTriggerprein
 
 class SpecTriggerunParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %triggerun section
 	'''
 	obj = SpecStTriggerun
 
 class SpecTriggerpostunParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %triggerpostun section
 	'''
 	obj = SpecStTriggerpostun
 
 class SpecVerifyscriptParser(SpecSectionParser):
 	'''
-	TODO
+	Parse %verifyscript section
 	'''
 	obj = SpecStVerifyscript
 

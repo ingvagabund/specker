@@ -33,7 +33,7 @@ from specManipulator import SpecManipulator
 
 class SpecRenderer(SpecManipulator):
 	'''
-	TODO
+	A spec renderer
 	'''
 	def __init__(self, model):
 		self.RENDERERS = [
@@ -67,14 +67,14 @@ class SpecRenderer(SpecManipulator):
 
 	def register(self, renderer):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Register a spec renderer
+		@param renderer: renderer to be registered
+		@type renderer: L{SpecSectionRenderer}
+		@rtype: None
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@raise SpecNotFound: if provided renderer cannot be registered e.g. invalid renderer
+		@todo: move to SpecManipulator
 		'''
-		# TODO: move to SpecManipulator
 		found = False
 		for idx, item in enumerate(self.RENDERERS):
 			if issubclass(renderer, item):
@@ -87,35 +87,37 @@ class SpecRenderer(SpecManipulator):
 
 	def render_list(self, l, f):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render a list of sections
+		@param l: a list to be rendered
+		@type l: list of L{SpecSection}
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		for section in l:
 			self.render_section(section, f)
 
 	def render(self, f):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render whole model to a file
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.render_list(self.model.getSections(), f)
 
 	def render_section(self, s, f):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render a section
+		@param s: a section to be rendered
+		@type s: L{SpecSection}
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
+		@raise SpecNotImplemented: if renderer for the section is not registered
 		'''
 		found = False
 		for renderer in self.RENDERERS:
@@ -123,16 +125,20 @@ class SpecRenderer(SpecManipulator):
 				found = True
 				renderer(s).render(f, self)
 		if not found:
-			raise NotImplementedError("Not implemented renderer")
+			raise SpecNotImplemented("Not implemented renderer")
 
 	def find_section_print(self, section_type, f = sys.stdout, verbose = True):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
-		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		Find a section of a type and print/render it
+		@param section_type: a section type to be found
+		@type section_type: __class__
+		@param f: a file to render to
+		@type f: file
+		@param verbose: if true, raise an exception if a section is not found
+		@type verbose: Boolean
+		@return: list of sections which were printed
+		@rtype: list of L{SpecSection}
+		@raise SpecNotFound: if no section was printed
 		'''
 		s = self.model.find_section(section_type)
 
@@ -146,12 +152,17 @@ class SpecRenderer(SpecManipulator):
 
 	def print_definitions(self, defs, definition, packages, f):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Find a definition and print/render it
+		@param defs: definitions to print from
+		@type defs: list of L{SpecSection}
+		@param definition: definition to be printed
+		@type defs: re
+		@param packages: packages from definitions should be printed
+		@type packages: list of strings
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		for d in defs:
 			if definition.match(str(d.name)):
@@ -168,337 +179,325 @@ class SpecRenderer(SpecManipulator):
 					d.getValue().write(f, raw = True)
 					f.write('\n') # Add delim since raw token is printed
 
-	def provides_show(self, package, f = sys.stdout):
+	def provides_show(self, packages, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show provides for a specific package
+		@param packages: list of packages to show provides for
+		@type packages: list of strings
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		defs = self.find_definitions_all(self.model.getSections())
-		self.print_definitions(defs, re.compile('Provides:'), package, f)
+		self.print_definitions(defs, re.compile('Provides:'), packages, f)
 
 	def requires_show(self, packages, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show requires for a specific package
+		@param packages: list of packages to show requires for
+		@type packages: list of strings
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		defs = self.find_definitions_all(self.model.getSections())
 		self.print_definitions(defs, re.compile('Requires:'), packages, f)
 
-	def buildrequires_show(self, package, f = sys.stdout):
+	def buildrequires_show(self, packages, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show buildrequires for a specific package
+		@param packages: list of packages to show buildrequires for
+		@type packages: list of strings
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		defs = self.find_definitions_all(self.model.getSections())
-		self.print_definitions(defs, re.compile('BuildRequires:'), package, f)
+		self.print_definitions(defs, re.compile('BuildRequires:'), packages, f)
 
 	def changelog_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show changelog section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStChangelog, f)
 
-	def description_show(self, package = None, f = sys.stdout):
+	def description_show(self, packages = None, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show description section
+		@param packages: a file to render to
+		@type packages: file
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
+		# TODO: do this for a specific package
 		return self.find_section_print(SpecStDescription, f)
 
 	def build_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show build section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStBuild, f)
 
 	def check_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show check section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStCheck, f)
 
 	def clean_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show clean section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStClean, f)
 
 	def files_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show files section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
-		return self.find_section_print(SpecStFiles, f)
+		self.find_section_print(SpecStFiles, f)
 
 	def install_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show install section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStInstall, f)
 
 	def package_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show package section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
+		# TODO: do this for specific packages
 		return self.find_section_print(SpecStPackage, f)
 
 	def prep_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show prep section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPrep, f)
 
 	def pre_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show pre section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPre, f)
 
 	def post_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show post section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPost, f)
 
 	def preun_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show preun section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPreun, f)
 
 	def postun_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show postun section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPostun, f)
 
 	def pretrans_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show pretrans section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPretrans, f)
 
 	def posttrans_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show posttrans section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPosttrans, f)
 
 	def triggerin_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show triggerin section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStTriggerin, f)
 
 	def triggerprein_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show triggerprein section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStTriggerprein, f)
 
 	def triggerun_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show triggerun section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStTriggerun, f)
 
 	def triggerpostun_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show triggerpostun section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStPostun, f)
 
 	def verifyscript_show(self, f = sys.stdout):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Show verifyscript section
+		@param f: a file to render to
+		@type f: file
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		return self.find_section_print(SpecStVerifyscript, f)
 
 class SpecSectionRenderer(object):
 	'''
-	TODO
-	@cvar obj: TODO
+	Generic section renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStSection
 
 	def __init__(self, section):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init
+		@param section: section to be rendered
+		@type section: L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section = section
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getTokenSection().write(f)
 		self.section.getTokens().write(f)
 
 class SpecExpressionRenderer(object):
 	'''
-	TODO
-	@cvar obj: TODO
+	Expression renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStExpression
 
 	def __init__(self, section):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Init
+		@param section: section to be rendered
+		@type section: L{SpecSection}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section = section
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		for token in self.section.getTokens():
 			token.write(f)
 
 class SpecIfRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%if renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStIf
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getIfToken().write(f)
 		SpecExpressionRenderer(self.section.getExpr()).render(f, ctx)
@@ -510,19 +509,20 @@ class SpecIfRenderer(SpecSectionRenderer):
 
 class SpecGlobalRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%global renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStGlobal
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getGlobalToken().write(f)
 		self.section.getVariable().write(f)
@@ -530,26 +530,27 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 
 class SpecBuildRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%build renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStBuild
 
 class SpecChangelogRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStChangelog
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getTokenSection().write(f)
 
@@ -564,54 +565,55 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 
 class SpecCheckRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStCheck
 
 class SpecCleanRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStClean
 
 class SpecDescriptionRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStDescription
 
 class SpecFilesRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStFiles
 
 class SpecInstallRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStInstall
 
 class SpecPackageRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPackage
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getTokenSection().write(f)
 		if self.section.getPackage():
@@ -620,111 +622,112 @@ class SpecPackageRenderer(SpecSectionRenderer):
 
 class SpecPrepRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPrep
 
 class SpecPreRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPre
 
 class SpecPostRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPost
 
 class SpecPreunRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPreun
 
 class SpecPostunRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPostun
 
 class SpecPretransRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPretrans
 
 class SpecPosttransRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPosttrans
 
 class SpecDefinitionRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStDefinition
 
 	def render(self, f, ctx):
 		'''
-		TODO
-		@param XXX:
-		@type XXX: number
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecRenderer}
 		@return: None
-		@rtype:
-		@raise SpecNotFound:
+		@rtype: None
 		'''
 		self.section.getName().write(f)
 		self.section.getValue().write(f)
 
 class SpecTriggerRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStTrigger
 
 class SpecTriggerinRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStTriggerin
 
 class SpecTriggerpreinRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStTriggerprein
 
 class SpecTriggerunRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStTriggerun
 
 class SpecTriggerpostunRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStTriggerpostun
 
 class SpecVerifyscriptRenderer(SpecSectionRenderer):
 	'''
-	TODO
-	@cvar obj: TODO
+	%changelog renderer
+	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStVerifyscript
 

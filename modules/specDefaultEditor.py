@@ -120,7 +120,7 @@ class SpecDefaultEditor(SpecModelEditor):
 			if len(s) > 1:
 				raise SpecNotImplemented("Cannot edit more then one section")
 
-			SpecDebug.debug("- editing section '%s'", str(s[0]))
+			SpecDebug.debug("- editing section '%s'" % str(s[0]))
 			self.get_editor(s[0]).edit(s[0], replacement)
 		elif verbose:
 			raise SpecNotFound("Error: section type '%s' not found" % section_type)

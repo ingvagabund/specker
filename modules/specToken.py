@@ -36,7 +36,7 @@ class SpecToken:
 		'''
 		Init L{SpecToken}
 		@param specFile: L{SpecFile} to parse
-		@type XXX: L{SpecFile}
+		@type specFile: L{SpecFile}
 		@return: None
 		@rtype: None
 		'''
@@ -234,7 +234,7 @@ class SpecToken:
 		'''
 		Set token
 		@param token: token which should be used for token instance
-		@type: string
+		@type token: string
 		@return: None
 		@rtype: None
 		'''

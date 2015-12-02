@@ -137,7 +137,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@param defs: definitions to print from
 		@type defs: list of L{SpecSection}
 		@param definition: definition to be printed
-		@type defs: re
+		@type definition: re
 		@param packages: packages from definitions should be printed
 		@type packages: list of strings
 		@param f: a file to render to

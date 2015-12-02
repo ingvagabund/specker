@@ -124,7 +124,7 @@ class SpecDefaultEditor(SpecModelEditor):
 	def sections_add(self, sections):
 		'''
 		Add sections to model
-		@param section: section to be added
+		@param sections: section to be added
 		@type : L{SpecSection}
 		@return: None
 		@rtype: None
@@ -140,7 +140,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		@param section_type: section type to be used when calling add
 		@type section_type: __class__
 		@param items: items to be added to a section of type section type
-		@type verbose: editor specific
+		@type items: editor specific
 		@param verbose: if True raise an exception if editor is not found
 		@type verbose: Boolean
 		@return: section used for edit
@@ -165,7 +165,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		@type definition: string
 		@param packages: definitions to be added to packages e.g. {'devel':
 		['gcc', 'gdb'], '-': ['gcc']}; use '-' or None for main package
-		@type definition: dict
+		@type packages: dict
 		@return: None
 		@rtype: None
 		@raise SpecNotFound: if package is not found
@@ -270,7 +270,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		'''
 		self.find_definition_remove(re.compile('Requires:'), packages)
 
-	def buildrequires_add(self, package):
+	def buildrequires_add(self, packages):
 		'''
 		Add 'BuildRequires:' to packages
 		@param packages: buil requires to be added to packages e.g. {'devel':
@@ -280,7 +280,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		@rtype: None
 		@raise SpecNotFound: if package is not found
 		'''
-		self.find_definition_add('BuildRequires:', package)
+		self.find_definition_add('BuildRequires:', packages)
 
 	def buildrequires_remove(self, packages):
 		'''
@@ -305,8 +305,8 @@ class SpecDefaultEditor(SpecModelEditor):
 		@type email: string
 		@param version: version, if None, last version is used
 		@type version: string
-		@param message: a message to be placed to the changelog entry
-		@type message: string
+		@param msg: a message to be placed to the changelog entry
+		@type msg: string
 		@return: None
 		@rtype: None
 		@raise SpecNotFound: if changelog section is not found
@@ -653,7 +653,7 @@ class SpecDefinitionEditor(SpecSectionEditor):
 		@param parent: parent section
 		@type parent: L{SpecSection}
 		@param name: name of the definition
-		@type parent: string
+		@type name: string
 		@param value: value of the definition
 		@type value: string
 		@return: newly created definition
@@ -711,8 +711,8 @@ class SpecChangelogEditor(SpecSectionEditor):
 		@type email: string
 		@param version: version, if None, last version is used
 		@type version: string
-		@param message: a message to be placed to the changelog entry
-		@type message: string
+		@param msg: a message to be placed to the changelog entry
+		@type msg: string
 		@return: newly added entry
 		@rtype: L{SpecStChangelogEntry}
 		'''

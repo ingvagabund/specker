@@ -561,9 +561,10 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		if options.custom_manipulator_parser:
-			execfile(options.custom_manipulator_parser)
-			parser = custom_manipulator_editor(model_writer())
+		if options.custom_manipulator_editor:
+			execfile(options.custom_manipulator_editor)
+			spec = custom_manipulator_editor(model_reader(parser.get_model_writer().get_model()),
+											parser.get_model_writer())
 		else:
 			spec = SpecDefaultEditor(model_reader(parser.get_model_writer().get_model()),
 											parser.get_model_writer())
@@ -671,8 +672,8 @@ if __name__ == "__main__":
 			spec.sections_add(spec2.parse_loop_section(None))
 
 		if options.custom_manipulator_renderer:
-			execfile(options.custom_manipulator_editor)
-			spec = custom_manipulator_editor(spec.get_model_writer())
+			execfile(options.custom_manipulator_renderer)
+			spec = custom_manipulator_renderer(spec.get_model_writer())
 		else:
 			spec = SpecFileRenderer(spec.get_model_reader())
 

@@ -214,6 +214,18 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
+		"", "", "--custom-model-reader", dest="custom_model_reader",
+		action = "store", type = "string",
+		help = "custom model reader source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-model-writer", dest="custom_model_writer",
+		action = "store", type = "string",
+		help = "custom model writer source file"
+	)
+
+	parser.add_option(
 		"", "", "--custom-manipulator-editor", dest="custom_manipulator_editor",
 		action = "store", type = "string",
 		help = "custom manipulator editor source file"
@@ -518,11 +530,23 @@ if __name__ == "__main__":
 		logger.setLevel(logging.DEBUG)
 		SpecDebug.logger.setLevel(logging.DEBUG)
 
+	if options.custom_model_reader:
+		execfile(options.custom_model_reader)
+		model_reader = custom_model_reader
+	else:
+		model_reader = SpecModelReader
+
+	if options.custom_model_writer:
+		execfile(options.custom_model_writer)
+		model_writer = custom_model_writer
+	else:
+		model_writer = SpecModelWriter
+
 	if options.custom_manipulator_parser:
 		execfile(options.custom_manipulator_parser)
-		parser = custom_manipulator_parser(SpecModelWriter())
+		parser = custom_manipulator_parser(model_writer())
 	else:
-		parser = SpecFileParser(SpecModelWriter())
+		parser = SpecFileParser(model_writer())
 
 	try:
 		if options.custom_parser:
@@ -540,9 +564,9 @@ if __name__ == "__main__":
 
 		if options.custom_manipulator_parser:
 			execfile(options.custom_manipulator_parser)
-			parser = custom_manipulator_editor(SpecModelWriter())
+			parser = custom_manipulator_editor(model_writer())
 		else:
-			spec = SpecDefaultEditor(SpecModelReader(), parser.get_model_writer())
+			spec = SpecDefaultEditor(model_reader(), parser.get_model_writer())
 		del parser
 
 		if options.custom_editor:
@@ -640,9 +664,9 @@ if __name__ == "__main__":
 
 		if options.sections_add:
 			if options.custom_manipulator_parser:
-				spec2 = custom_manipulator_parser(SpecModelReader())
+				spec2 = custom_manipulator_parser(model_reader())
 			else:
-				spec2 = SpecFileParser(SpecModelReader())
+				spec2 = SpecFileParser(model_reader())
 			spec2.init(sys.stdin)
 			spec.sections_add(spec2.parse_loop_section(None))
 

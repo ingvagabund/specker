@@ -194,22 +194,23 @@ class SpecModel(object):
 		@raise SpecNotFound:
 		@todo: move to the model itself?
 		'''
-		ret = []
+		def xfind_definitions_all(sections):
+			ret = []
+			for s in sections:
+				if issubclass(s.__class__, SpecStIf):
+					b = xfind_definitions_all(s.get_true_branch())
+					if b:
+						ret += b
+					b = xfind_definitions_all(s.get_false_branch())
+					if b:
+						ret += b
+				elif issubclass(s.__class__, SpecStDefinition):
+					ret.append(s)
+				elif issubclass(s.__class__, SpecStPackage):
+					b = xfind_definitions_all(s.get_defs())
+					if b:
+						ret += b
+			return ret
 
-		for s in self.sections:
-			if issubclass(s.__class__, SpecStIf):
-				b = self.find_definitions_all(s.get_true_branch())
-				if b:
-					ret += b
-				b = self.find_definitions_all(s.get_false_branch())
-				if b:
-					ret += b
-			elif issubclass(s.__class__, SpecStDefinition):
-				ret.append(s)
-			elif issubclass(s.__class__, SpecStPackage):
-				b = self.find_definitions_all(s.get_defs())
-				if b:
-					ret += b
-
-		return ret
+		return xfind_definitions_all(self.sections)
 

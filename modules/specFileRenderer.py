@@ -426,7 +426,7 @@ class SpecSectionRenderer(object):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -456,7 +456,7 @@ class SpecExpressionRenderer(object):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -476,7 +476,7 @@ class SpecIfRenderer(SpecSectionRenderer):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -501,7 +501,7 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -529,7 +529,7 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -592,7 +592,7 @@ class SpecPackageRenderer(SpecSectionRenderer):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''
@@ -663,7 +663,7 @@ class SpecDefinitionRenderer(SpecSectionRenderer):
 		@param f: a file to render to
 		@type f: file
 		@param ctx: a rendering context
-		@type ctx: L{SpecRenderer}
+		@type ctx: L{SpecModelRenderer}
 		@return: None
 		@rtype: None
 		'''

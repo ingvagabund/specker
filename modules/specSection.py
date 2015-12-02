@@ -144,7 +144,7 @@ class SpecStIf(SpecSection):
 		'''
 		Get expression of %if
 		@return: expression
-		@rtype: L{SpecExpression}
+		@rtype: L{SpecStExpression}
 		'''
 		return self.expr
 
@@ -351,7 +351,7 @@ class SpecStExpression(SpecSection):
 		'''
 		Set tokens of an expression
 		@param tkns: expression tokens
-		@type tkns: list of L{SpecTokens}
+		@type tkns: list of L{SpecToken}
 		@return: None
 		@rtype: None
 		'''
@@ -626,7 +626,7 @@ class SpecStChangelog(SpecStSection):
 		'''
 		Insert a changelog entry at the beginning
 		@param entry: changelog entry to be inserted
-		@type entry: L{SpecChangelogEntry}
+		@type entry: L{SpecStChangelog.SpecStChangelogEntry}
 		'''
 		self.entries.insert(0, entry)
 

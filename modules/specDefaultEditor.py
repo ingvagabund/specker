@@ -714,7 +714,7 @@ class SpecChangelogEditor(SpecSectionEditor):
 		@param msg: a message to be placed to the changelog entry
 		@type msg: string
 		@return: newly added entry
-		@rtype: L{SpecStChangelogEntry}
+		@rtype: L{SpecStChangelog.SpecStChangelogEntry}
 		'''
 		entry = SpecChangelogEditor.obj.SpecStChangelogEntry(changelog)
 		entry.set_star(SpecToken.create('*'))

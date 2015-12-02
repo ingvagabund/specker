@@ -117,7 +117,7 @@ class SpecStBuildMeta(SpecStSectionMeta):
 
 class SpecStChangelogEntryMeta(SpecStSectionMeta):
 	'''
-	metaclass for L{SpecStChangelogEntry}
+	metaclass for L{SpecStChangelog} entry
 	'''
 	def __repr__(c):
 		'''

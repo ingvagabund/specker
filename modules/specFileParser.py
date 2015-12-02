@@ -87,11 +87,11 @@ class SpecFileParser(SpecModelParser):
 		A callback for L{SpecTokenList} used to check whether next token is
 		a section token
 		@param obj: self instance
-		@type obj: L{SpecParser} instance
+		@type obj: L{SpecModelParser} instance
 		@param token_list: token list to be used
 		@type token_list: L{SpecTokenList}
 		@return: section parser to be used for parsing the upcoming section
-		@rtype: L{SpecParser}
+		@rtype: L{SpecModelParser}
 		'''
 		return obj.section_beginning(token_list)
 
@@ -101,7 +101,7 @@ class SpecFileParser(SpecModelParser):
 		@param token_list: token list to be used
 		@type token_list: L{SpecTokenList}
 		@return: section parser to be used to parse the upcoming section
-		@rtype: L{SpecParser}
+		@rtype: L{SpecModelParser}
 		'''
 		for parser in self.MANIPULATORS:
 			ret = parser.section_beginning(token_list)
@@ -257,7 +257,7 @@ class SpecSectionParser(object):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
@@ -300,7 +300,7 @@ class SpecExpressionParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
@@ -348,7 +348,7 @@ class SpecIfParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		@raises SpecBadToken: if an unexpected token is reached
@@ -427,7 +427,7 @@ class SpecDefinitionParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
@@ -474,7 +474,7 @@ class SpecGlobalParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
@@ -526,7 +526,7 @@ class SpecChangelogParser(SpecSectionParser):
 		@param parent: parent section or None
 		@type parent: L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 
@@ -594,7 +594,7 @@ class SpecChangelogParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''
@@ -674,7 +674,7 @@ class SpecPackageParser(SpecSectionParser):
 		@param allowed: allowed sections within the section
 		@type allowed: list of L{SpecSection}
 		@param ctx: parsing context
-		@type ctx: L{SpecParser}
+		@type ctx: L{SpecModelParser}
 		@return: parsed section
 		@rtype: L{SpecSection}
 		'''

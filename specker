@@ -214,6 +214,24 @@ if __name__ == "__main__":
 	)
 
 	parser.add_option(
+		"", "", "--custom-manipulator-editor", dest="custom_manipulator_editor",
+		action = "store", type = "string",
+		help = "custom manipulator editor source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-manipulator-parser", dest="custom_manipulator_parser",
+		action = "store", type = "string",
+		help = "custom manipulator parser source file"
+	)
+
+	parser.add_option(
+		"", "", "--custom-manipulator-renderer", dest="custom_manipulator_renderer",
+		action = "store", type = "string",
+		help = "custom manipulator renderer source file"
+	)
+
+	parser.add_option(
 		"", "", "--custom-editor", dest="custom_editor", action = "store", type = "string",
 		help = "custom editor source file"
 	)
@@ -500,7 +518,11 @@ if __name__ == "__main__":
 		logger.setLevel(logging.DEBUG)
 		SpecDebug.logger.setLevel(logging.DEBUG)
 
-	parser = SpecFileParser(SpecModelWriter())
+	if options.custom_manipulator_parser:
+		execfile(options.custom_manipulator_parser)
+		parser = custom_manipulator_parser(SpecModelWriter())
+	else:
+		parser = SpecFileParser(SpecModelWriter())
 
 	try:
 		if options.custom_parser:
@@ -516,7 +538,11 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		spec = SpecDefaultEditor(SpecModelReader(), parser.get_model_writer())
+		if options.custom_manipulator_parser:
+			execfile(options.custom_manipulator_parser)
+			parser = custom_manipulator_editor(SpecModelWriter())
+		else:
+			spec = SpecDefaultEditor(SpecModelReader(), parser.get_model_writer())
 		del parser
 
 		if options.custom_editor:
@@ -613,11 +639,18 @@ if __name__ == "__main__":
 			spec.verifyscript_edit(what)
 
 		if options.sections_add:
-			spec2 = SpecFileParser(SpecModelReader())
+			if options.custom_manipulator_parser:
+				spec2 = custom_manipulator_parser(SpecModelReader())
+			else:
+				spec2 = SpecFileParser(SpecModelReader())
 			spec2.init(sys.stdin)
 			spec.sections_add(spec2.parse_loop_section(None))
 
-		spec = SpecFileRenderer(spec.get_model_writer())
+		if options.custom_manipulator_renderer:
+			execfile(options.custom_manipulator_editor)
+			spec = custom_manipulator_editor(spec.get_model_writer())
+		else:
+			spec = SpecFileRenderer(spec.get_model_writer())
 
 		if options.custom_renderer:
 			execfile(options.custom_renderer)

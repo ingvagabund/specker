@@ -41,8 +41,10 @@ class SpecFileParser(SpecModelParser):
 	'''
 	A spec parser
 	'''
-	def __init__(self):
-		self.PARSERS = [
+	def __init__(self, writer):
+		self.token_list = None
+		self.set_model_writer(writer)
+		self.MANIPULATORS = [
 				SpecIfParser,
 				SpecDefinitionParser,
 				SpecGlobalParser,
@@ -68,28 +70,6 @@ class SpecFileParser(SpecModelParser):
 				SpecTriggerpostunParser,
 				SpecVerifyscriptParser
 			]
-
-		self.model = None
-		self.token_list = None
-
-	def register(self, parser):
-		'''
-		Register a spec parser
-		@param parser: parser to be registered
-		@type parser: L{SpecSectionParser}
-		@rtype: None
-		@return: None
-		@raise SpecNotFound: if provided parser cannot be registered e.g. invalid parser
-		@todo: move to SpecManipulator
-		'''
-		found = False
-		for idx, item in enumerate(self.PARSERS):
-			if issubclass(parser, item):
-				found = True
-				self.PARSERS[idx] = parser
-
-		if not found:
-			raise SpecNotFound("Invalid parser '%s' registration" % parser.__name__)
 
 	def init(self, f):
 		'''
@@ -123,7 +103,7 @@ class SpecFileParser(SpecModelParser):
 		@return: section parser to be used to parse the upcoming section
 		@rtype: L{SpecParser}
 		'''
-		for parser in self.PARSERS:
+		for parser in self.MANIPULATORS:
 			ret = parser.section_beginning(token_list)
 			if ret is not None:
 				return ret
@@ -186,7 +166,7 @@ class SpecFileParser(SpecModelParser):
 		@rtype: list of L{SpecSection}
 		'''
 		ret = []
-		allowed = copy.deepcopy(self.PARSERS)
+		allowed = copy.deepcopy(self.MANIPULATORS)
 
 		found = True
 		while found:
@@ -223,10 +203,8 @@ class SpecFileParser(SpecModelParser):
 		@rtype:
 		@raise SpecBadToken: when an unexpected token is reached
 		'''
-		self.model = SpecModel()
-
-		self.model.append_items(self.parse_preamble())
-		self.model.append_items(self.parse_loop_section())
+		self.get_model_writer().append_items(self.parse_preamble())
+		self.get_model_writer().append_items(self.parse_loop_section())
 
 		eof = self.token_list.touch()
 		if not eof.is_eof():

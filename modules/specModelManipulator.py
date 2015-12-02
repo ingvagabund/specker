@@ -25,59 +25,33 @@ A spec main model manipulator
 @license: GPL 2.0
 '''
 
-from specSection import *
+from specDebug import SpecDebug
+from specError import SpecNotFound, SpecNotImplemented
 
 class SpecModelManipulator(object):
 	'''
 	A generic class for classes which tend to manipulate with spec model
 	'''
 	def __init__(self, model = None):
-		self.model = model
+		self.MANIPULATORS = [ ]
+		raise SpecNotImplemented("Manipulator not implemented")
 
-	def set_model(self, model):
+	def register(self, manipulator):
 		'''
-		Set model to manipulate with
-		@param model: a spec model
-		@type model: L{SpecModel}
+		Register a spec model manipulator
+		@param manipulator: an manipulator to be registered
+		@type manipulator: L{SpecSectionEditor}/L{SpecSectionParser}/L{SpecSectionRenderer}
 		@return: None
 		@rtype: None
+		@raise SpecNotFound: if provided manipulator cannot be registered e.g. invalid manipulator
 		'''
-		self.model = model
+		found = False
+		for idx, item in enumerate(self.MANIPULATORS):
+			if issubclass(manipulator, item):
+				found = True
+				SpecDebug.logger.debug("- registered new manipulator '%s'" % str(manipulator))
+				self.MANIPULATORS[idx] = manipulator
 
-	def get_model(self):
-		'''
-		Get used spec model
-		@return: spec model
-		@rtype: L{SpecModel}
-		'''
-		return self.model
-
-	def find_definitions_all(self, statements):
-		'''
-		Find all definitions within spec model
-		@param statements: statements to be looked for in
-		@type statements: list of L{SpecSection}
-		@return: list of definitions
-		@rtype: list of L{SpecStDefinition}
-		@raise SpecNotFound:
-		@todo: move to the model itself?
-		'''
-		ret = []
-
-		for s in statements:
-			if issubclass(s.__class__, SpecStIf):
-				b = self.find_definitions_all(s.get_true_branch())
-				if b:
-					ret += b
-				b = self.find_definitions_all(s.get_false_branch())
-				if b:
-					ret += b
-			elif issubclass(s.__class__, SpecStDefinition):
-				ret.append(s)
-			elif issubclass(s.__class__, SpecStPackage):
-				b = self.find_definitions_all(s.get_defs())
-				if b:
-					ret += b
-
-		return ret
+		if not found:
+			raise SpecNotFound("Invalid manipulator '%s' registration" % manipulator.__name__)
 

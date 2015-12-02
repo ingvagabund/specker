@@ -186,3 +186,30 @@ class SpecModel(object):
 				ret.append(s)
 		return ret
 
+	def find_definitions_all(self):
+		'''
+		Find all definitions within spec model
+		@return: list of definitions
+		@rtype: list of L{SpecStDefinition}
+		@raise SpecNotFound:
+		@todo: move to the model itself?
+		'''
+		ret = []
+
+		for s in self.sections:
+			if issubclass(s.__class__, SpecStIf):
+				b = self.find_definitions_all(s.get_true_branch())
+				if b:
+					ret += b
+				b = self.find_definitions_all(s.get_false_branch())
+				if b:
+					ret += b
+			elif issubclass(s.__class__, SpecStDefinition):
+				ret.append(s)
+			elif issubclass(s.__class__, SpecStPackage):
+				b = self.find_definitions_all(s.get_defs())
+				if b:
+					ret += b
+
+		return ret
+

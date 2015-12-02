@@ -36,8 +36,9 @@ class SpecFileRenderer(SpecModelRenderer):
 	'''
 	A spec renderer
 	'''
-	def __init__(self, model):
-		self.RENDERERS = [
+	def __init__(self, reader):
+		self.set_model_reader(reader)
+		self.MANIPULATORS = [
 				SpecIfRenderer,
 				SpecDefinitionRenderer,
 				SpecGlobalRenderer,
@@ -64,29 +65,6 @@ class SpecFileRenderer(SpecModelRenderer):
 				SpecVerifyscriptRenderer
 			]
 
-		self.model = model
-
-	def register(self, renderer):
-		'''
-		Register a spec renderer
-		@param renderer: renderer to be registered
-		@type renderer: L{SpecSectionRenderer}
-		@rtype: None
-		@return: None
-		@raise SpecNotFound: if provided renderer cannot be registered e.g. invalid renderer
-		@todo: move to SpecManipulator
-		'''
-		found = False
-		for idx, item in enumerate(self.RENDERERS):
-			if issubclass(renderer, item):
-				found = True
-				SpecDebug.logger.debug("- registered renderer '%s'", str(renderer))
-				self.RENDERERS[idx] = renderer
-				break
-
-		if not found:
-			raise SpecNotFound("Invalid renderer '%s' registration" % renderer.__name__)
-
 	def render_list(self, l, f):
 		'''
 		Render a list of sections
@@ -108,7 +86,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		self.render_list(self.model.get_sections(), f)
+		self.render_list(self.get_model_reader().get_sections(), f)
 
 	def render_section(self, s, f):
 		'''
@@ -122,7 +100,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@raise SpecNotImplemented: if renderer for the section is not registered
 		'''
 		found = False
-		for renderer in self.RENDERERS:
+		for renderer in self.MANIPULATORS:
 			if issubclass(s.__class__, renderer.obj):
 				found = True
 				SpecDebug.logger.debug("- rendering section '%s'" % str(s))
@@ -143,7 +121,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@rtype: list of L{SpecSection}
 		@raise SpecNotFound: if no section was printed
 		'''
-		s = self.model.find_section(section_type)
+		s = self.get_model_reader().find_section(section_type)
 
 		if s is not None:
 			for sec in s:
@@ -192,7 +170,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.get_sections())
+		defs = self.find_definitions_all(self.get_model_reader().get_sections())
 		self.print_definitions(defs, re.compile('Provides:'), packages, f)
 
 	def requires_show(self, packages, f = sys.stdout):
@@ -205,7 +183,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.get_sections())
+		defs = self.find_definitions_all(self.get_model_reader().get_sections())
 		self.print_definitions(defs, re.compile('Requires:'), packages, f)
 
 	def buildrequires_show(self, packages, f = sys.stdout):
@@ -218,7 +196,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.model.get_sections())
+		defs = self.find_definitions_all(self.get_model_reader().get_sections())
 		self.print_definitions(defs, re.compile('BuildRequires:'), packages, f)
 
 	def changelog_show(self, f = sys.stdout):

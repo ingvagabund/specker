@@ -24,13 +24,33 @@ A generic spec model parser class
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
-# TODO
 
+from specError import SpecNotImplemented
 from specModelManipulator import SpecModelManipulator
 
 class SpecModelParser(SpecModelManipulator):
 	'''
 	A generic spec model parser class
 	'''
-	pass
+	def __init__(self, writer):
+		self.set_model_writer(writer)
+		raise SpecNotImplemented("Parser not implemented")
+
+	def set_model_writer(self, model_writer):
+		'''
+		Register a spec model writer
+		@param model_writer: a spec model writer to be registered
+		@type model_writer: L{SpecModelWriter}
+		@return: None
+		@rtype: None
+		'''
+		self.model_writer = model_writer
+
+	def get_model_writer(self):
+		'''
+		Get registered spec model writer
+		@return: a spec model writer
+		@rtype: L{SpecModelWriter}
+		'''
+		return self.model_writer
 

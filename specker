@@ -35,6 +35,7 @@ from modules.specDefaultEditor import SpecDefaultEditor
 from modules.specFileRenderer import SpecFileRenderer
 from modules.specDebug import SpecDebug
 from modules.specError import SpecBadParam
+from modules.specModelTransformator import SpecModelWriter, SpecModelReader
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))
@@ -499,7 +500,7 @@ if __name__ == "__main__":
 		logger.setLevel(logging.DEBUG)
 		SpecDebug.logger.setLevel(logging.DEBUG)
 
-	parser = SpecFileParser()
+	parser = SpecFileParser(SpecModelWriter())
 
 	try:
 		if options.custom_parser:
@@ -515,7 +516,7 @@ if __name__ == "__main__":
 
 		parser.parse()
 
-		spec = SpecDefaultEditor(parser.get_model())
+		spec = SpecDefaultEditor(SpecModelReader(), parser.get_model_writer())
 		del parser
 
 		if options.custom_editor:
@@ -612,11 +613,11 @@ if __name__ == "__main__":
 			spec.verifyscript_edit(what)
 
 		if options.sections_add:
-			spec2 = SpecFileParser()
+			spec2 = SpecFileParser(SpecModelReader())
 			spec2.init(sys.stdin)
 			spec.sections_add(spec2.parse_loop_section(None))
 
-		spec = SpecFileRenderer(spec.get_model())
+		spec = SpecFileRenderer(spec.get_model_writer())
 
 		if options.custom_renderer:
 			execfile(options.custom_renderer)

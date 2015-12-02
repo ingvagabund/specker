@@ -30,15 +30,16 @@ from specSection import *
 from specDebug import SpecDebug
 from specToken import SpecToken, SpecTokenList
 from specError import SpecNotFound, SpecNotImplemented
-from specModelManipulator import SpecModelManipulator
+from specModelEditor import SpecModelEditor
 
-class SpecDefaultEditor(SpecModelManipulator):
+class SpecDefaultEditor(SpecModelEditor):
 	'''
 	A spec model editor
 	'''
-	def __init__(self, model):
-		self.model = model
-		self.EDITORS = [
+	def __init__(self, reader, writer):
+		self.set_model_reader(reader)
+		self.set_model_writer(writer)
+		self.MANIPULATORS = [
 				SpecIfEditor,
 				SpecDefinitionEditor,
 				SpecGlobalEditor,
@@ -65,26 +66,6 @@ class SpecDefaultEditor(SpecModelManipulator):
 				SpecVerifyscriptEditor
 			]
 
-	def register(self, editor):
-		'''
-		Register a spec model editor
-		@param editor: an editor to be registered
-		@type editor: L{SpecSectionEditor}
-		@return: None
-		@rtype: None
-		@raise SpecNotFound: if provided editor cannot be registered e.g. invalid editor
-		@todo: move to SpecManipulator
-		'''
-		found = False
-		for idx, item in enumerate(self.EDITORS):
-			if issubclass(editor, item):
-				found = True
-				SpecDebug.logger.debug("- registered new manipulator '%s'" % str(editor))
-				self.EDITORS[idx] = editor
-
-		if not found:
-			raise SpecNotFound("Invalid editor '%s' registration" % editor.__name__)
-
 	def get_editor_class(self, cls):
 		'''
 		Get editor based on class
@@ -95,7 +76,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		@raise SpecNotFound: if editor class is not found
 		'''
 		found = False
-		for editor in self.EDITORS:
+		for editor in self.MANIPULATORS:
 			if issubclass(cls, editor.obj):
 				found = True
 				return editor
@@ -127,7 +108,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		@raise SpecNotFound: if editor is not found
 		@raise SpecNotImplemented: if more than one section matches section type
 		'''
-		s = self.model.find_section(section_type)
+		s = self.get_model_reader().find_section(section_type)
 
 		if s is not None:
 			if len(s) > 1:
@@ -151,7 +132,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		'''
 		for section in sections:
 			SpecDebug.logger.debug("- adding section '%s'", str(section))
-			self.model.add(section)
+			self.get_model_writer().add(section)
 
 	def find_section_add(self, section_type, items, verbose = True):
 		'''
@@ -167,7 +148,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		@raise SpecNotFound: if editor is not found
 		@raise SpecNotImplemented: if more than one section matches section type
 		'''
-		s = self.model.find_section(section_type)
+		s = self.get_model_reader().find_section(section_type)
 
 		if s is not None:
 			SpecDebug.logger.debug("- adding section to '%s'", str(s[0]))
@@ -196,10 +177,10 @@ class SpecDefaultEditor(SpecModelManipulator):
 			if pkg == '-':
 				for val in packages['-']:
 					d = definition_editor.create(None, definition, val)
-					self.model.add(d)
+					self.get_model_writer().add(d)
 			else:
 				found = False
-				for st_pkg in self.model.get_sections():
+				for st_pkg in self.get_model_reader().get_sections():
 					if issubclass(st_pkg.__class__, SpecStPackage):
 						if st_pkg.pkg != None and str(st_pkg.get_package()) == pkg:
 							found = True
@@ -224,15 +205,15 @@ class SpecDefaultEditor(SpecModelManipulator):
 		'''
 		for pkg in packages:
 			if pkg == '-':
-				for st_def in self.model.get_sections():
+				for st_def in self.get_model_reader().model.get_sections():
 					if issubclass(st_def.__class__, SpecStDefinition):
 						if definition.match(str(st_def.get_name())):
 							for val in packages['-']:
 								if st_def.get_value() == val:
-									self.model.remove(st_def)
+									self.get_model_writer().remove(st_def)
 			else:
 				found = False
-				for st_pkg in self.model.get_sections():
+				for st_pkg in self.get_model_reader().model.get_sections():
 					if type(st_pkg) is SpecStPackage:
 						if st_pkg.pkg != None and str(st_pkg.pkg) == pkg:
 								st_pkg.remove_definition(definition, packages[pkg])
@@ -331,7 +312,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		@raise SpecNotFound: if changelog section is not found
 		@raise SpecNotImplemented: if multiple changelog sections are found
 		'''
-		changelog = self.model.find_section(SpecStChangelog)
+		changelog = self.get_model_reader().find_section(SpecStChangelog)
 		if len(changelog) > 1:
 			raise SpecNotImplemented("Adding to multiple %changelogs not supported")
 		if len(changelog) != 1:
@@ -428,7 +409,7 @@ class SpecDefaultEditor(SpecModelManipulator):
 		# TODO: check for duplicit entry
 		for pkg_name in items:
 			pkg = self.get_editor_class(SpecStPackage).create(None, pkg_name)
-			self.model.add(pkg)
+			self.get_model_writer().add(pkg)
 
 	def package_remove(self, items):
 		'''
@@ -442,15 +423,15 @@ class SpecDefaultEditor(SpecModelManipulator):
 		@todo: rename to packages_remove()
 		'''
 		for item in items:
-			for st_pkg in self.model.get_sections():
+			for st_pkg in self.get_model_reader().get_sections():
 				if not issubclass(st_pkg.__class__, SpecStPackage):
 					continue
 
 				if (item == '-' or item is None) and st_pkg.get_package() is None:
-					self.model.remove(st_pkg)
+					self.get_model_writer().remove(st_pkg)
 				elif item is not None and st_pkg.get_package() is not None and \
 						item == str(st_pkg.get_package()):
-					self.model.remove(st_pkg)
+					self.get_model_writer().remove(st_pkg)
 
 	def prep_edit(self, replacement):
 		'''

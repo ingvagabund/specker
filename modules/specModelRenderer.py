@@ -25,13 +25,32 @@ A generic spec model renderer class
 @license: GPL 2.0
 '''
 
-# TODO
-
 from specModelManipulator import SpecModelManipulator
 
 class SpecModelRenderer(SpecModelManipulator):
 	'''
 	A generic spec model renderer class
 	'''
-	pass
+	def __init__(self, reader):
+		self.set_model_reader(reader)
+		raise SpecNotImplemented("Renderer not implemented")
+
+	def set_model_reader(self, model_reader):
+		'''
+		Register a spec model reader
+		@param model_reader: a spec model reader to be registered
+		@type model_reader: L{SpecModelReader}
+		@return: None
+		@rtype: None
+		'''
+		self.model_reader = model_reader
+
+	def get_model_reader(self):
+		'''
+		Get registered spec model reader
+		@return: a spec model reader
+		@rtype: L{SpecModelReader}
+		'''
+		return self.model_reader
+
 

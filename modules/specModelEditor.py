@@ -31,5 +31,44 @@ class SpecModelEditor(SpecModelManipulator):
 	'''
 	A generic spec model editor class
 	'''
-	pass
+	def __init__(self, reader, writer):
+		self.set_model_reader(reader)
+		self.set_model_writer(writer)
+		raise SpecNotImplemented("Editor not implemented")
+
+	def set_model_reader(self, model_reader):
+		'''
+		Register a spec model reader
+		@param model_reader: a spec model reader to be registered
+		@type model_reader: L{SpecModelReader}
+		@return: None
+		@rtype: None
+		'''
+		self.model_reader = model_reader
+
+	def set_model_writer(self, model_writer):
+		'''
+		Register a spec model writer
+		@param model_writer: a spec model writer to be registered
+		@type model_writer: L{SpecModelWriter}
+		@return: None
+		@rtype: None
+		'''
+		self.model_writer = model_writer
+
+	def get_model_reader(self):
+		'''
+		Get registered spec model reader
+		@return: a spec model reader
+		@rtype: L{SpecModelReader}
+		'''
+		return self.model_reader
+
+	def get_model_writer(self):
+		'''
+		Get registered spec model writer
+		@return: a spec model writer
+		@rtype: L{SpecModelWriter}
+		'''
+		return self.model_writer
 

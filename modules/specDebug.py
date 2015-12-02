@@ -27,21 +27,80 @@ Library debug control
 
 import logging
 import sys
+from specError import SpecNotImplemented
 
 class SpecDebug(object):
 	'''
-	Library debug control, use C{SpecDebug.logger.setLoggingLevel(level)} to
-	initialize logger. Level could be one of the following (C{import logging}):
-	  - logging.DEBUG
-	  - logging.CRITICAL
-	  - logging.ERROR
-	  - logging.WARNING
-	  - logging.INFO
-	  - logging.DEBUG
-	You can adjust handler when initializing, otherwise it defaults to
-	C{sys.stderr}.
+	Library debug control
 	@cvar logger: library logger
 	'''
 	logger = logging.getLogger('specker-lib')
 	logger.addHandler(logging.StreamHandler(sys.stderr))
+
+	def __init__(self):
+		raise SpecNotImplemented("Cannot instantiate SpecDebug")
+
+	@classmethod
+	def start_debug(cls):
+		'''
+		Start debugging
+		@return: None
+		@rtype: None
+		'''
+		cls.logger.setLevel(logging.DEBUG)
+		cls.debug("Logging started")
+
+	@classmethod
+	def stop_debug(cls):
+		'''
+		Stop debugging
+		@return: None
+		@rtype: None
+		'''
+		cls.debug("Logging stopped")
+		cls.logger.setLevel(logging.ERROR)
+
+	@classmethod
+	def set_handler(cls, handler):
+		'''
+		Set output handler, default sys.stderr
+		@param handler: handler to be used
+		@type handler: file
+		@return: None
+		@rtype: None
+		'''
+		cls.logger.addHandler(handler)
+
+	@classmethod
+	def debug(cls, msg):
+		'''
+		Print debug message
+		@param msg: message to be printed
+		@type msg: string
+		@return: None
+		@rtype: None
+		'''
+		cls.logger.debug("[DEBUG] " + msg)
+
+	@classmethod
+	def log(cls, msg):
+		'''
+		Print log message
+		@param msg: message to be printed
+		@type msg: string
+		@return: None
+		@rtype: None
+		'''
+		cls.logger.log("[LOG] " + msg)
+
+	@classmethod
+	def error(cls, msg):
+		'''
+		Print error message
+		@param msg: message to be printed
+		@type msg: string
+		@return: None
+		@rtype: None
+		'''
+		cls.logger.error('Error: ' + msg)
 

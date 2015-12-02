@@ -49,7 +49,7 @@ class SpecModelManipulator(object):
 		for idx, item in enumerate(self.MANIPULATORS):
 			if issubclass(manipulator, item):
 				found = True
-				SpecDebug.logger.debug("- registered new manipulator '%s'" % str(manipulator))
+				SpecDebug.debug("- registered new manipulator '%s'" % str(manipulator))
 				self.MANIPULATORS[idx] = manipulator
 
 		if not found:

@@ -114,7 +114,7 @@ class SpecDefaultEditor(SpecModelEditor):
 			if len(s) > 1:
 				raise SpecNotImplemented("Cannot edit more then one section")
 
-			SpecDebug.logger.debug("- editing section '%s'", str(s[0]))
+			SpecDebug.debug("- editing section '%s'", str(s[0]))
 			self.get_editor(s[0]).edit(s[0], replacement)
 		elif verbose:
 			raise SpecNotFound("Error: section type '%s' not found" % section_type)
@@ -131,7 +131,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		@todo: remove/use only model to add?
 		'''
 		for section in sections:
-			SpecDebug.logger.debug("- adding section '%s'", str(section))
+			SpecDebug.debug("- adding section '%s'", str(section))
 			self.get_model_writer().add(section)
 
 	def find_section_add(self, section_type, items, verbose = True):
@@ -151,7 +151,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		s = self.get_model_reader().find_section(section_type)
 
 		if s is not None:
-			SpecDebug.logger.debug("- adding section to '%s'", str(s[0]))
+			SpecDebug.debug("- adding section to '%s'", str(s[0]))
 			self.get_editor(s[0]).add(s[0], items)
 		elif verbose:
 			raise SpecNotFound("Error: section '%s' not found" % section_type)

@@ -527,8 +527,7 @@ if __name__ == "__main__":
 		input_file = args[0]
 
 	if options.verbose:
-		logger.setLevel(logging.DEBUG)
-		SpecDebug.logger.setLevel(logging.DEBUG)
+		SpecDebug.start_debug()
 
 	if options.custom_model_reader:
 		execfile(options.custom_model_reader)

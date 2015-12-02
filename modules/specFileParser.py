@@ -128,7 +128,7 @@ class SpecFileParser(SpecModelParser):
 		while found:
 			found = False
 			token = token_list.touch()
-			SpecDebug.logger.debug("- parsing round: '%s'" % str(token))
+			SpecDebug.debug("- parsing round: '%s'" % str(token))
 
 			if token.is_eof():
 				break
@@ -137,12 +137,12 @@ class SpecFileParser(SpecModelParser):
 				section = t.parse(token_list, parent, allowed, self)
 				if section:
 					found = True
-					SpecDebug.logger.debug("- adding parsed section '%s' (preamble)" % type(section))
+					SpecDebug.debug("- adding parsed section '%s' (preamble)" % type(section))
 					ret.append(section)
 					break
 
 			if not found:
-				SpecDebug.logger.debug("- unparsed token '%s' on line %s" % (str(token), str(token.line)))
+				SpecDebug.debug("- unparsed token '%s' on line %s" % (str(token), str(token.line)))
 
 		return ret
 
@@ -156,7 +156,7 @@ class SpecFileParser(SpecModelParser):
 
 		ret = self.parse_loop(self.token_list, None, allowed)
 		unparsed = self.token_list.touch()
-		SpecDebug.logger.debug("-- preamble finished with token '%s' on line %d" % (str(unparsed), unparsed.line))
+		SpecDebug.debug("-- preamble finished with token '%s' on line %d" % (str(unparsed), unparsed.line))
 		return ret
 
 	def parse_loop_section(self):
@@ -173,7 +173,7 @@ class SpecFileParser(SpecModelParser):
 			found = False
 			token = self.token_list.touch()
 
-			SpecDebug.logger.debug("-- parsing section '%s' " % str(token))
+			SpecDebug.debug("-- parsing section '%s' " % str(token))
 
 			if token.is_eof():
 				break
@@ -182,17 +182,17 @@ class SpecFileParser(SpecModelParser):
 				section = t.parse(self.token_list, None, allowed, self)
 				if section:
 					found = True
-					SpecDebug.logger.debug("- adding parsed section '%s'" % type(section))
+					SpecDebug.debug("- adding parsed section '%s'" % type(section))
 					ret.append(section)
 					c = section.__class__
 					if not issubclass(c, SpecStIf) and not issubclass(c, SpecStGlobal) and not \
 							issubclass(c, SpecStDescription) and not issubclass(c, SpecStFiles):
-						SpecDebug.logger.debug("-- removing " + str(token) + " from allowed")
+						SpecDebug.debug("-- removing " + str(token) + " from allowed")
 						if section in allowed:
 							allowed.remove(section)
 					break
 
-		SpecDebug.logger.debug("-- unparsed beginning of a section: " + str(token))
+		SpecDebug.debug("-- unparsed beginning of a section: " + str(token))
 
 		return ret
 

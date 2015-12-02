@@ -170,7 +170,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.get_model_reader().get_sections())
+		defs = self.get_model_reader().find_definitions_all()
 		self.print_definitions(defs, re.compile('Provides:'), packages, f)
 
 	def requires_show(self, packages, f = sys.stdout):
@@ -183,7 +183,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.get_model_reader().get_sections())
+		defs = self.get_model_reader().find_definitions_all()
 		self.print_definitions(defs, re.compile('Requires:'), packages, f)
 
 	def buildrequires_show(self, packages, f = sys.stdout):
@@ -196,7 +196,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		@return: None
 		@rtype: None
 		'''
-		defs = self.find_definitions_all(self.get_model_reader().get_sections())
+		defs = self.get_model_reader().find_definitions_all()
 		self.print_definitions(defs, re.compile('BuildRequires:'), packages, f)
 
 	def changelog_show(self, f = sys.stdout):

@@ -31,8 +31,11 @@ class SpecModelTransformator(object):
 	'''
 	An adapter used to communicate with model
 	'''
-	def __init__(self):
-		self.model = SpecModel()
+	def __init__(self, model = None):
+		if not model:
+			self.model = SpecModel()
+		else:
+			self.model = model
 
 	def set_model(self, model):
 		'''

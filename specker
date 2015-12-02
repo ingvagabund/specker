@@ -565,7 +565,8 @@ if __name__ == "__main__":
 			execfile(options.custom_manipulator_parser)
 			parser = custom_manipulator_editor(model_writer())
 		else:
-			spec = SpecDefaultEditor(model_reader(), parser.get_model_writer())
+			spec = SpecDefaultEditor(model_reader(parser.get_model_writer().get_model()),
+											parser.get_model_writer())
 		del parser
 
 		if options.custom_editor:
@@ -673,7 +674,7 @@ if __name__ == "__main__":
 			execfile(options.custom_manipulator_editor)
 			spec = custom_manipulator_editor(spec.get_model_writer())
 		else:
-			spec = SpecFileRenderer(spec.get_model_writer())
+			spec = SpecFileRenderer(spec.get_model_reader())
 
 		if options.custom_renderer:
 			execfile(options.custom_renderer)

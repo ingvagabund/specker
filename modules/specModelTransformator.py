@@ -111,7 +111,7 @@ class SpecModelTransformator(object):
 		@return: list of sections of the provided type or None
 		@rtype: list of L{SpecSection}
 		'''
-		return self.model.find_section()
+		return self.model.find_section(section_type)
 
 	def find_definitions_all(self):
 		'''

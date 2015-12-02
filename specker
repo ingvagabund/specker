@@ -673,7 +673,7 @@ if __name__ == "__main__":
 
 		if options.custom_manipulator_renderer:
 			execfile(options.custom_manipulator_renderer)
-			spec = custom_manipulator_renderer(spec.get_model_writer())
+			spec = custom_manipulator_renderer(spec.get_model_reader())
 		else:
 			spec = SpecFileRenderer(spec.get_model_reader())
 

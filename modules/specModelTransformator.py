@@ -55,6 +55,20 @@ class SpecModelTransformator(object):
 		'''
 		return self.model
 
+	def get_sections(self):
+		'''
+		Get list of all sections
+		@return: list of sections
+		@rtype: list of L{SpecSection}
+		'''
+		return self.model.get_sections()
+
+class SpecModelWriter(SpecModelTransformator):
+	'''
+	An adapter used to communicate with model - modifying methods used by
+	L{SpecModelEditor} and L{SpecModelParser}
+	'''
+
 	def append(self, section):
 		'''
 		Append a section
@@ -95,14 +109,10 @@ class SpecModelTransformator(object):
 		'''
 		return self.model.add(section)
 
-	def get_sections(self):
-		'''
-		Get list of all sections
-		@return: list of sections
-		@rtype: list of L{SpecSection}
-		'''
-		return self.model.get_sections()
-
+class SpecModelReader(SpecModelTransformator):
+	'''
+	An adapter used to communicate with model - non-modifying methods
+	'''
 	def find_section(self, section_type):
 		'''
 		Find a section of a specific type type
@@ -123,16 +133,4 @@ class SpecModelTransformator(object):
 		'''
 		return self.model.find_definitions_all()
 
-class SpecModelWriter(SpecModelTransformator):
-	'''
-	An adapter used to communicate with model - modifying methods used by
-	L{SpecModelEditor} and L{SpecModelParser}
-	'''
-	pass
-
-class SpecModelReader(SpecModelTransformator):
-	'''
-	An adapter used to communicate with model - non-modifying methods
-	'''
-	pass
 

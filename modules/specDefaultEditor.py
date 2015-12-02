@@ -77,9 +77,15 @@ class SpecDefaultEditor(SpecModelEditor):
 		'''
 		found = False
 		for editor in self.MANIPULATORS:
-			if issubclass(cls, editor.obj):
-				found = True
-				return editor
+			if isinstance(editor.obj, list):
+				for e in editor.obj:
+					if issubclass(cls, e):
+						found = True
+						return editor
+			else:
+				if issubclass(cls, editor.obj):
+					found = True
+					return editor
 		if not found:
 			raise SpecNotImplemented("Not implemented editor")
 

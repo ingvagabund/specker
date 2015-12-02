@@ -166,13 +166,13 @@ class SpecToken:
 
 	def same_line(self, token):
 		'''
-		Check if token is on the same line as myself
+		Check if (next) token is on the same line as myself
 		@param token: token to be checked
 		@type token: L{SpecToken}
 		@return: True if token is on the same line
 		@rtype: Boolean
 		'''
-		return self.line == token.line
+		return (self.line + self.append.count('\\\n')) == token.line
 
 	@staticmethod
 	def create(token, prepend = '', append = ' '):

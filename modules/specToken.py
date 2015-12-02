@@ -451,6 +451,18 @@ class SpecTokenList:
 		'''
 		return self.token_list[i]
 
+	def __setitem__(self, i, item):
+		'''
+		Set item using direct access
+		@param i: index to token list
+		@type i: number
+		@param item: item to be set
+		@type item: L{SpecToken}
+		@return: token on given position
+		@rtype: L{SpecToken}
+		'''
+		self.token_list[i] = item
+
 	def __eq__(self, str_compare):
 		'''
 		Compare token list with a string

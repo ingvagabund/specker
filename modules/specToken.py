@@ -453,6 +453,17 @@ class SpecTokenList:
 		'''
 		self.token_list.append(item)
 
+	def token_list_append_items(self, items):
+		'''
+		Append multiple items to the token list
+		@param items: items to be added
+		@type items: L{SpecTokenList}
+		@return: None
+		@rtype: None
+		'''
+		for item in items:
+			self.token_list.append(item)
+
 	def __getitem__(self, i):
 		'''
 		Get item for direct access

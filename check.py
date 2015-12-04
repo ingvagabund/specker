@@ -170,6 +170,7 @@ class TestFileRenderer(unittest.TestCase):
 ################################################################################
 
 if __name__ == '__main__':
+	LOGGER.addHandler(logging.StreamHandler(sys.stderr))
 	parser = optparse.OptionParser("%prog OPTIONS")
 
 	parser.add_option(
@@ -178,11 +179,10 @@ if __name__ == '__main__':
 	)
 
 	options, args = parser.parse_args()
-	if len(args) > 1:
+	if len(args) > 0:
 		LOGGER.error("Error: Incorrect number of arguments")
 		exit(1)
 
-	LOGGER.addHandler(logging.StreamHandler(sys.stderr))
 	if options.verbose:
 		VERBOSE = True
 		LOGGER.setLevel(logging.DEBUG)

@@ -5,7 +5,7 @@
 all: doc
 
 doc:
-	@epydoc --graph all -o DOC/ modules/ plugins/ examples/ specker -v && \
+	@epydoc --graph all -o DOC/ modules/ plugins/ examples/ specker check.py -v && \
 		echo "Documentation created, see 'DOC/' dir..."
 
 check:

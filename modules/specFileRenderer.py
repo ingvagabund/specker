@@ -43,6 +43,7 @@ class SpecFileRenderer(SpecModelRenderer):
 				SpecIfRenderer,
 				SpecDefinitionRenderer,
 				SpecGlobalRenderer,
+				SpecDefineRenderer,
 				SpecBuildRenderer,
 				SpecChangelogRenderer,
 				SpecCheckRenderer,
@@ -521,6 +522,27 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 		@rtype: None
 		'''
 		self.section.get_global_token().write(f)
+		self.section.get_variable().write(f)
+		SpecExpressionRenderer(self.section.get_value()).render(f, ctx)
+
+class SpecDefineRenderer(SpecSectionRenderer):
+	'''
+	%define renderer
+	@cvar obj: sections rendered by this renderer
+	'''
+	obj = SpecStDefine
+
+	def render(self, f, ctx):
+		'''
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecModelRenderer}
+		@return: None
+		@rtype: None
+		'''
+		self.section.get_define_token().write(f)
 		self.section.get_variable().write(f)
 		SpecExpressionRenderer(self.section.get_value()).render(f, ctx)
 

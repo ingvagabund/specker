@@ -65,6 +65,16 @@ class SpecStGlobalMeta(SpecSectionMeta):
 		'''
 		return "%global"
 
+class SpecStDefineMeta(SpecSectionMeta):
+	'''
+	metaclass for L{SpecStDefine}
+	'''
+	def __repr__(c):
+		'''
+		section representation
+		'''
+		return "%define"
+
 class SpecStEofMeta(SpecSectionMeta):
 	'''
 	metaclass for L{SpecStEof}

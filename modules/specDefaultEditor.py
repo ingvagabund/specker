@@ -43,6 +43,7 @@ class SpecDefaultEditor(SpecModelEditor):
 				SpecIfEditor,
 				SpecDefinitionEditor,
 				SpecGlobalEditor,
+				SpecDefineEditor,
 				SpecBuildEditor,
 				SpecChangelogEditor,
 				SpecCheckEditor,
@@ -688,6 +689,25 @@ class SpecGlobalEditor(SpecSectionEditor):
 		@raise SpecNotImplemented: always, not implemented yet
 		'''
 		raise SpecNotImplemented("Editing %global not implemented")
+
+class SpecDefineEditor(SpecSectionEditor):
+	'''
+	'%define' editor
+	@cvar obj: sections that could be edited with this editor
+	'''
+	obj = SpecStDefine
+
+	@classmethod
+	def edit(cls, replacement):
+		'''
+		Edit a '%define' statement
+		@param replacement: a replacement to be used
+		@type replacement: string
+		@return: None
+		@rtype: None
+		@raise SpecNotImplemented: always, not implemented yet
+		'''
+		raise SpecNotImplemented("Editing %define not implemented")
 
 class SpecBuildEditor(SpecSectionEditor):
 	'''

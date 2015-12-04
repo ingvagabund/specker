@@ -307,6 +307,72 @@ class SpecStGlobal(SpecSection):
 		'''
 		return self.value
 
+class SpecStDefine(SpecSection):
+	'''
+	%define representation
+	'''
+	__metaclass__ = SpecStDefineMeta
+
+	def __init__(self, parent):
+		self.parent = parent
+		self.define_token = None
+		self.variable = None
+		self.value = None
+
+	def set_define_token(self, dfn):
+		'''
+		Set %define token
+		@param dfn: global token
+		@type dfn: L{SpecToken}
+		@return: None
+		@rtype: None
+		'''
+		self.define_token = dfn
+
+	def set_variable(self, var):
+		'''
+		Set define variable
+		@param var: define variable
+		@type var: L{SpecToken}
+		@return: None
+		@rtype: None
+		'''
+		self.variable = var
+
+	def set_value(self, val):
+		'''
+		Set define value
+		@param val: gloabl value
+		@type val: list of L{SpecToken}
+		@return: None
+		@rtype: None
+		'''
+		self.value = val
+
+	def get_define_token(self):
+		'''
+		Get define token
+		@return: define token
+		@rtype: L{SpecToken}
+		'''
+		return self.define_token
+
+	def get_variable(self):
+		'''
+		Get define variable
+		@return: define variable
+		@rtype: L{SpecToken}
+		'''
+		return self.variable
+
+	def get_value(self):
+		'''
+		Get define value
+		@return: define value
+		@rtype: list of L{SpecToken}
+		'''
+		return self.value
+
 class SpecStEof(SpecSection):
 	'''
 	EOF representation

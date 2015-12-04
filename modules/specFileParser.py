@@ -48,6 +48,7 @@ class SpecFileParser(SpecModelParser):
 				SpecIfParser,
 				SpecDefinitionParser,
 				SpecGlobalParser,
+				SpecDefineParser,
 				SpecBuildParser,
 				SpecChangelogParser,
 				SpecCheckParser,
@@ -489,6 +490,54 @@ class SpecGlobalParser(SpecSectionParser):
 
 		ret = SpecGlobalParser.obj(parent)
 		ret.set_global_token(token_list.get())
+		ret.set_variable(token_list.get())
+		if ret.get_variable().is_eof():
+			raise SpecBedToken("Expected variable, got '%s'" % str(ret.get_variable()))
+
+		ret.set_value(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
+		return ret
+
+class SpecDefineParser(SpecSectionParser):
+	'''
+	Parse %define
+	'''
+	obj = SpecStDefine
+
+	@staticmethod
+	def section_beginning(token_list):
+		'''
+		Check if next token is a section beginning
+		@param token_list: token list to use
+		@type token_list: L{SpecTokenList}
+		@return: None or a parser to be used to parse the section
+		@rtype: L{SpecSectionParser}
+		'''
+		token = token_list.touch()
+		if str(token) == str(SpecDefineParser.obj):
+			return SpecGlobalParser.obj
+		else:
+			return None
+
+	@classmethod
+	def parse(cls, token_list, parent, allowed, ctx):
+		'''
+		Parse section from token list
+		@param token_list: a token list to be used
+		@type token_list: L{SpecTokenList}
+		@param parent: parent section or None
+		@type parent: L{SpecSection}
+		@param allowed: allowed sections within the section
+		@type allowed: list of L{SpecSection}
+		@param ctx: parsing context
+		@type ctx: L{SpecModelParser}
+		@return: parsed section
+		@rtype: L{SpecSection}
+		'''
+		if not cls.section_beginning(token_list):
+			return None
+
+		ret = SpecDefineParser.obj(parent)
+		ret.set_define_token(token_list.get())
 		ret.set_variable(token_list.get())
 		if ret.get_variable().is_eof():
 			raise SpecBedToken("Expected variable, got '%s'" % str(ret.get_variable()))

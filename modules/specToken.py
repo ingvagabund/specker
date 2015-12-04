@@ -24,7 +24,7 @@ A spec file token abstraction and token list representation
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
-
+import cStringIO
 from specFile import SpecFile
 from specError import SpecBadIndex
 
@@ -430,6 +430,18 @@ class SpecTokenList:
 		'''
 		for token in self.token_list:
 			token.write(f, raw)
+
+	def get_raw(self):
+		'''
+		Get string representation of token list
+		@return: string representation
+		@rtype: string
+		'''
+		output = cStringIO.StringIO()
+		self.write(output, True)
+		ret = output.getvalue()
+		output.close()
+		return ret
 
 	def token_list_append(self, item):
 		'''

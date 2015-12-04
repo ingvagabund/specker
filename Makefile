@@ -8,6 +8,10 @@ doc:
 	@epydoc --graph all -o DOC/ modules/ plugins/ examples/ specker -v && \
 		echo "Documentation created, see 'DOC/' dir..."
 
+check:
+	@echo "Performing checks..."
+	@LC_ALL="C" ./check.py
+
 clean:
 	@echo "Cleaning tree..."
 	@find -iname '*.pyc' -exec rm -f {} \;

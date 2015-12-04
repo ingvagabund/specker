@@ -396,7 +396,8 @@ class SpecDefinitionParser(SpecSectionParser):
 
 		if str(token) in [ 'Name:', 'Version:', 'Release:', 'Summary:', 'License:',
 				'URL:', 'ExclusiveArch:', 'BuildRequires:', 'Provides:', 'Requires:',
-				'Source:', 'BuildArch:']:
+				'Source:', 'BuildArch:', 'Group:', 'Url:', 'Conflicts:', 'Obsoletes:',
+				'BuildRoot:' ]:
 			return SpecDefinitionParser.obj
 
 		p = re.compile('BuildRequires(.*):') # This could be adjusted later on
@@ -412,6 +413,10 @@ class SpecDefinitionParser(SpecSectionParser):
 			return SpecDefinitionParser.obj
 
 		p = re.compile('Source[0-9]+:')
+		if p.match(str(token)):
+				return SpecDefinitionParser.obj
+
+		p = re.compile('Patch[0-9]+:')
 		if p.match(str(token)):
 				return SpecDefinitionParser.obj
 

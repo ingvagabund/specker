@@ -110,6 +110,35 @@ class SpecFileParser(SpecModelParser):
 
 		return None # Not found
 
+	@staticmethod
+	def section_beginning_callback_no_if(obj, token_list):
+		'''
+		A callback for L{SpecTokenList} used to check whether next token is
+		a section token, skip %ifs
+		@param obj: self instance
+		@type obj: L{SpecModelParser} instance
+		@param token_list: token list to be used
+		@type token_list: L{SpecTokenList}
+		@return: section parser to be used for parsing the upcoming section
+		@rtype: L{SpecModelParser}
+		'''
+		return obj.section_beginning_no_if(token_list)
+
+	def section_beginning_no_if(self, token_list):
+		'''
+		Check whether next token is a section token, skip %if
+		@param token_list: token list to be used
+		@type token_list: L{SpecTokenList}
+		@return: section parser to be used to parse the upcoming section
+		@rtype: L{SpecModelParser}
+		'''
+		for parser in self.MANIPULATORS:
+			ret = parser.section_beginning(token_list)
+			if ret is not None and not issubclass(ret, SpecStIf):
+				return ret
+
+		return None # Not found
+
 	def parse_loop(self, token_list, parent, allowed):
 		'''
 		Main parse loop to get list of parsed sections
@@ -137,7 +166,7 @@ class SpecFileParser(SpecModelParser):
 				section = t.parse(token_list, parent, allowed, self)
 				if section:
 					found = True
-					SpecDebug.debug("- adding parsed section '%s' (preamble)" % type(section))
+					SpecDebug.debug("- adding parsed section '%s'" % type(section))
 					ret.append(section)
 					break
 
@@ -165,36 +194,8 @@ class SpecFileParser(SpecModelParser):
 		@return: list of parsed sections
 		@rtype: list of L{SpecSection}
 		'''
-		ret = []
 		allowed = copy.deepcopy(self.MANIPULATORS)
-
-		found = True
-		while found:
-			found = False
-			token = self.token_list.touch()
-
-			SpecDebug.debug("-- parsing section '%s' " % str(token))
-
-			if token.is_eof():
-				break
-
-			for t in allowed:
-				section = t.parse(self.token_list, None, allowed, self)
-				if section:
-					found = True
-					SpecDebug.debug("- adding parsed section '%s'" % type(section))
-					ret.append(section)
-					c = section.__class__
-					if not issubclass(c, SpecStIf) and not issubclass(c, SpecStGlobal) and not \
-							issubclass(c, SpecStDescription) and not issubclass(c, SpecStFiles):
-						SpecDebug.debug("-- removing " + str(token) + " from allowed")
-						if section in allowed:
-							allowed.remove(section)
-					break
-
-		SpecDebug.debug("-- unparsed beginning of a section: " + str(token))
-
-		return ret
+		return self.parse_loop(self.token_list, None, allowed)
 
 	def parse(self):
 		'''
@@ -268,7 +269,7 @@ class SpecSectionParser(object):
 		ret = section(parent)
 		ret.set_token_section(token_list.get())
 		#could be empty
-		ret.set_tokens(token_list.get_while_not(functools.partial(ctx.section_beginning_callback, ctx)))
+		ret.set_tokens(token_list.get_while_not(functools.partial(ctx.section_beginning_callback_no_if, ctx)))
 
 		return ret
 

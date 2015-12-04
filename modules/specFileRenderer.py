@@ -27,6 +27,7 @@ A spec model rendering
 
 import re
 import sys
+import cStringIO
 from specDebug import SpecDebug
 from specError import SpecNotFound, SpecNotImplemented
 from specModelRenderer import SpecModelRenderer
@@ -432,6 +433,20 @@ class SpecSectionRenderer(object):
 		'''
 		self.section.get_token_section().write(f)
 		self.section.get_tokens().write(f)
+
+	def raw_string(self, ctx):
+		'''
+		Get raw section representation
+		@param ctx: a rendering context
+		@type ctx: L{SpecModelRenderer}
+		@return: raw string of a section
+		@rtype: string
+		'''
+		output = cStringIO.StringIO()
+		self.render(output, ctx)
+		ret = ret.getvalue()
+		output.close()
+		return ret
 
 class SpecExpressionRenderer(object):
 	'''

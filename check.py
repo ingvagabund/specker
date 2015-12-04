@@ -60,7 +60,7 @@ def print_status(status, verbose = VERBOSE):
 	@param status: process status to be printed
 	@type status: dict {'stdout', 'stderr', 'returncode'}
 	@param verbose: if True, print status
-	@type status: Boolean
+	@type verbose: Boolean
 	@return: None
 	@rtype: None
 	'''

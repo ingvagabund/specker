@@ -106,7 +106,7 @@ class SpecFileParser(SpecModelParser):
 		for parser in self.MANIPULATORS:
 			ret = parser.section_beginning(token_list)
 			if ret is not None:
-				return ret
+				return parser
 
 		return None # Not found
 
@@ -135,7 +135,7 @@ class SpecFileParser(SpecModelParser):
 		for parser in self.MANIPULATORS:
 			ret = parser.section_beginning(token_list)
 			if ret is not None and not issubclass(ret, SpecStIf):
-				return ret
+				return parser
 
 		return None # Not found
 

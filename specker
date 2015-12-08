@@ -669,7 +669,7 @@ if __name__ == "__main__":
 			else:
 				spec2 = SpecFileParser(model_reader())
 			spec2.init(sys.stdin)
-			spec.sections_add(spec2.parse_loop_section(None))
+			spec.sections_add(spec2.parse_loop_section())
 
 		if options.custom_manipulator_renderer:
 			execfile(options.custom_manipulator_renderer)

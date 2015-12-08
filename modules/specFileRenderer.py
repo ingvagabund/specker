@@ -105,7 +105,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		for renderer in self.MANIPULATORS:
 			if issubclass(s.__class__, renderer.obj):
 				found = True
-				SpecDebug.debug("- rendering section '%s'" % str(s))
+				SpecDebug.debug("- rendering section '%s'" % type(s))
 				renderer(s).render(f, self)
 		if not found:
 			raise SpecNotImplemented("Not implemented renderer")

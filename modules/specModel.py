@@ -161,7 +161,7 @@ class SpecModel(object):
 			idx_find = get_add_index(idx_find, idx)
 
 			if idx_find is None:
-				raise SpecNotFound("Section '%s' was not found in section order" % section)
+				raise SpecNotFound("Section '%s' was not found in section order" % type(section))
 
 			for i, sec in enumerate(self.sections):
 				if issubclass(sec.__class__, self.SPEC_SECTION_ORDER[idx_find]):

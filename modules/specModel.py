@@ -26,6 +26,7 @@ Basic operations on spec sections and spec section encapsulation
 '''
 
 from specSection import *
+from specError import SpecNotImplemented
 
 class SpecModel(object):
 	'''

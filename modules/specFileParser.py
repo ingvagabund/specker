@@ -622,11 +622,9 @@ class SpecChangelogParser(SpecSectionParser):
 		user_email = token_list.get()
 		entry.set_user_email(user_email)
 
-		version_delim = token_list.get()
-		if str(version_delim) != '-':
-			token_list.unget()
-			raise SpecBadToken("Expected token '-', got '%s'" % str(version_delim))
-		entry.set_version_delim(version_delim)
+		# version delim is optional here, if not stated, let's skip it
+		if str(token_list.touch()) == '-':
+			entry.set_version_delim(token_list.get())
 
 		version = token_list.get()
 		entry.set_version(version)

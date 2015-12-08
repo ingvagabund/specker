@@ -577,7 +577,8 @@ class SpecChangelogRenderer(SpecSectionRenderer):
 			entry.get_date().write(f)
 			entry.get_user().write(f)
 			entry.get_user_email().write(f)
-			entry.get_version_delim().write(f)
+			if entry.get_version_delim():
+				entry.get_version_delim().write(f)
 			entry.get_version().write(f)
 			entry.get_message().write(f)
 

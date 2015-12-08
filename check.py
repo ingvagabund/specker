@@ -145,6 +145,20 @@ class TestGeneric(unittest.TestCase):
 
 ################################################################################
 
+class TestModel(unittest.TestCase):
+	'''
+	Test L{SpecModel}
+	'''
+	def test_sections_add(self):
+		with open('./testsuite/sections_add_in2.spec', 'r') as fin:
+			result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'], stdin = fin)
+		assertEqual(0, result['returncode'], result)
+		with open('./testsuite/sections_add_out.spec', 'r') as fout:
+			sections_add_out_spec = fout.read()
+		assertEqual(result['stdout'], sections_add_out_spec, result)
+
+################################################################################
+
 class TestFileParser(unittest.TestCase):
 	'''
 	Test L{SpecFileParser}
@@ -194,7 +208,7 @@ if __name__ == '__main__':
 	loader = unittest.TestLoader()
 
 	suites_list = []
-	for test_class in [TestGeneric, TestFileParser, TestDefaultEditor, TestFileRenderer]:
+	for test_class in [TestGeneric, TestFileParser, TestModel, TestDefaultEditor, TestFileRenderer]:
 		suites_list.append(loader.loadTestsFromTestCase(test_class))
 
 	unittest.TextTestRunner(verbosity = unittest_verbosity).run(unittest.TestSuite(suites_list))

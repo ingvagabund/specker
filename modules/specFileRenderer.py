@@ -41,6 +41,7 @@ class SpecFileRenderer(SpecModelRenderer):
 		self.set_model_reader(reader)
 		self.MANIPULATORS = [
 				SpecIfRenderer,
+				SpecTagRenderer,
 				SpecDefinitionRenderer,
 				SpecGlobalRenderer,
 				SpecDefineRenderer,
@@ -687,6 +688,26 @@ class SpecPosttransRenderer(SpecSectionRenderer):
 	@cvar obj: sections rendered by this renderer
 	'''
 	obj = SpecStPosttrans
+
+class SpecTagRenderer(SpecSectionRenderer):
+	'''
+	tag renderer (%license, %doc, ...)
+	@cvar obj: sections rendered by this renderer
+	'''
+	obj = SpecStTag
+
+	def render(self, f, ctx):
+		'''
+		Render section
+		@param f: a file to render to
+		@type f: file
+		@param ctx: a rendering context
+		@type ctx: L{SpecModelRenderer}
+		@return: None
+		@rtype: None
+		'''
+		self.section.get_name().write(f)
+		self.section.get_value().write(f)
 
 class SpecDefinitionRenderer(SpecSectionRenderer):
 	'''

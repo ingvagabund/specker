@@ -45,6 +45,16 @@ class SpecStIfMeta(SpecSectionMeta):
 		'''
 		return "%if"
 
+class SpecStTagMeta(SpecSectionMeta):
+	'''
+	metaclass for L{SpecStTag}
+	'''
+	def __repr__(c):
+		'''
+		section representation
+		'''
+		return "spec tag"
+
 class SpecStDefinitionMeta(SpecSectionMeta):
 	'''
 	metaclass for L{SpecStDefinition}

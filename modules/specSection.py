@@ -180,6 +180,53 @@ class SpecStIf(SpecSection):
 		'''
 		return self.endif_token
 
+class SpecStTag(SpecSection):
+	'''
+	A tag representation (%doc, %license...)
+	'''
+	__metaclass__ = SpecStTagMeta
+
+	def __init__(self, parent):
+		self.parent = parent
+		self.name = None
+		self.value = None
+
+	def set_name(self, name):
+		'''
+		Set tag name
+		@param name: tag name
+		@type name: L{SpecToken}
+		@return: None
+		@rtype: None
+		'''
+		self.name = name
+
+	def set_value(self, val):
+		'''
+		Set value of the tag
+		@param val: tag value
+		@type val: list of L{SpecToken}
+		@return: None
+		@rtype: None
+		'''
+		self.value = val
+
+	def get_name(self):
+		'''
+		Get tag name
+		@return: tag name
+		@rtype: L{SpecToken}
+		'''
+		return self.name
+
+	def get_value(self):
+		'''
+		Get tag value
+		@return: tag value
+		@rtype: list of L{SpecToken}
+		'''
+		return self.value
+
 class SpecStDefinition(SpecSection):
 	'''
 	Definition representation

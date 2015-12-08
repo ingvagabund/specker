@@ -48,7 +48,7 @@ def run_specker(args, stdin = None):
 	prog = ["./specker"] + args
 	LOGGER.debug(">>> args: " + str(args))
 
-	process = Popen(prog, stdin = None, stderr = PIPE, stdout = PIPE, shell = False)
+	process = Popen(prog, stdin = stdin, stderr = PIPE, stdout = PIPE, shell = False)
 	stdout, stderr = process.communicate()
 	returncode = process.returncode
 

@@ -604,7 +604,11 @@ class SpecChangelogParser(SpecSectionParser):
 		def changelog_entry_beginning_callback(obj, token_list):
 			# is there some section?
 			if obj.section_beginning_callback(obj, token_list):
-				return True
+				# changelog message can consist of keyword like:
+				# - Add missing Requires: golang(github.com/gorilla/mux) to devel
+				tkn = token_list.touch()
+				if not tkn.same_line(token_list[token_list.get_pointer() - 1]):
+					return True
 
 			# or is there another changelog entry?
 			return str(token_list.touch()) == '*'
@@ -641,7 +645,7 @@ class SpecChangelogParser(SpecSectionParser):
 		entry.set_version(version)
 
 		entry.set_message(token_list.get_while_not(
-									functools.partial(changelog_entry_beginning_callback, ctx )
+									functools.partial(changelog_entry_beginning_callback, ctx)
 									)
 								)
 

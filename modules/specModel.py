@@ -25,8 +25,9 @@ Basic operations on spec sections and spec section encapsulation
 @license: GPL 2.0
 '''
 
+from specDebug import SpecDebug
 from specSection import *
-from specError import SpecNotImplemented
+from specError import SpecNotImplemented, SpecNotFound
 
 class SpecModel(object):
 	'''
@@ -106,18 +107,25 @@ class SpecModel(object):
 		@rtype: None
 		'''
 		def get_add_index(idx_find, idx):
-			# first iterate downwards, when beginning reached, continue upwards
-			# from idx till end of section is reached (should not occur)
-			if idx_find < idx and idx_find > 0:
-				return idx_find - 1
-			elif idx_find < idx and idx_find == 0:
-				return idx + 1
-			elif idx_find > idx and idx_find < len(self.SPEC_SECTION_ORDER):
-				return idx_find + 1
-			elif idx_find == idx:
-				return idx - 1
+			if idx_find == idx:
+				ret = idx - 1
+				diff = -1
 			else:
-				return None
+				diff = idx_find - idx
+				if diff < 0:
+					ret = idx + (-diff)
+				else:
+					ret = idx - (diff + 1)
+			# check bounds
+			if ret < 0:
+				ret = idx + (abs(diff) + 1)
+				if ret >= len(self.SPEC_SECTION_ORDER):
+					return None
+			elif ret >= len(self.SPEC_SECTION_ORDER):
+				ret = idx - abs(diff)
+				if ret < 0:
+					return None
+			return ret
 
 		if issubclass(section.__class__, SpecStDefinition) \
 				or issubclass(section.__class__, SpecStIf):
@@ -128,6 +136,7 @@ class SpecModel(object):
 			# simple replace
 			for idx, sec in enumerate(self.sections):
 				if issubclass(sec.__class__, section.__class__):
+					SpecDebug.debug("-- replacing section '%s'" % type(section))
 					self.sections[idx] = section
 					found = True
 					break
@@ -135,9 +144,11 @@ class SpecModel(object):
 		if found:
 			return
 
-		# replace failed, append section
+		# replace failed, append section based on section order
 
 		if issubclass(section.__class__, SpecStPackage):
+			# This needs special checks based on package, not only package, but
+			# description, ... as well
 			raise SpecNotImplemented("Adding %package section not implemented") # TODO: implement
 
 		for idx, sec in enumerate(self.SPEC_SECTION_ORDER):
@@ -153,13 +164,18 @@ class SpecModel(object):
 				raise SpecNotFound("Section '%s' was not found in section order" % section)
 
 			for i, sec in enumerate(self.sections):
-				if type(sec) == self.SPEC_SECTION_ORDER[idx_find]:
+				if issubclass(sec.__class__, self.SPEC_SECTION_ORDER[idx_find]):
 					found = True
-					self.sections.insert(i + 1, section)
+					if idx_find > idx:
+						SpecDebug.debug("-- addiding section '%s' at position before section '%s'" % (type(section), type(sec)))
+						self.sections.insert(i, section)
+					else:
+						SpecDebug.debug("-- addiding section '%s' at position after section '%s'" % (type(section), type(sec)))
+						self.sections.insert(i + 1, section)
 					break
 
 		if not found:
-			raise SpecNotFound("Section '%s' was not added" % section)
+			raise SpecNotFound("Section '%s' was not added" % type(section))
 
 	def get_sections(self):
 		'''

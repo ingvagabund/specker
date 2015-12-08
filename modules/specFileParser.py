@@ -35,7 +35,7 @@ from specError import SpecBadToken, SpecBadIf
 from specModel import SpecModel
 from specModelParser import SpecModelParser
 from specSection import *
-from specToken import SpecTokenList
+from specTokenList import SpecTokenList
 
 class SpecFileParser(SpecModelParser):
 	'''

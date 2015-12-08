@@ -28,7 +28,8 @@ A spec model editor
 import re
 from specSection import *
 from specDebug import SpecDebug
-from specToken import SpecToken, SpecTokenList
+from specToken import SpecToken
+from specTokenList import SpecTokenList
 from specError import SpecNotFound, SpecNotImplemented
 from specModelEditor import SpecModelEditor
 

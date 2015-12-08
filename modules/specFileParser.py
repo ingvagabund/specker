@@ -309,11 +309,22 @@ class SpecExpressionParser(SpecSectionParser):
 		ret = SpecExpressionParser.obj(parent)
 
 		tokens = SpecTokenList()
-		tkn = token_list.get()
-		tokens.token_list_append(tkn)
-		while tkn.same_line(token_list.touch()):
-			tkn = token_list.get()
-			tokens.token_list_append(tkn)
+		# let's assume, that the very first token is a part of an expression
+		tokens.token_list_append(token_list.get())
+
+		while True:
+			tkn = token_list.touch()
+			if str(tkn) == '>=' or str(tkn) == '<=' \
+					or str(tkn) == '<' or str(tkn) == '>' \
+					or str(tkn) == '!=' or str(tkn) == '==' \
+					or str(tkn) == '&&' or str(tkn) == '||':
+				tokens.token_list_append(token_list.get())
+				if token_list.touch().is_eof():
+					raise SpecBadToken("Unexpected EOF, expected expression termination")
+				tokens.token_list_append(token_list.get())
+				continue
+			else:
+				break
 
 		ret.set_tokens(tokens)
 		return ret

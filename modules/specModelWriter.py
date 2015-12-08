@@ -18,48 +18,58 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-An adapter used to communicate with model
+An adapter used to communicate with model, write methods
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
 
-from specModel import SpecModel
+from specModelTransformator import SpecModelTransformator
 
-class SpecModelTransformator(object):
+class SpecModelWriter(SpecModelTransformator):
 	'''
-	An adapter used to communicate with model
+	An adapter used to communicate with model - modifying methods used by
+	L{SpecModelEditor} and L{SpecModelParser}
 	'''
-	def __init__(self, model = None):
-		if not model:
-			self.model = SpecModel()
-		else:
-			self.model = model
 
-	def set_model(self, model):
+	def append(self, section):
 		'''
-		Set model to manipulate with
-		@param model: a spec model
-		@type model: L{SpecModel}
+		Append a section
+		@param section: a section to be appended
+		@type section: L{SpecSection}
 		@return: None
 		@rtype: None
 		'''
-		self.model = model
+		self.model.append(section)
 
-	def get_model(self):
+	def remove(self, section):
 		'''
-		Get used spec model
-		@return: spec model
-		@rtype: L{SpecModel}
+		Remove a section
+		@param section: a section to be removed
+		@type section: L{SpecSection}
+		@return: None
+		@rtype: None
 		'''
-		return self.model
+		self.model.remove(section)
 
-	def get_sections(self):
+	def append_items(self, items):
 		'''
-		Get list of all sections
-		@return: list of sections
-		@rtype: list of L{SpecSection}
+		Append multiple sections
+		@param items: sections to be added
+		@type items: list of L{SpecSection}
+		@return: None
+		@rtype: None
 		'''
-		return self.model.get_sections()
+		self.model.append_items(items)
+
+	def add(self, section):
+		'''
+		Add a section, try to guess the most suitable position for the section
+		@param section: section to be added
+		@type section: L{SpecSection}
+		@return: None
+		@rtype: None
+		'''
+		return self.model.add(section)
 

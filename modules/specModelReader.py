@@ -18,48 +18,36 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ####################################################################
 '''
-An adapter used to communicate with model
+An adapter used to communicate with model, read methods
 @author: Fridolin Pokorny
 @contact: fpokorny@redhat.com
 @organization: Red Hat Inc.
 @license: GPL 2.0
 '''
 
-from specModel import SpecModel
+from specModelTransformator import SpecModelTransformator
 
-class SpecModelTransformator(object):
+class SpecModelReader(SpecModelTransformator):
 	'''
-	An adapter used to communicate with model
+	An adapter used to communicate with model - non-modifying methods
 	'''
-	def __init__(self, model = None):
-		if not model:
-			self.model = SpecModel()
-		else:
-			self.model = model
-
-	def set_model(self, model):
+	def find_section(self, section_type):
 		'''
-		Set model to manipulate with
-		@param model: a spec model
-		@type model: L{SpecModel}
-		@return: None
-		@rtype: None
-		'''
-		self.model = model
-
-	def get_model(self):
-		'''
-		Get used spec model
-		@return: spec model
-		@rtype: L{SpecModel}
-		'''
-		return self.model
-
-	def get_sections(self):
-		'''
-		Get list of all sections
-		@return: list of sections
+		Find a section of a specific type type
+		@param section_type: section type to look for
+		@type section_type: __class__
+		@return: list of sections of the provided type or None
 		@rtype: list of L{SpecSection}
 		'''
-		return self.model.get_sections()
+		return self.model.find_section(section_type)
+
+	def find_definitions_all(self):
+		'''
+		Find all definitions within spec model
+		@return: list of definitions
+		@rtype: list of L{SpecStDefinition}
+		@raise SpecNotFound:
+		@todo: move to the model itself?
+		'''
+		return self.model.find_definitions_all()
 

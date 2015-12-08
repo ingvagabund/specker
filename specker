@@ -35,7 +35,8 @@ from modules.specDefaultEditor import SpecDefaultEditor
 from modules.specFileRenderer import SpecFileRenderer
 from modules.specDebug import SpecDebug
 from modules.specError import SpecBadParam
-from modules.specModelTransformator import SpecModelWriter, SpecModelReader
+from modules.specModelReader import SpecModelReader
+from modules.specModelWriter import SpecModelWriter
 
 logger = logging.getLogger('specker')
 logger.addHandler(logging.StreamHandler(sys.stderr))

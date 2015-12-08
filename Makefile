@@ -10,7 +10,7 @@ doc:
 
 check:
 	@echo "Performing checks..."
-	@LC_ALL="C" ./check.py
+	@LC_ALL="C" ./check.py -v
 
 clean:
 	@echo "Cleaning tree..."

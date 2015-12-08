@@ -138,7 +138,7 @@ class SpecDefaultEditor(SpecModelEditor):
 		@todo: remove/use only model to add?
 		'''
 		for section in sections:
-			SpecDebug.debug("- adding section '%s'", str(section))
+			SpecDebug.debug("- adding section '%s'" % str(section))
 			self.get_model_writer().add(section)
 
 	def find_section_add(self, section_type, items, verbose = True):

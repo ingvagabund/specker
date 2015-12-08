@@ -64,7 +64,7 @@ def print_status(status, verbose = VERBOSE):
 	@return: None
 	@rtype: None
 	'''
-	if verbose:
+	if VERBOSE:
 		LOGGER.debug(">>> FAILED!!!")
 		LOGGER.debug(">>> Stdout:\n%s", status['stdout'])
 		LOGGER.debug(">>> Stderr:\n%s", status['stderr'])

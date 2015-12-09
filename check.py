@@ -200,6 +200,18 @@ class TestGeneric(unittest.TestCase):
 		assertEqual(0, result['returncode'], result)
 		assertNoDiff(result['stdout'], output_file, result)
 
+	def test_custom_model_writer(self):
+		input_file = "./testsuite/custom_model_writer.spec"
+		source_file  = "./testsuite/custom_model_writer.py"
+		output_file = "./testsuite/custom_model_writer_out.spec"
+		result = run_specker([
+										"--custom-model-writer=%s" % source_file,
+										"--provides-remove=/bin/cp",
+										input_file
+									],
+									stdin = source_file)
+		assertEqual(0, result['returncode'], result)
+		assertNoDiff(result['stdout'], output_file, result)
 
 ################################################################################
 

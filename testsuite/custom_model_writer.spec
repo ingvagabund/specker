@@ -1,0 +1,1 @@
+../examples/custom_model_writer.spec

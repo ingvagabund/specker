@@ -174,6 +174,19 @@ class TestGeneric(unittest.TestCase):
 		assertEqual(0, result['returncode'], result)
 		assertNoDiff(result['stdout'], input_file, result)
 
+	def test_custom_editor(self):
+		input_file = "./testsuite/custom_editor.spec"
+		source_file  = "./testsuite/custom_editor.py"
+		output_file = "./testsuite/custom_editor_out.spec"
+		result = run_specker([
+									'--custom-editor=%s' % source_file,
+									'--install-edit=777',
+									input_file,
+									],
+									stdin = source_file)
+		assertEqual(0, result['returncode'], result)
+		assertNoDiff(result['stdout'], output_file, result)
+
 ################################################################################
 
 class TestModel(unittest.TestCase):

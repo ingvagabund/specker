@@ -31,8 +31,6 @@ class MySpecModelWriter(SpecModelWriter):
 			line = token_list.get_line()
 			while line:
 				line.write(output)
-				print what
-				print output.getvalue()
 				if what not in output.getvalue():
 					new_tokens.token_list_append_items(line)
 				line = token_list.get_line()
@@ -41,6 +39,7 @@ class MySpecModelWriter(SpecModelWriter):
 			files_section.set_tokens(new_tokens)
 			output.close()
 
+		SpecModelWriter.remove(self, section)
 		if issubclass(section.__class__, SpecStDefinition):
 			remove_from_files(section.get_value().get_raw().split('/')[-1])
 

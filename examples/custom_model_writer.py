@@ -9,9 +9,9 @@ C{./specker examples/custom_model_writer.spec --provides-remove="/bin/cp" --cust
 '''
 
 import cStringIO
-from modules.specToken import SpecTokenList
+from modules.specTokenList import SpecTokenList
 from modules.specSection import SpecStDefinition, SpecStFiles
-from modules.specModelTransformator import SpecModelWriter
+from modules.specModelWriter import SpecModelWriter
 
 class MySpecModelWriter(SpecModelWriter):
 	def remove(self, section):

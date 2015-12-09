@@ -157,19 +157,22 @@ class TestGeneric(unittest.TestCase):
 	Generic tests
 	'''
 	def test_nonexisting_file(self):
-		result = run_specker(["somenonlongnameofanonexistentfile"])
+		input_file = "somenonlongnameofanonexistentfile"
+		result = run_specker([input_file])
 		assertContains('No such file or directory', result['stderr'], result)
 		assertNotEqual(0, result['returncode'], result)
 
 	def test_golang_flannel(self):
-		result = run_specker(["./testsuite/golang-flannel.spec"])
+		input_file = "./testsuite/golang-flannel.spec"
+		result = run_specker([input_file])
 		assertEqual(0, result['returncode'], result)
-		assertNoDiff(result['stdout'], './testsuite/golang-flannel.spec', result)
+		assertNoDiff(result['stdout'], input_file, result)
 
 	def test_golang_flannel(self):
-		result = run_specker(["./testsuite/EMPTY"])
+		input_file = "./testsuite/EMPTY"
+		result = run_specker([input_file])
 		assertEqual(0, result['returncode'], result)
-		assertNoDiff(result['stdout'], './testsuite/EMPTY', result)
+		assertNoDiff(result['stdout'], input_file, result)
 
 ################################################################################
 
@@ -178,10 +181,12 @@ class TestModel(unittest.TestCase):
 	Test L{SpecModel}
 	'''
 	def test_sections_add(self):
-		result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'],
-				stdin = './testsuite/sections_add_in2.spec')
+		input_file1 = "./testsuite/sections_add_in1.spec"
+		input_file2 = "./testsuite/sections_add_in2.spec"
+		output_file = './testsuite/sections_add_out.spec'
+		result = run_specker([input_file1, '--sections-add'], stdin = input_file2)
 		assertEqual(0, result['returncode'], result)
-		assertNoDiff(result['stdout'], './testsuite/sections_add_out.spec', result)
+		assertNoDiff(result['stdout'], output_file, result)
 
 ################################################################################
 

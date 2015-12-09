@@ -166,6 +166,11 @@ class TestGeneric(unittest.TestCase):
 		assertEqual(0, result['returncode'], result)
 		assertNoDiff(result['stdout'], './testsuite/golang-flannel.spec', result)
 
+	def test_golang_flannel(self):
+		result = run_specker(["./testsuite/EMPTY"])
+		assertEqual(0, result['returncode'], result)
+		assertNoDiff(result['stdout'], './testsuite/EMPTY', result)
+
 ################################################################################
 
 class TestModel(unittest.TestCase):

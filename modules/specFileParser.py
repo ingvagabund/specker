@@ -196,8 +196,7 @@ class SpecFileParser(SpecModelParser):
 		@return: list of parsed sections
 		@rtype: list of L{SpecSection}
 		'''
-		allowed = copy.deepcopy(self.MANIPULATORS)
-		return self.parse_loop(self.token_list, None, allowed)
+		return self.parse_loop(self.token_list, None, self.MANIPULATORS)
 
 	def parse(self):
 		'''

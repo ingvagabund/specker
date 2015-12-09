@@ -311,14 +311,18 @@ class SpecExpressionParser(SpecSectionParser):
 
 		tokens = SpecTokenList()
 		# let's assume, that the very first token is a part of an expression
-		tokens.token_list_append(token_list.get())
+		if str(token_list.touch()) == '!':
+			tokens.token_list_append(token_list.get())
+			tokens.token_list_append(token_list.get())
+		else:
+			tokens.token_list_append(token_list.get())
 
 		while True:
 			tkn = token_list.touch()
 			if str(tkn) == '>=' or str(tkn) == '<=' \
 					or str(tkn) == '<' or str(tkn) == '>' \
 					or str(tkn) == '!=' or str(tkn) == '==' \
-					or str(tkn) == '&&' or str(tkn) == '||':
+					or str(tkn) == '&&' or str(tkn) == '||' or str(tkn) == '!':
 				tokens.token_list_append(token_list.get())
 				if token_list.touch().is_eof():
 					raise SpecBadToken("Unexpected EOF, expected expression termination")

@@ -44,7 +44,7 @@ manipulation you wish.
 Renders just read the SpecModel and transform them to your representation.
 Again, it can vary - you can use raw spec file, JSON or a binary representation.
 
-![Design overview](fig/design_overview.png "Design overview")
+![Design overview](docs/design_overview.png "Design overview")
 
 ## Examples
 

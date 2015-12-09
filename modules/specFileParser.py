@@ -657,7 +657,7 @@ class SpecChangelogParser(SpecSectionParser):
 			# changelog message can consist of keyword like:
 			# - Add missing Requires: golang(github.com/gorilla/mux) to devel
 			tkn = token_list.touch()
-			if not tkn.same_line(token_list[token_list.get_pointer() - 1]):
+			if tkn.same_line(token_list[token_list.get_pointer() - 1]):
 				return False
 
 			# is there some section?

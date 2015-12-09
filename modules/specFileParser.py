@@ -649,13 +649,16 @@ class SpecChangelogParser(SpecSectionParser):
 			return datetime.datetime.strptime(s, '%a %b %d %Y')
 
 		def changelog_entry_beginning_callback(obj, token_list):
+			# changelog message can consist of keyword like:
+			# - Add missing Requires: golang(github.com/gorilla/mux) to devel
+			tkn = token_list.touch()
+			if not tkn.same_line(token_list[token_list.get_pointer() - 1]):
+				return False
+
 			# is there some section?
-			if obj.section_beginning_callback(obj, token_list):
-				# changelog message can consist of keyword like:
-				# - Add missing Requires: golang(github.com/gorilla/mux) to devel
-				tkn = token_list.touch()
-				if not tkn.same_line(token_list[token_list.get_pointer() - 1]):
-					return True
+			res = obj.section_beginning_callback(obj, token_list)
+			if res:
+				return True
 
 			# or is there another changelog entry?
 			return str(token_list.touch()) == '*'

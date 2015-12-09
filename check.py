@@ -48,9 +48,17 @@ def run_specker(args, stdin = None):
 	prog = ["./specker"] + args
 	LOGGER.debug(">>> args: " + str(args))
 
-	process = Popen(prog, stdin = stdin, stderr = PIPE, stdout = PIPE, shell = False)
+	if stdin:
+		fin = open(stdin, 'r')
+	else:
+		fin = None
+
+	process = Popen(prog, stdin = fin, stderr = PIPE, stdout = PIPE, shell = False)
 	stdout, stderr = process.communicate()
 	returncode = process.returncode
+
+	if stdin:
+		fin.close()
 
 	return { 'stdout': stdout, 'stderr': stderr, 'returncode': returncode }
 
@@ -150,8 +158,7 @@ class TestModel(unittest.TestCase):
 	Test L{SpecModel}
 	'''
 	def test_sections_add(self):
-		with open('./testsuite/sections_add_in2.spec', 'r') as fin:
-			result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'], stdin = fin)
+		result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'], stdin = './testsuite/sections_add_in2.spec')
 		assertEqual(0, result['returncode'], result)
 		with open('./testsuite/sections_add_out.spec', 'r') as fout:
 			sections_add_out_spec = fout.read()

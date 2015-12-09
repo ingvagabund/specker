@@ -62,7 +62,7 @@ def run_specker(args, stdin = None):
 
 	return { 'stdout': stdout, 'stderr': stderr, 'returncode': returncode }
 
-def print_status(status, verbose = VERBOSE):
+def print_status(status, verbose = VERBOSE, additional = None):
 	'''
 	Print status of a process, if verbose
 	@param status: process status to be printed
@@ -77,6 +77,8 @@ def print_status(status, verbose = VERBOSE):
 		LOGGER.debug(">>> Stdout:\n%s", status['stdout'])
 		LOGGER.debug(">>> Stderr:\n%s", status['stderr'])
 		LOGGER.debug(">>> Return code:\n%s", status['returncode'])
+		if additional:
+			LOGGER.debug(">>> Additional info:\n%s", additional)
 
 def assertContains(pattern, output, status):
 	'''
@@ -91,8 +93,6 @@ def assertContains(pattern, output, status):
 	if pattern not in output:
 		print_status(status)
 		assert False
-	elif VERBOSE:
-		LOGGER.debug(">>> OK")
 
 def assertTrue(expr, status):
 	'''
@@ -114,7 +114,7 @@ def assertFalse(expr, status):
 	@param status: status to be printed if assertion fails
 	@type status: dict {'stdout', 'stderr', 'returncode'}
 	'''
-	assertFalse(not expr, status)
+	assertTrue(not expr, status)
 
 def assertEqual(cmp1, cmp2, status):
 	'''
@@ -140,6 +140,16 @@ def assertNotEqual(cmp1, cmp2, status):
 		print_status(status)
 		assert False
 
+def assertNoDiff(stdout, f, status):
+		with open(f, 'r') as fout:
+			content = fout.read()
+
+		if stdout != content:
+			cmd = Popen(["diff", "-Naur", f, '-'], stdout=PIPE, stdin=PIPE)
+			diff = cmd.communicate(input = stdout)[0]
+			print_status(status, additional = diff)
+			assert False
+
 ################################################################################
 
 class TestGeneric(unittest.TestCase):
@@ -154,9 +164,7 @@ class TestGeneric(unittest.TestCase):
 	def test_golang_flannel(self):
 		result = run_specker(["./testsuite/golang-flannel.spec"])
 		assertEqual(0, result['returncode'], result)
-		with open('./testsuite/golang-flannel.spec', 'r') as fout:
-			sections_add_out_spec = fout.read()
-		assertEqual(result['stdout'], sections_add_out_spec, result)
+		assertNoDiff(result['stdout'], './testsuite/golang-flannel.spec', result)
 
 ################################################################################
 
@@ -168,9 +176,7 @@ class TestModel(unittest.TestCase):
 		result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'],
 				stdin = './testsuite/sections_add_in2.spec')
 		assertEqual(0, result['returncode'], result)
-		with open('./testsuite/sections_add_out.spec', 'r') as fout:
-			sections_add_out_spec = fout.read()
-		assertEqual(result['stdout'], sections_add_out_spec, result)
+		assertNoDiff(result['stdout'], './testsuite/sections_add_out.spec', result)
 
 ################################################################################
 
@@ -226,5 +232,6 @@ if __name__ == '__main__':
 	for test_class in [TestGeneric, TestFileParser, TestModel, TestDefaultEditor, TestFileRenderer]:
 		suites_list.append(loader.loadTestsFromTestCase(test_class))
 
-	unittest.TextTestRunner(verbosity = unittest_verbosity).run(unittest.TestSuite(suites_list))
+	ret = unittest.TextTestRunner(verbosity = unittest_verbosity).run(unittest.TestSuite(suites_list))
+	sys.exit(not (len(ret.errors) == 0 and len(ret.failures) == 0))
 

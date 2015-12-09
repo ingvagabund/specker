@@ -136,7 +136,8 @@ class SpecFileParser(SpecModelParser):
 		'''
 		for parser in self.MANIPULATORS:
 			ret = parser.section_beginning(token_list)
-			if ret is not None and not issubclass(ret, SpecStIf):
+			if ret is not None and not issubclass(ret, SpecStIf) \
+					and not issubclass(ret, SpecStTag) and not issubclass(ret, SpecStGlobal):
 				return parser
 
 		return None # Not found
@@ -183,7 +184,7 @@ class SpecFileParser(SpecModelParser):
 		@return: parsed sections in preamble
 		@rtype: list of L{SpecSection}
 		'''
-		allowed = [ SpecIfParser, SpecDefinitionParser, SpecGlobalParser ]
+		allowed = [ SpecIfParser, SpecDefinitionParser, SpecGlobalParser, SpecTagParser, SpecDefineParser ]
 
 		ret = self.parse_loop(self.token_list, None, allowed)
 		unparsed = self.token_list.touch()

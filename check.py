@@ -151,6 +151,13 @@ class TestGeneric(unittest.TestCase):
 		assertContains('No such file or directory', result['stderr'], result)
 		assertNotEqual(0, result['returncode'], result)
 
+	def test_golang_flannel(self):
+		result = run_specker(["./testsuite/golang-flannel.spec"])
+		assertEqual(0, result['returncode'], result)
+		with open('./testsuite/golang-flannel.spec', 'r') as fout:
+			sections_add_out_spec = fout.read()
+		assertEqual(result['stdout'], sections_add_out_spec, result)
+
 ################################################################################
 
 class TestModel(unittest.TestCase):
@@ -158,7 +165,8 @@ class TestModel(unittest.TestCase):
 	Test L{SpecModel}
 	'''
 	def test_sections_add(self):
-		result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'], stdin = './testsuite/sections_add_in2.spec')
+		result = run_specker(["./testsuite/sections_add_in1.spec", '--sections-add'],
+				stdin = './testsuite/sections_add_in2.spec')
 		assertEqual(0, result['returncode'], result)
 		with open('./testsuite/sections_add_out.spec', 'r') as fout:
 			sections_add_out_spec = fout.read()

@@ -799,7 +799,7 @@ class SpecPackageParser(SpecSectionParser):
 		section = SpecPackageParser.obj(parent)
 		section.set_token_section(token_list.get())
 		if section.get_token_section().same_line(token_list.touch()):
-			section.set_package(token_list.get())
+			section.set_package(token_list.get_line())
 		section.set_defs(ctx.parse_loop(token_list, section, [SpecIfParser, SpecDefinitionParser]))
 
 		return section

@@ -52,7 +52,8 @@ class SpecToken:
 		self.append = ""  # appended whitespaces
 		self.token = ""
 		self.line  = None
-		self.eol_count = 0
+		self.eol_count_prepend = 0
+		self.eol_count_append = 0
 
 		if specFile is None:
 			return
@@ -75,8 +76,10 @@ class SpecToken:
 				else:
 					self.prepend += c
 
-				if c == '\n':
-					self.eol_count += 1
+				if c == '\n' and not token_parsed:
+					self.eol_count_prepend += 1
+				elif c == '\n' and token_parsed:
+					self.eol_count_append += 1
 			elif c == '\\' and specFile.touch() == '\n':
 				if token_parsed:
 					self.append += c
@@ -85,7 +88,10 @@ class SpecToken:
 					self.prepend += c
 					self.prepend += specFile.getc()
 
-				self.eol_count += 1
+				if not token_parsed:
+					self.eol_count_prepend += 1
+				else:
+					self.eol_count_append += 1
 			elif c == '#':
 				if token_parsed:
 					# TODO: make better decision, e.g. '^  #comment$'
@@ -98,7 +104,6 @@ class SpecToken:
 				else:
 					self.prepend += c
 					self.prepend += read_comment(specFile)
-
 			else:
 				if len(self.append) == 0:
 					self.token += c

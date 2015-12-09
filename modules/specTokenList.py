@@ -55,8 +55,9 @@ class SpecTokenList:
 			t = SpecToken(specFile)
 			self.token_list.append(t)
 
+			line += t.eol_count_prepend
 			t.line = line
-			line += t.eol_count
+			line += t.eol_count_append
 
 			if t.token == None:
 				break

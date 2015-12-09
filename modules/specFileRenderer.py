@@ -524,7 +524,7 @@ class SpecGlobalRenderer(SpecSectionRenderer):
 		'''
 		self.section.get_global_token().write(f)
 		self.section.get_variable().write(f)
-		SpecExpressionRenderer(self.section.get_value()).render(f, ctx)
+		self.section.get_value().write(f)
 
 class SpecDefineRenderer(SpecSectionRenderer):
 	'''
@@ -545,7 +545,7 @@ class SpecDefineRenderer(SpecSectionRenderer):
 		'''
 		self.section.get_define_token().write(f)
 		self.section.get_variable().write(f)
-		SpecExpressionRenderer(self.section.get_value()).render(f, ctx)
+		self.section.get_value().write(f)
 
 class SpecBuildRenderer(SpecSectionRenderer):
 	'''

@@ -552,7 +552,7 @@ class SpecGlobalParser(SpecSectionParser):
 		if ret.get_variable().is_eof():
 			raise SpecBedToken("Expected variable, got '%s'" % str(ret.get_variable()))
 
-		ret.set_value(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
+		ret.set_value(token_list.get_line())
 		return ret
 
 class SpecDefineParser(SpecSectionParser):
@@ -600,7 +600,7 @@ class SpecDefineParser(SpecSectionParser):
 		if ret.get_variable().is_eof():
 			raise SpecBedToken("Expected variable, got '%s'" % str(ret.get_variable()))
 
-		ret.set_value(SpecExpressionParser.parse(token_list, ret, allowed, ctx))
+		ret.set_value(token_list.get_line())
 		return ret
 
 class SpecBuildParser(SpecSectionParser):

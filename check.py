@@ -179,13 +179,27 @@ class TestGeneric(unittest.TestCase):
 		source_file  = "./testsuite/custom_editor.py"
 		output_file = "./testsuite/custom_editor_out.spec"
 		result = run_specker([
-									'--custom-editor=%s' % source_file,
-									'--install-edit=777',
-									input_file,
+										'--custom-editor=%s' % source_file,
+										'--install-edit=777',
+										input_file,
 									],
 									stdin = source_file)
 		assertEqual(0, result['returncode'], result)
 		assertNoDiff(result['stdout'], output_file, result)
+
+	def test_custom_manipulator_editor(self):
+		input_file = "./testsuite/custom_manipulator_editor.spec"
+		source_file  = "./testsuite/custom_manipulator_editor.py"
+		output_file = "./testsuite/custom_manipulator_editor_out.txt"
+		result = run_specker([
+										"--custom-manipulator-renderer=%s" % source_file,
+										"--provides-show=*",
+										input_file
+									],
+									stdin = source_file)
+		assertEqual(0, result['returncode'], result)
+		assertNoDiff(result['stdout'], output_file, result)
+
 
 ################################################################################
 

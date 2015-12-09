@@ -1,0 +1,1 @@
+../examples/custom_manipulator_editor.spec

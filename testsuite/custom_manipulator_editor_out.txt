@@ -1,0 +1,15 @@
+ Package		| Value    
+ -			| golang(%{import_path}/backend)=%{version}-%{release}
+ -			| golang(%{import_path}/backend/alloc)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/alloc)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/awsvpc)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/gce)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/hostgw)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/udp)=%{version}-%{release}
+ devel			| golang(%{import_path}/backend/vxlan)=%{version}-%{release}
+ devel			| golang(%{import_path}/network)=%{version}-%{release}
+ devel			| golang(%{import_path}/pkg/ip)=%{version}-%{release}
+ devel			| golang(%{import_path}/remote)=%{version}-%{release}
+ devel			| golang(%{import_path}/subnet)=%{version}-%{release}
+ 
